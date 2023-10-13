@@ -1,10 +1,10 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using Microsoft.Build.BuildEngine;
+using Microsoft.Build.BackEnd.Logging;
 using SelectiveConditionEvaluator.Framework.Telemetry;
 using SelectiveConditionEvaluator.Shared;
-using ParallelConsoleLogger = SelectiveConditionEvaluator.Logging.ParallelLogger.ParallelConsoleLogger;
+using ParallelConsoleLogger = Microsoft.Build.BackEnd.Logging.ParallelConsoleLogger;
 
 #nullable disable
 
@@ -98,97 +98,6 @@ namespace SelectiveConditionEvaluator.Logging
         /// </summary>
         private void InitializeBaseConsoleLogger()
         {
-            if (_consoleLogger != null)
-            {
-                return;
-            }
-
-            bool useMPLogger = false;
-            bool disableConsoleColor = false;
-            bool forceConsoleColor = false;
-            bool preferConsoleColor = false;
-            if (!string.IsNullOrEmpty(_parameters))
-            {
-                string[] parameterComponents = _parameters.Split(BaseConsoleLogger.parameterDelimiters);
-                foreach (string param in parameterComponents)
-                {
-                    if (param.Length <= 0)
-                    {
-                        continue;
-                    }
-
-                    if (string.Equals(param, "ENABLEMPLOGGING", StringComparison.OrdinalIgnoreCase))
-                    {
-                        useMPLogger = true;
-                    }
-                    if (string.Equals(param, "DISABLEMPLOGGING", StringComparison.OrdinalIgnoreCase))
-                    {
-                        useMPLogger = false;
-                    }
-                    if (string.Equals(param, "DISABLECONSOLECOLOR", StringComparison.OrdinalIgnoreCase))
-                    {
-                        disableConsoleColor = true;
-                    }
-                    if (string.Equals(param, "FORCECONSOLECOLOR", StringComparison.OrdinalIgnoreCase))
-                    {
-                        forceConsoleColor = true;
-                    }
-                    if (string.Equals(param, "PREFERCONSOLECOLOR", StringComparison.OrdinalIgnoreCase))
-                    {
-                        // Use ansi color codes if current target console do support it
-                        preferConsoleColor = ConsoleConfiguration.AcceptAnsiColorCodes;
-                    }
-                }
-            }
-
-            if (forceConsoleColor || (!disableConsoleColor && preferConsoleColor))
-            {
-                _colorSet = BaseConsoleLogger.SetColorAnsi;
-                _colorReset = BaseConsoleLogger.ResetColorAnsi;
-            }
-            else if (disableConsoleColor)
-            {
-                _colorSet = BaseConsoleLogger.DontSetColor;
-                _colorReset = BaseConsoleLogger.DontResetColor;
-            }
-
-            if (_numberOfProcessors == 1 && !useMPLogger)
-            {
-                _consoleLogger = new SerialConsoleLogger(_verbosity, _write, _colorSet, _colorReset);
-                if (this is FileLogger)
-                {
-                    KnownTelemetry.LoggingConfigurationTelemetry.FileLoggerType = "serial";
-                }
-                else
-                {
-                    KnownTelemetry.LoggingConfigurationTelemetry.ConsoleLoggerType = "serial";
-                }
-            }
-            else
-            {
-                _consoleLogger = new ParallelConsoleLogger(_verbosity, _write, _colorSet, _colorReset);
-                if (this is FileLogger)
-                {
-                    KnownTelemetry.LoggingConfigurationTelemetry.FileLoggerType = "parallel";
-                }
-                else
-                {
-                    KnownTelemetry.LoggingConfigurationTelemetry.ConsoleLoggerType = "parallel";
-                }
-            }
-
-            if (_showSummary != null)
-            {
-                _consoleLogger.ShowSummary = _showSummary;
-            }
-
-            if (!string.IsNullOrEmpty(_parameters))
-            {
-                _consoleLogger.Parameters = _parameters;
-                _parameters = null;
-            }
-
-            _consoleLogger.SkipProjectStartedText = _skipProjectStartedText;
         }
 
         #endregion

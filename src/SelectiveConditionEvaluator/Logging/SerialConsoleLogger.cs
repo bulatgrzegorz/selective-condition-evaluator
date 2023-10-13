@@ -7,7 +7,7 @@
 
 using System.Collections;
 using System.Diagnostics;
-using Microsoft.Build.BuildEngine;
+using Microsoft.Build.BackEnd.Logging;
 using SelectiveConditionEvaluator.Shared;
 using ResourceUtilities = SelectiveConditionEvaluator.Deprecated.Engine.Shared.ResourceUtilities;
 
@@ -223,64 +223,6 @@ namespace SelectiveConditionEvaluator.Logging
         /// <owner>t-jeffv, sumedhk</owner>
         public override void ProjectStartedHandler(object sender, ProjectStartedEventArgs e)
         {
-            if (!contextStack.IsEmpty())
-            {
-                this.VerifyStack(contextStack.Peek().type == FrameType.Target, "Bad stack -- Top is project {0}", contextStack.Peek().ID);
-            }
-
-            // if verbosity is normal, detailed or diagnostic
-            if (IsVerbosityAtLeast(LoggerVerbosity.Normal))
-            {
-                ShowDeferredMessages();
-
-                // check for stack corruption
-                if (!contextStack.IsEmpty())
-                {
-                    this.VerifyStack(contextStack.Peek().type == FrameType.Target, "Bad stack -- Top is target {0}", contextStack.Peek().ID);
-                }
-
-                contextStack.Push(new Frame(FrameType.Project,
-                                            false, // message not yet displayed
-                                            this.currentIndentLevel,
-                                            e.ProjectFile,
-                                            e.TargetNames,
-                                            null,
-                                            GetCurrentlyBuildingProjectFile()));
-                WriteProjectStarted();
-            }
-            else
-            {
-                contextStack.Push(new Frame(FrameType.Project,
-                                            false, // message not yet displayed
-                                            this.currentIndentLevel,
-                                            e.ProjectFile,
-                                            e.TargetNames,
-                                            null,
-                                            GetCurrentlyBuildingProjectFile()));
-            }
-
-            if (this.showPerfSummary)
-            {
-                PerformanceCounter counter = GetPerformanceCounter(e.ProjectFile, ref projectPerformanceCounters);
-
-                // Place the counter "in scope" meaning the project is executing right now.
-                counter.InScope = true;
-            }
-
-            if (Verbosity == LoggerVerbosity.Diagnostic && showItemAndPropertyList)
-            {
-                if (e.Properties != null)
-                {
-                    ArrayList propertyList = ExtractPropertyList(e.Properties);
-                    WriteProperties(propertyList);
-                }
-
-                if (e.Items != null)
-                {
-                    SortedList itemList = ExtractItemList(e.Items);
-                    WriteItems(itemList);
-                }
-            }
         }
 
         /// <summary>
@@ -291,35 +233,6 @@ namespace SelectiveConditionEvaluator.Logging
         /// <owner>t-jeffv, sumedhk</owner>
         public override void ProjectFinishedHandler(object sender, ProjectFinishedEventArgs e)
         {
-            if (this.showPerfSummary)
-            {
-                PerformanceCounter counter = GetPerformanceCounter(e.ProjectFile, ref projectPerformanceCounters);
-
-                // Place the counter "in scope" meaning the project is done executing right now.
-                counter.InScope = false;
-            }
-
-            // if verbosity is detailed or diagnostic,
-            // or there was an error or warning
-            if (contextStack.Peek().hasErrorsOrWarnings
-                || (IsVerbosityAtLeast(LoggerVerbosity.Detailed)))
-            {
-                setColor(ConsoleColor.Cyan);
-
-                if (IsVerbosityAtLeast(LoggerVerbosity.Normal))
-                {
-                    WriteNewLine();
-                }
-
-                WriteLinePretty(e.Message);
-
-                resetColor();
-            }
-
-            Frame top = contextStack.Pop();
-
-            this.VerifyStack(top.type == FrameType.Project, "Unexpected project frame {0}", top.ID);
-            this.VerifyStack(top.ID == e.ProjectFile, "Project frame {0} expected, but was {1}.", e.ProjectFile, top.ID);
         }
 
         /// <summary>
@@ -330,31 +243,6 @@ namespace SelectiveConditionEvaluator.Logging
         /// <owner>t-jeffv, sumedhk</owner>
         public override void TargetStartedHandler(object sender, TargetStartedEventArgs e)
         {
-            contextStack.Push(new Frame(FrameType.Target,
-                                        false,
-                                        this.currentIndentLevel,
-                                        e.TargetName,
-                                        null,
-                                        e.TargetFile,
-                                        GetCurrentlyBuildingProjectFile()));
-
-            // if verbosity is detailed or diagnostic
-            if (IsVerbosityAtLeast(LoggerVerbosity.Detailed))
-            {
-                WriteTargetStarted();
-            }
-
-            if (this.showPerfSummary)
-            {
-                PerformanceCounter counter = GetPerformanceCounter(e.TargetName, ref targetPerformanceCounters);
-
-                // Place the counter "in scope" meaning the target is executing right now.
-                counter.InScope = true;
-            }
-
-            // Bump up the overall number of indents, so that anything within this target will show up
-            // indented.
-            this.currentIndentLevel++;
         }
 
         /// <summary>
@@ -365,38 +253,6 @@ namespace SelectiveConditionEvaluator.Logging
         /// <owner>t-jeffv, sumedhk</owner>
         public override void TargetFinishedHandler(object sender, TargetFinishedEventArgs e)
         {
-            // Done with the target, so shift everything left again.
-            this.currentIndentLevel--;
-
-            if (this.showPerfSummary)
-            {
-                PerformanceCounter counter = GetPerformanceCounter(e.TargetName, ref targetPerformanceCounters);
-
-                // Place the counter "in scope" meaning the target is done executing right now.
-                counter.InScope = false;
-            }
-
-            bool targetHasErrorsOrWarnings = contextStack.Peek().hasErrorsOrWarnings;
-
-            // if verbosity is diagnostic,
-            // or there was an error or warning and verbosity is normal or detailed
-            if ((targetHasErrorsOrWarnings && (IsVerbosityAtLeast(LoggerVerbosity.Normal)))
-                  || Verbosity == LoggerVerbosity.Diagnostic)
-            {
-                setColor(ConsoleColor.Cyan);
-                WriteLinePretty(e.Message);
-                resetColor();
-            }
-
-            Frame top = contextStack.Pop();
-            this.VerifyStack(top.type == FrameType.Target, "bad stack frame type");
-            this.VerifyStack(top.ID == e.TargetName, "bad stack frame id");
-
-            // set the value on the Project frame, for the ProjectFinished handler
-            if (targetHasErrorsOrWarnings)
-            {
-                SetErrorsOrWarningsOnCurrentFrame();
-            }
         }
 
         /// <summary>
@@ -407,25 +263,6 @@ namespace SelectiveConditionEvaluator.Logging
         /// <owner>t-jeffv, sumedhk</owner>
         public override void TaskStartedHandler(object sender, TaskStartedEventArgs e)
         {
-            // if verbosity is detailed or diagnostic
-            if (IsVerbosityAtLeast(LoggerVerbosity.Detailed))
-            {
-                setColor(ConsoleColor.Cyan);
-                WriteLinePretty(e.Message);
-                resetColor();
-            }
-
-            if (this.showPerfSummary)
-            {
-                PerformanceCounter counter = GetPerformanceCounter(e.TaskName, ref taskPerformanceCounters);
-
-                // Place the counter "in scope" meaning the task is executing right now.
-                counter.InScope = true;
-            }
-
-            // Bump up the overall number of indents, so that anything within this task will show up
-            // indented.
-            this.currentIndentLevel++;
         }
 
         /// <summary>
@@ -436,24 +273,6 @@ namespace SelectiveConditionEvaluator.Logging
         /// <owner>t-jeffv, sumedhk</owner>
         public override void TaskFinishedHandler(object sender, TaskFinishedEventArgs e)
         {
-            // Done with the task, so shift everything left again.
-            this.currentIndentLevel--;
-
-            if (this.showPerfSummary)
-            {
-                PerformanceCounter counter = GetPerformanceCounter(e.TaskName, ref taskPerformanceCounters);
-
-                // Place the counter "in scope" meaning the task is done executing.
-                counter.InScope = false;
-            }
-
-            // if verbosity is detailed or diagnostic
-            if (IsVerbosityAtLeast(LoggerVerbosity.Detailed))
-            {
-                setColor(ConsoleColor.Cyan);
-                WriteLinePretty(e.Message);
-                resetColor();
-            }
         }
 
         /// <summary>
@@ -560,6 +379,8 @@ namespace SelectiveConditionEvaluator.Logging
                 }
             }
         }
+
+        public override void StatusEventHandler(object sender, BuildStatusEventArgs e) => throw new NotImplementedException();
 
         /// <summary>
         /// Writes project started messages.

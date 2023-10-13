@@ -1,19 +1,22 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-// THE ASSEMBLY BUILT FROM THIS SOURCE FILE HAS BEEN DEPRECATED FOR YEARS. IT IS BUILT ONLY TO PROVIDE
-// BACKWARD COMPATIBILITY FOR API USERS WHO HAVE NOT YET MOVED TO UPDATED APIS. PLEASE DO NOT SEND PULL
-// REQUESTS THAT CHANGE THIS FILE WITHOUT FIRST CHECKING WITH THE MAINTAINERS THAT THE FIX IS REQUIRED.
-
+using System;
 using System.Collections;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
-using Microsoft.Build.BuildEngine;
+using System.Linq;
+using SelectiveConditionEvaluator;
+using SelectiveConditionEvaluator.Logging;
+using SelectiveConditionEvaluator.Logging.ParallelLogger;
 using SelectiveConditionEvaluator.Shared;
-using ResourceUtilities = SelectiveConditionEvaluator.Deprecated.Engine.Shared.ResourceUtilities;
+using ColorResetter = SelectiveConditionEvaluator.Logging.ColorResetter;
+using ColorSetter = SelectiveConditionEvaluator.Logging.ColorSetter;
+using WriteHandler = SelectiveConditionEvaluator.Logging.WriteHandler;
 
-namespace SelectiveConditionEvaluator.Logging.ParallelLogger
+#nullable disable
+
+namespace Microsoft.Build.BackEnd.Logging
 {
     /// <summary>
     /// This class implements the default logger that outputs event data
@@ -22,8 +25,12 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
     /// <remarks>This class is not thread safe.</remarks>
     internal class ParallelConsoleLogger : BaseConsoleLogger
     {
-        #region Constructors
+        /// <summary>
+        /// Associate a (nodeID and project_context_id) to a target framework.
+        /// </summary>
+        internal Dictionary<(int nodeId, int contextId), string> propertyOutputMap = new Dictionary<(int nodeId, int contextId), string>();
 
+        #region Constructors
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -44,8 +51,7 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
                 verbosity,
                 new WriteHandler(Console.Out.Write),
                 new ColorSetter(SetColor),
-                new ColorResetter(Console.ResetColor)
-            )
+                new ColorResetter(ResetColor))
         {
             // do nothing
         }
@@ -53,17 +59,15 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         /// <summary>
         /// Initializes the logger, with alternate output handlers.
         /// </summary>
-        public ParallelConsoleLogger
-        (
+        public ParallelConsoleLogger(
             LoggerVerbosity verbosity,
             WriteHandler write,
             ColorSetter colorSet,
-            ColorResetter colorReset
-        )
+            ColorResetter colorReset)
         {
             InitializeConsoleMethods(verbosity, write, colorSet, colorReset);
-            deferredMessages = new Dictionary<BuildEventContext, List<BuildMessageEventArgs>>(compareContextNodeId);
-            buildEventManager = new BuildEventManager();
+            _deferredMessages = new Dictionary<BuildEventContext, List<BuildMessageEventArgs>>(s_compareContextNodeId);
+            _buildEventManager = new BuildEventManager();
         }
 
         /// <summary>
@@ -71,23 +75,33 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         /// </summary>
         private void CheckIfOutputSupportsAlignment()
         {
-            alignMessages = false;
-            bufferWidth = -1;
+            _alignMessages = false;
+            _bufferWidth = -1;
 
             // If forceNoAlign is set there is no point getting the console width as there will be no aligning of the text
-            if (!forceNoAlign)
+            if (!_forceNoAlign)
             {
                 if (runningWithCharacterFileType)
                 {
                     // Get the size of the console buffer so messages can be formatted to the console width
-                    bufferWidth = Console.BufferWidth;
-                    alignMessages = true;
+                    try
+                    {
+                        _bufferWidth = ConsoleConfiguration.BufferWidth;
+                        _alignMessages = true;
+                    }
+                    catch (Exception)
+                    {
+                        // on Win8 machines while in IDE Console.BufferWidth will throw (while it talks to native console it gets "operation aborted" native error)
+                        // this is probably temporary workaround till we understand what is the reason for that exception
+                        _alignMessages = false;
+                    }
                 }
                 else
                 {
-                    alignMessages = false;
+                    _alignMessages = false;
                 }
             }
+
         }
 
         #endregion
@@ -103,25 +117,42 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
             {
                 return true;
             }
+
             if (String.Equals(parameterName, "SHOWCOMMANDLINE", StringComparison.OrdinalIgnoreCase))
             {
-                showCommandline = true;
+                if (String.IsNullOrEmpty(parameterValue))
+                {
+                    _showCommandLine = true;
+                }
+                else
+                {
+                    try
+                    {
+                        _showCommandLine = ConversionUtilities.ConvertStringToBool(parameterValue);
+                    }
+                    catch (ArgumentException)
+                    {
+                        // For compatibility, if the string is not a boolean, just ignore it
+                        _showCommandLine = false;
+                    }
+                }
+
                 return true;
             }
             else if (String.Equals(parameterName, "SHOWTIMESTAMP", StringComparison.OrdinalIgnoreCase))
             {
-                showTimeStamp = true;
+                _showTimeStamp = true;
                 return true;
             }
             else if (String.Equals(parameterName, "SHOWEVENTID", StringComparison.OrdinalIgnoreCase))
             {
-                showEventId = true;
+                _showEventId = true;
                 return true;
             }
             else if (String.Equals(parameterName, "FORCENOALIGN", StringComparison.OrdinalIgnoreCase))
             {
-                forceNoAlign = true;
-                alignMessages = false;
+                _forceNoAlign = true;
+                _alignMessages = false;
                 return true;
             }
             return false;
@@ -130,9 +161,9 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         public override void Initialize(IEventSource eventSource)
         {
             // If the logger is being used in singleproc do not show EventId after each message unless it is set as part of a console parameter
-            if (numberOfProcessors == 1)
+            if (NumberOfProcessors == 1)
             {
-                showEventId = false;
+                _showEventId = false;
             }
 
             // Parameters are parsed in Initialize
@@ -145,7 +176,7 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         /// </summary>
         private void ShownBuildEventContext(BuildEventContext e)
         {
-            lastDisplayedBuildEventContext = e;
+            _lastDisplayedBuildEventContext = e;
         }
 
         /// <summary>
@@ -154,29 +185,7 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         /// </summary>
         internal override void ResetConsoleLoggerState()
         {
-            if (ShowSummary)
-            {
-                errorList = new ArrayList();
-                warningList = new ArrayList();
-            }
-            else
-            {
-                errorList = null;
-                warningList = null;
-            }
 
-            errorCount = 0;
-            warningCount = 0;
-            projectPerformanceCounters = null;
-            targetPerformanceCounters = null;
-            taskPerformanceCounters = null;
-            hasBuildStarted = false;
-
-            // Reset the two data structures created when the logger was created
-            buildEventManager = new BuildEventManager();
-            deferredMessages = new Dictionary<BuildEventContext, List<BuildMessageEventArgs>>(compareContextNodeId);
-            prefixWidth = 0;
-            lastDisplayedBuildEventContext = null;
         }
 
         /// <summary>
@@ -187,7 +196,7 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         public override void BuildStartedHandler(object sender, BuildStartedEventArgs e)
         {
             buildStarted = e.Timestamp;
-            hasBuildStarted = true;
+            _hasBuildStarted = true;
 
             if (showOnlyErrors || showOnlyWarnings)
             {
@@ -198,6 +207,15 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
             {
                 WriteLinePrettyFromResource("BuildStartedWithTime", e.Timestamp);
             }
+
+            if (Traits.LogAllEnvironmentVariables)
+            {
+                WriteEnvironment(e.BuildEnvironment);
+            }
+            else
+            {
+                WriteEnvironment(e.BuildEnvironment?.Where(kvp => EnvironmentUtilities.IsWellKnownEnvironmentDerivedProperty(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
+            }
         }
 
         /// <summary>
@@ -207,97 +225,90 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         /// <param name="e">event arguments</param>
         public override void BuildFinishedHandler(object sender, BuildFinishedEventArgs e)
         {
-            if (!showOnlyErrors && !showOnlyWarnings)
+            // If for some reason we have deferred messages at the end of the build they should be displayed
+            // so that the reason why they are still buffered can be determined.
+            if (!showOnlyErrors && !showOnlyWarnings && _deferredMessages.Count > 0)
             {
-                // If for some reason we have deferred messages at the end of the build they should be displayed
-                // so that the reason why they are still buffered can be determined
-                if (deferredMessages.Count > 0)
-                {
-                    if (IsVerbosityAtLeast(LoggerVerbosity.Detailed))
-                    {
-                        // Print out all of the deferred messages
-                        WriteLinePrettyFromResource("DeferredMessages");
-                        foreach (List<BuildMessageEventArgs> messageList in deferredMessages.Values)
-                        {
-                            foreach (BuildMessageEventArgs message in messageList)
-                            {
-                                PrintMessage(message, false);
-                            }
-                        }
-                    }
-                    else if (IsVerbosityAtLeast(LoggerVerbosity.Normal))
-                    {
-                        // In normal vervosity we do not want to print out the deferred messages but we do want
-                        // to let the users know that there were deferred messages to be seen
-                        WriteLinePrettyFromResource("DeferredMessagesAvailiable");
-                    }
-                }
-
-                // Show the performance summary iff the verbosity is diagnostic or the user specifically asked for it
-                // with a logger parameter.
-                if (this.showPerfSummary)
-                {
-                    ShowPerfSummary();
-                }
-
-                // if verbosity is normal, detailed or diagnostic
                 if (IsVerbosityAtLeast(LoggerVerbosity.Normal))
                 {
-                    if (e.Succeeded)
+                    // Print out all of the deferred messages
+                    WriteLinePrettyFromResource("DeferredMessages");
+                    foreach (List<BuildMessageEventArgs> messageList in _deferredMessages.Values)
                     {
-                        setColor(ConsoleColor.Green);
+                        foreach (BuildMessageEventArgs message in messageList)
+                        {
+                            PrintMessage(message, false);
+                        }
                     }
-
-                    // Write the "Build Finished" event.
-                    WriteNewLine();
-                    WriteLinePretty(e.Message);
-                    resetColor();
                 }
+            }
 
-                // The decision whether or not to show a summary at this verbosity
-                // was made during initalization. We just do what we're told.
-                if (ShowSummary)
+            // Show the performance summary if the verbosity is diagnostic or the user specifically asked for it
+            // with a logger parameter.
+            if (this.showPerfSummary)
+            {
+                ShowPerfSummary();
+            }
+
+            // Write the "Build Finished" event if verbosity is normal, detailed or diagnostic or the user
+            // specified to show the summary.
+            if (ShowSummary == true)
+            {
+                if (e.Succeeded)
                 {
-                    // We can't display a nice nested summary unless we're at Normal or above,
-                    // since we need to have gotten TargetStarted events, which aren't forwarded otherwise.
-                    if (IsVerbosityAtLeast(LoggerVerbosity.Normal))
-                    {
-                        ShowNestedErrorWarningSummary();
-
-                        // Emit text like:
-                        //     1 Warning(s)
-                        //     0 Error(s)
-                        // Don't color the line if it's zero. (Per Whidbey behavior.)
-                        if (warningCount > 0)
-                        {
-                            setColor(ConsoleColor.Yellow);
-                        }
-                        WriteLinePrettyFromResource(2, "WarningCount", warningCount);
-                        resetColor();
-
-                        if (errorCount > 0)
-                        {
-                            setColor(ConsoleColor.Red);
-                        }
-                        WriteLinePrettyFromResource(2, "ErrorCount", errorCount);
-                        resetColor();
-                    }
-                    else
-                    {
-                        ShowFlatErrorWarningSummary();
-                    }
+                    setColor(ConsoleColor.Green);
                 }
 
-                // if verbosity is normal, detailed or diagnostic
+                // Write the "Build Finished" event.
+                WriteNewLine();
+                WriteLinePretty(e.Message);
+                resetColor();
+            }
+
+            // The decision whether or not to show a summary at this verbosity
+            // was made during initialization. We just do what we're told.
+            if (ShowSummary == true)
+            {
+                // We can't display a nice nested summary unless we're at Normal or above,
+                // since we need to have gotten TargetStarted events, which aren't forwarded otherwise.
                 if (IsVerbosityAtLeast(LoggerVerbosity.Normal))
                 {
-                    // The time elapsed is the difference between when the BuildStartedEventArg
-                    // was created and when the BuildFinishedEventArg was created
-                    string timeElapsed = LogFormatter.FormatTimeSpan(e.Timestamp - buildStarted);
-
-                    WriteNewLine();
-                    WriteLinePrettyFromResource("TimeElapsed", timeElapsed);
+                    ShowNestedErrorWarningSummary();
                 }
+                else
+                {
+                    ShowFlatErrorWarningSummary();
+                }
+
+                // Emit text like:
+                //     1 Warning(s)
+                //     0 Error(s)
+                // Don't color the line if it's zero. (Per Whidbey behavior.)
+                if (warningCount > 0)
+                {
+                    setColor(ConsoleColor.Yellow);
+                }
+                WriteLinePrettyFromResource(2, "WarningCount", warningCount);
+                resetColor();
+
+                if (errorCount > 0)
+                {
+                    setColor(ConsoleColor.Red);
+                }
+                WriteLinePrettyFromResource(2, "ErrorCount", errorCount);
+                resetColor();
+            }
+
+            // Show build time if verbosity is normal, detailed or diagnostic or the user specified to
+            // show the summary.
+            if (ShowSummary == true)
+            {
+                // The time elapsed is the difference between when the BuildStartedEventArg
+                // was created and when the BuildFinishedEventArg was created
+                string timeElapsed = LogFormatter.FormatTimeSpan(e.Timestamp - buildStarted);
+
+                WriteNewLine();
+                WriteLinePrettyFromResource("TimeElapsed", timeElapsed);
             }
 
             ResetConsoleLoggerState();
@@ -333,7 +344,7 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
                 setColor(ConsoleColor.Yellow);
                 foreach (BuildWarningEventArgs warning in warningList)
                 {
-                    WriteMessageAligned(EventArgsFormatting.FormatEventMessage(warning, runningWithCharacterFileType), true);
+                    WriteMessageAligned(EventArgsFormatting.FormatEventMessage(warning, showProjectFile, FindLogOutputProperties(warning)), true);
                 }
             }
 
@@ -342,7 +353,7 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
                 setColor(ConsoleColor.Red);
                 foreach (BuildErrorEventArgs error in errorList)
                 {
-                    WriteMessageAligned(EventArgsFormatting.FormatEventMessage(error, runningWithCharacterFileType), true);
+                    WriteMessageAligned(EventArgsFormatting.FormatEventMessage(error, showProjectFile, FindLogOutputProperties(error)), true);
                 }
             }
 
@@ -356,55 +367,28 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         /// </summary>
         private void ShowNestedErrorWarningSummary()
         {
-            if (warningList.Count == 0 && errorList.Count == 0)
-            {
-                return;
-            }
 
-            // If we're showing only warnings and/or errors, don't summarize.
-            // This is the buildc.err case. There's no point summarizing since we'd just
-            // repeat the entire log content again.
-            if (showOnlyErrors || showOnlyWarnings)
-            {
-                return;
-            }
-
-            if (warningCount > 0)
-            {
-                setColor(ConsoleColor.Yellow);
-                ShowErrorWarningSummary<BuildWarningEventArgs>(warningList);
-            }
-
-            if (errorCount > 0)
-            {
-                setColor(ConsoleColor.Red);
-                ShowErrorWarningSummary<BuildErrorEventArgs>(errorList);
-            }
-
-            resetColor();
         }
 
-        private void ShowErrorWarningSummary<T>(ArrayList listToProcess) where T : BuildEventArgs
+        private void ShowErrorWarningSummary(IEnumerable<BuildEventArgs> listToProcess)
         {
             // Group the build warning event args based on the entry point and the target in which the warning occurred
-            Dictionary<ErrorWarningSummaryDictionaryKey, List<T>> groupByProjectEntryPoint = new Dictionary<ErrorWarningSummaryDictionaryKey, List<T>>();
+            var groupByProjectEntryPoint = new Dictionary<ErrorWarningSummaryDictionaryKey, List<BuildEventArgs>>();
 
             // Loop through each of the warnings and put them into the correct buckets
-            for (int listCount = 0; listCount < listToProcess.Count; listCount++)
+            foreach (BuildEventArgs errorWarningEventArgs in listToProcess)
             {
-                T errorWarningEventArgs = (T)listToProcess[listCount];
-
                 // Target event may be null for a couple of reasons:
                 // 1) If the event was from a project load, or engine
                 // 2) If the flushing of the event queue for each request and result is turned off
                 // as this could cause errors and warnings to be seen by the logger after the target finished event
                 // which would cause the error or warning to have no matching target started event as they are removed
                 // when a target finished event is logged.
-                // 3) On NORMAL verbosity if the error or warning occurres in a project load then the error or warning and the target started event will be forwarded to
+                // 3) On NORMAL verbosity if the error or warning occurs in a project load then the error or warning and the target started event will be forwarded to
                 // different forwarding loggers which cannot communicate to each other, meaning there will be no matching target started event logged
                 // as the forwarding logger did not know to forward the target started event
                 string targetName = null;
-                TargetStartedEventMinimumFields targetEvent = buildEventManager.GetTargetStartedEvent(errorWarningEventArgs.BuildEventContext);
+                TargetStartedEventMinimumFields targetEvent = _buildEventManager.GetTargetStartedEvent(errorWarningEventArgs.BuildEventContext);
 
                 if (targetEvent != null)
                 {
@@ -415,57 +399,57 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
                 ErrorWarningSummaryDictionaryKey key = new ErrorWarningSummaryDictionaryKey(errorWarningEventArgs.BuildEventContext, targetName);
 
                 // Check to see if there is a bucket for the warning
-                if (!groupByProjectEntryPoint.ContainsKey(key))
+                // If there is no bucket create a new one which contains a list of all the errors which
+                // happened for a given buildEventContext / target
+                if (!groupByProjectEntryPoint.TryGetValue(key, out var errorWarningEventListByTarget))
                 {
-                    // If there is no bucket create a new one which contains a list of all the errors which
                     // happened for a given buildEventContext / target
-                    List<T> errorWarningEventListByTarget = new List<T>();
+                    errorWarningEventListByTarget = new List<BuildEventArgs>();
                     groupByProjectEntryPoint.Add(key, errorWarningEventListByTarget);
                 }
-
                 // Add the error event to the correct bucket
-                groupByProjectEntryPoint[key].Add(errorWarningEventArgs);
+                errorWarningEventListByTarget.Add(errorWarningEventArgs);
             }
 
             BuildEventContext previousEntryPoint = null;
             string previousTarget = null;
             // Loop through each of the bucket and print out the stack trace information for the errors
-            foreach (KeyValuePair<ErrorWarningSummaryDictionaryKey, List<T>> valuePair in groupByProjectEntryPoint)
+            foreach (KeyValuePair<ErrorWarningSummaryDictionaryKey, List<BuildEventArgs>> valuePair in groupByProjectEntryPoint)
             {
-                //If the project entrypoint where the error occurred is the same as the previous message do not print the
+                // If the project entry point where the error occurred is the same as the previous message do not print the
                 // stack trace again
                 if (previousEntryPoint != valuePair.Key.EntryPointContext)
                 {
                     WriteNewLine();
-                    foreach (string s in buildEventManager.ProjectCallStackFromProject(valuePair.Key.EntryPointContext))
+                    foreach (string s in _buildEventManager.ProjectCallStackFromProject(valuePair.Key.EntryPointContext))
                     {
                         WriteMessageAligned(s, false);
                     }
                     previousEntryPoint = valuePair.Key.EntryPointContext;
                 }
 
-                //If the target where the error occurred is the same as the previous message do not print the location
+                // If the target where the error occurred is the same as the previous message do not print the location
                 // where the error occurred again
                 if (!String.Equals(previousTarget, valuePair.Key.TargetName, StringComparison.OrdinalIgnoreCase))
                 {
-                    //If no targetName was specified then do not show the target where the error occurred
+                    // If no targetName was specified then do not show the target where the error occurred
                     if (!string.IsNullOrEmpty(valuePair.Key.TargetName))
                     {
-                        WriteMessageAligned(ResourceUtilities.FormatResourceString("ErrorWarningInTarget", valuePair.Key.TargetName), false);
+                        WriteMessageAligned(ResourceUtilities.FormatResourceStringStripCodeAndKeyword("ErrorWarningInTarget", valuePair.Key.TargetName), false);
                     }
                     previousTarget = valuePair.Key.TargetName;
                 }
 
                 // Print out all of the errors under the ProjectEntryPoint / target
-                foreach (T errorWarningEvent in valuePair.Value)
+                foreach (BuildEventArgs errorWarningEvent in valuePair.Value)
                 {
-                    if (errorWarningEvent is BuildErrorEventArgs)
+                    if (errorWarningEvent is BuildErrorEventArgs buildErrorEventArgs)
                     {
-                        WriteMessageAligned("  " + EventArgsFormatting.FormatEventMessage(errorWarningEvent as BuildErrorEventArgs, runningWithCharacterFileType), false);
+                        WriteMessageAligned("  " + EventArgsFormatting.FormatEventMessage(buildErrorEventArgs, showProjectFile, FindLogOutputProperties(errorWarningEvent)), false);
                     }
-                    else if (errorWarningEvent is BuildWarningEventArgs)
+                    else if (errorWarningEvent is BuildWarningEventArgs buildWarningEventArgs)
                     {
-                        WriteMessageAligned("  " + EventArgsFormatting.FormatEventMessage(errorWarningEvent as BuildWarningEventArgs, runningWithCharacterFileType), false);
+                        WriteMessageAligned("  " + EventArgsFormatting.FormatEventMessage(buildWarningEventArgs, showProjectFile, FindLogOutputProperties(errorWarningEvent)), false);
                     }
                 }
                 WriteNewLine();
@@ -479,53 +463,23 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         /// <param name="e">event arguments</param>
         public override void ProjectStartedHandler(object sender, ProjectStartedEventArgs e)
         {
-            ErrorUtilities.VerifyThrowArgumentNull(e.BuildEventContext, "BuildEventContext");
-            ErrorUtilities.VerifyThrowArgumentNull(e.ParentProjectBuildEventContext, "ParentProjectBuildEventContext");
-
-            // Add the project to the BuildManager so we can use the start information later in the build process
-            buildEventManager.AddProjectStartedEvent(e);
-
-            if (this.showPerfSummary)
-            {
-                // Create a new project performance counter for this project
-                MPPerformanceCounter counter = GetPerformanceCounter(e.ProjectFile, ref projectPerformanceCounters);
-                counter.AddEventStarted(e.TargetNames, e.BuildEventContext, e.Timestamp, compareContextNodeId);
-            }
-
-            // If there were deferred messages then we should show them now, this will cause the project started event to be shown properly
-            if (deferredMessages.ContainsKey(e.BuildEventContext))
-            {
-                if (!showOnlyErrors && !showOnlyWarnings)
-                {
-                    foreach (BuildMessageEventArgs message in deferredMessages[e.BuildEventContext])
-                    {
-                        // This will display the project started event before the messages is shown
-                        this.MessageHandler(sender, message);
-                    }
-                }
-                deferredMessages.Remove(e.BuildEventContext);
-            }
-
-            //If we are in diagnostic and are going to show items, show the project started event
-            // along with the items. The project started event will only be shown if it has not been shown before
-            if (Verbosity == LoggerVerbosity.Diagnostic && showItemAndPropertyList)
-            {
-                //Show the deferredProjectStartedEvent
-                if (!showOnlyErrors && !showOnlyWarnings)
-                {
-                    DisplayDeferredProjectStartedEvent(e.BuildEventContext);
-                }
-                if (e.Properties != null)
-                {
-                    WriteProperties(e, e.Properties);
-                }
-
-                if (e.Items != null)
-                {
-                    WriteItems(e, e.Items);
-                }
-            }
         }
+
+        private string ReadProjectConfigurationDescription(IEnumerable items)
+        {
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// In case the items are stored on ProjectEvaluationFinishedEventArgs
+        /// (new behavior), we first store the value per evaluation, and then
+        /// in ProjectStarted, find the value from the project's evaluation
+        /// and use that.
+        /// </summary>
+        private (int, int) GetEvaluationKey(BuildEventContext buildEventContext)
+            // note that we use a negative number for evaluations so that we don't conflict
+            // with project context ids.
+            => (buildEventContext.NodeId, -buildEventContext.EvaluationId);
 
         /// <summary>
         /// Handler for project finished events
@@ -534,76 +488,6 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         /// <param name="e">event arguments</param>
         public override void ProjectFinishedHandler(object sender, ProjectFinishedEventArgs e)
         {
-            ErrorUtilities.VerifyThrowArgumentNull(e.BuildEventContext, "BuildEventContext");
-
-
-            //Get the project started event so we can use its information to properly display a project finished event
-            ProjectStartedEventMinimumFields startedEvent = buildEventManager.GetProjectStartedEvent(e.BuildEventContext);
-            ErrorUtilities.VerifyThrow(startedEvent != null, "Started event should not be null in the finished event handler");
-
-            if (this.showPerfSummary)
-            {
-                // Stop the performance counter which was created in the project started event handler
-                MPPerformanceCounter counter = GetPerformanceCounter(e.ProjectFile, ref projectPerformanceCounters);
-                counter.AddEventFinished(startedEvent.TargetNames, e.BuildEventContext, e.Timestamp);
-            }
-
-            if (IsVerbosityAtLeast(LoggerVerbosity.Normal))
-            {
-                // Only want to show the project finished event if a project started event has been shown
-                if (startedEvent.ShowProjectFinishedEvent)
-                {
-                    lastProjectFullKey = GetFullProjectKey(e.BuildEventContext);
-
-                    if (!showOnlyErrors && !showOnlyWarnings)
-                    {
-                        WriteLinePrefix(e.BuildEventContext, e.Timestamp, false);
-                        setColor(ConsoleColor.Cyan);
-
-                        // In the project finished message the targets which were built and the project which was built
-                        // should be shown
-                        string targets = startedEvent.TargetNames;
-                        string projectName = startedEvent.ProjectFile ?? string.Empty;
-
-                        // Show which targets were built as part of this project
-                        if (string.IsNullOrEmpty(targets))
-                        {
-                            if (e.Succeeded)
-                            {
-                                WriteMessageAligned(ResourceUtilities.FormatResourceString("ProjectFinishedPrefixWithDefaultTargetsMultiProc", projectName), true);
-                            }
-                            else
-                            {
-                                WriteMessageAligned(ResourceUtilities.FormatResourceString("ProjectFinishedPrefixWithDefaultTargetsMultiProcFailed", projectName), true);
-                            }
-                        }
-                        else
-                        {
-                            if (e.Succeeded)
-                            {
-                                WriteMessageAligned(ResourceUtilities.FormatResourceString("ProjectFinishedPrefixWithTargetNamesMultiProc", projectName, targets), true);
-                            }
-                            else
-                            {
-                                WriteMessageAligned(ResourceUtilities.FormatResourceString("ProjectFinishedPrefixWithTargetNamesMultiProcFailed", projectName, targets), true);
-                            }
-                        }
-
-                        // In single proc only make a space between the project done event and the next line, this
-                        // is to increase the readability on the single proc log when there are a number of done events
-                        // or a mix of done events and project started events. Also only do this on the console and not any log file.
-                        if (numberOfProcessors == 1 && runningWithCharacterFileType)
-                        {
-                            WriteNewLine();
-                        }
-                    }
-
-                    ShownBuildEventContext(e.BuildEventContext);
-                    resetColor();
-                }
-            }
-            // We are done with the project started event if the project has finished building, remove its reference
-            buildEventManager.RemoveProjectStartedEvent(e.BuildEventContext);
         }
 
         /// <summary>
@@ -612,6 +496,7 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         /// property values, using the cached reference to the list from the
         /// appropriate ProjectStarted event.
         /// </summary>
+        /// <param name="e">A <see cref="BuildEventArgs"/> object containing information about the build event.</param>
         /// <param name="properties">List of properties</param>
         internal void WriteProperties(BuildEventArgs e, IEnumerable properties)
         {
@@ -620,7 +505,7 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
                 return;
             }
 
-            ArrayList propertyList = ExtractPropertyList(properties);
+            var propertyList = ExtractPropertyList(properties);
 
             // if there are no properties to display return out of the method and dont print out anything related to displaying
             // the properties, this includes the multiproc prefix information or the Initial properties header
@@ -634,26 +519,51 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
             ShownBuildEventContext(e.BuildEventContext);
         }
 
-        internal override void OutputProperties(ArrayList list)
+        internal override void OutputProperties(List<DictionaryEntry> list)
         {
             // Write the banner
             setColor(ConsoleColor.Green);
-            WriteMessageAligned(ResourceUtilities.FormatResourceString("PropertyListHeader"), true);
+            WriteMessageAligned(ResourceUtilities.GetResourceString("PropertyListHeader"), true);
             // Write each property name and its value, one per line
             foreach (DictionaryEntry prop in list)
             {
                 setColor(ConsoleColor.Gray);
-                string propertyString = String.Format(CultureInfo.CurrentCulture, "{0} = {1}", prop.Key, (string)(prop.Value));
+                string propertyString = String.Format(CultureInfo.CurrentCulture, "{0} = {1}", prop.Key, EscapingUtilities.UnescapeAll((string)(prop.Value)));
                 WriteMessageAligned(propertyString, false);
             }
             resetColor();
         }
+
+        /// <summary>
+        ///  Write the environment strings to the console.
+        /// </summary>
+        internal override void OutputEnvironment(IDictionary<string, string> environment)
+        {
+            // Write the banner
+            setColor(ConsoleColor.Green);
+            WriteMessageAligned(ResourceUtilities.GetResourceString("EnvironmentHeader"), true);
+
+            if (environment != null)
+            {
+                // Write each property name and its value, one per line
+                foreach (KeyValuePair<string, string> entry in environment)
+                {
+                    setColor(ConsoleColor.Gray);
+                    string environmentMessage = String.Format(CultureInfo.CurrentCulture, "{0} = {1}", entry.Key, entry.Value);
+                    WriteMessageAligned(environmentMessage, false);
+                }
+            }
+
+            resetColor();
+        }
+
         /// <summary>
         /// Writes out the list of item specs and their metadata.
         /// This could be done at any time during the build to show the latest
         /// items, using the cached reference to the list from the
         /// appropriate ProjectStarted event.
         /// </summary>
+        /// <param name="e">A <see cref="BuildEventArgs"/> object containing information about the build event.</param>
         /// <param name="items">List of items</param>
         internal void WriteItems(BuildEventArgs e, IEnumerable items)
         {
@@ -664,7 +574,7 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
 
             SortedList itemList = ExtractItemList(items);
 
-            // if there are no Items to display return out of the method and dont print out anything related to displaying
+            // If there are no Items to display return out of the method and don't print out anything related to displaying
             // the items, this includes the multiproc prefix information or the Initial items header
             if (itemList.Count == 0)
             {
@@ -675,29 +585,23 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
             ShownBuildEventContext(e.BuildEventContext);
         }
 
-        internal override void OutputItems(string itemType, ArrayList itemTypeList)
+        protected override void WriteItemType(string itemType)
         {
-            // Write each item, one per line
-            bool haveWrittenItemType = false;
-            foreach (ITaskItem item in itemTypeList)
-            {
-                string itemString = null;
-                if (!haveWrittenItemType)
-                {
-                    itemString = itemType;
-                    setColor(ConsoleColor.DarkGray);
-                    WriteMessageAligned(itemType, false);
-                    haveWrittenItemType = true;
-                }
-                setColor(ConsoleColor.Gray);
-
-                // Indent the text by two tab lengths
-                StringBuilder result = new StringBuilder();
-                result.Append(' ', 2 * tabWidth).Append(item.ItemSpec);
-                WriteMessageAligned(result.ToString(), false);
-            }
-            resetColor();
+            setColor(ConsoleColor.DarkGray);
+            WriteMessageAligned(itemType, prefixAlreadyWritten: false);
+            setColor(ConsoleColor.Gray);
         }
+
+        protected override void WriteItemSpec(string itemSpec)
+        {
+            WriteMessageAligned(new string(' ', 2 * tabWidth) + itemSpec, prefixAlreadyWritten: false);
+        }
+
+        protected override void WriteMetadata(string name, string value)
+        {
+            WriteMessageAligned($"{new string(' ', 4 * tabWidth)}{name} = {value}", prefixAlreadyWritten: false);
+        }
+
         /// <summary>
         /// Handler for target started events
         /// </summary>
@@ -705,18 +609,6 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         /// <param name="e">event arguments</param>
         public override void TargetStartedHandler(object sender, TargetStartedEventArgs e)
         {
-            ErrorUtilities.VerifyThrowArgumentNull(e.BuildEventContext, "BuildEventContext");
-
-            // Add the target started information to the buildEventManager so its information can be used
-            // later in the build
-            buildEventManager.AddTargetStartedEvent(e);
-
-            if (this.showPerfSummary)
-            {
-                // Create a new performance counter for this target
-                MPPerformanceCounter counter = GetPerformanceCounter(e.TargetName, ref targetPerformanceCounters);
-                counter.AddEventStarted(null, e.BuildEventContext, e.Timestamp, compareContextNodeIdTargetId);
-            }
         }
 
         /// <summary>
@@ -726,44 +618,6 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         /// <param name="e">event arguments</param>
         public override void TargetFinishedHandler(object sender, TargetFinishedEventArgs e)
         {
-            ErrorUtilities.VerifyThrowArgumentNull(e.BuildEventContext, "BuildEventContext");
-
-            if (this.showPerfSummary)
-            {
-                // Stop the performance counter started in the targetStartedEventHandler
-                MPPerformanceCounter counter = GetPerformanceCounter(e.TargetName, ref targetPerformanceCounters);
-                counter.AddEventFinished(null, e.BuildEventContext, e.Timestamp);
-            }
-
-            if (IsVerbosityAtLeast(LoggerVerbosity.Detailed))
-            {
-                // Get the target started event so we can determine whether or not to show the targetFinishedEvent
-                // as we only want to show target finished events if a target started event has been shown
-                TargetStartedEventMinimumFields startedEvent = buildEventManager.GetTargetStartedEvent(e.BuildEventContext);
-                ErrorUtilities.VerifyThrow(startedEvent != null, "Started event should not be null in the finished event handler");
-                if (startedEvent.ShowTargetFinishedEvent)
-                {
-                    if (!showOnlyErrors && !showOnlyWarnings)
-                    {
-                        lastProjectFullKey = GetFullProjectKey(e.BuildEventContext);
-                        WriteLinePrefix(e.BuildEventContext, e.Timestamp, false);
-                        setColor(ConsoleColor.Cyan);
-                        if (IsVerbosityAtLeast(LoggerVerbosity.Diagnostic) || showEventId)
-                        {
-                            WriteMessageAligned(ResourceUtilities.FormatResourceString("TargetMessageWithId", e.Message, e.BuildEventContext.TargetId), true);
-                        }
-                        else
-                        {
-                            WriteMessageAligned(e.Message, true);
-                        }
-                        resetColor();
-                    }
-                    ShownBuildEventContext(e.BuildEventContext);
-                }
-            }
-
-            //We no longer need this target started event, it can be removed
-            buildEventManager.RemoveTargetStartedEvent(e.BuildEventContext);
         }
 
         /// <summary>
@@ -773,38 +627,6 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         /// <param name="e">event arguments</param>
         public override void TaskStartedHandler(object sender, TaskStartedEventArgs e)
         {
-            ErrorUtilities.VerifyThrowArgumentNull(e.BuildEventContext, "BuildEventContext");
-
-            // if verbosity is detailed or diagnostic
-
-            if (IsVerbosityAtLeast(LoggerVerbosity.Detailed))
-            {
-                DisplayDeferredStartedEvents(e.BuildEventContext);
-
-                if (!showOnlyErrors && !showOnlyWarnings)
-                {
-                    bool prefixAlreadyWritten = WriteTargetMessagePrefix(e, e.BuildEventContext, e.Timestamp);
-                    setColor(ConsoleColor.DarkCyan);
-                    if (IsVerbosityAtLeast(LoggerVerbosity.Diagnostic) || showEventId)
-                    {
-                        WriteMessageAligned(ResourceUtilities.FormatResourceString("TaskMessageWithId", e.Message, e.BuildEventContext.TaskId), prefixAlreadyWritten);
-                    }
-                    else
-                    {
-                        WriteMessageAligned(e.Message, prefixAlreadyWritten);
-                    }
-                    resetColor();
-                }
-
-                ShownBuildEventContext(e.BuildEventContext);
-            }
-
-            if (this.showPerfSummary)
-            {
-                // Create a new performance counter for this task
-                MPPerformanceCounter counter = GetPerformanceCounter(e.TaskName, ref taskPerformanceCounters);
-                counter.AddEventStarted(null, e.BuildEventContext, e.Timestamp, null);
-            }
         }
 
         /// <summary>
@@ -814,33 +636,22 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         /// <param name="e">event arguments</param>
         public override void TaskFinishedHandler(object sender, TaskFinishedEventArgs e)
         {
-            ErrorUtilities.VerifyThrowArgumentNull(e.BuildEventContext, "BuildEventContext");
-            if (this.showPerfSummary)
+        }
+
+        /// <summary>
+        /// Finds the LogOutProperty string to be printed in messages.
+        /// </summary>
+        /// <param name="e">Build event to extract context information from.</param>
+        internal string FindLogOutputProperties(BuildEventArgs e)
+        {
+            string projectConfigurationDescription = String.Empty;
+            if (e.BuildEventContext != null)
             {
-                // Stop the task performance counter which was started in the task started event
-                MPPerformanceCounter counter = GetPerformanceCounter(e.TaskName, ref taskPerformanceCounters);
-                counter.AddEventFinished(null, e.BuildEventContext, e.Timestamp);
+                var key = (e.BuildEventContext.NodeId, e.BuildEventContext.ProjectContextId);
+                propertyOutputMap.TryGetValue(key, out projectConfigurationDescription);
             }
 
-            // if verbosity is detailed or diagnostic
-            if (IsVerbosityAtLeast(LoggerVerbosity.Detailed))
-            {
-                if (!showOnlyErrors && !showOnlyWarnings)
-                {
-                    bool prefixAlreadyWritten = WriteTargetMessagePrefix(e, e.BuildEventContext, e.Timestamp);
-                    setColor(ConsoleColor.DarkCyan);
-                    if (IsVerbosityAtLeast(LoggerVerbosity.Diagnostic) || showEventId)
-                    {
-                        WriteMessageAligned(ResourceUtilities.FormatResourceString("TaskMessageWithId", e.Message, e.BuildEventContext.TaskId), prefixAlreadyWritten);
-                    }
-                    else
-                    {
-                        WriteMessageAligned(e.Message, prefixAlreadyWritten);
-                    }
-                    resetColor();
-                }
-                ShownBuildEventContext(e.BuildEventContext);
-            }
+            return projectConfigurationDescription;
         }
 
         /// <summary>
@@ -849,16 +660,16 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         public override void ErrorHandler(object sender, BuildErrorEventArgs e)
         {
             ErrorUtilities.VerifyThrowArgumentNull(e.BuildEventContext, "BuildEventContext");
-            // Keep track of the number of error events raisd
+            // Keep track of the number of error events raised
             errorCount++;
 
             // If there is an error we need to walk up the call stack and make sure that
             // the project started events back to the root project know an error has occurred
             // and are not removed when they finish
-            buildEventManager.SetErrorWarningFlagOnCallStack(e.BuildEventContext);
+            _buildEventManager.SetErrorWarningFlagOnCallStack(e.BuildEventContext);
 
-            TargetStartedEventMinimumFields targetStartedEvent = buildEventManager.GetTargetStartedEvent(e.BuildEventContext);
-            // Can be null if the error occurred outside of a target, or the error occurres before the targetStartedEvent
+            TargetStartedEventMinimumFields targetStartedEvent = _buildEventManager.GetTargetStartedEvent(e.BuildEventContext);
+            // Can be null if the error occurred outside of a target, or the error occurred before the targetStartedEvent
             if (targetStartedEvent != null)
             {
                 targetStartedEvent.ErrorInTarget = true;
@@ -876,9 +687,9 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
                 }
 
                 setColor(ConsoleColor.Red);
-                WriteMessageAligned(EventArgsFormatting.FormatEventMessage(e, runningWithCharacterFileType), true);
+                WriteMessageAligned(EventArgsFormatting.FormatEventMessage(e, showProjectFile, FindLogOutputProperties(e)), true);
                 ShownBuildEventContext(e.BuildEventContext);
-                if (ShowSummary)
+                if (ShowSummary == true)
                 {
                     if (!errorList.Contains(e))
                     {
@@ -899,12 +710,12 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
             warningCount++;
 
             // If there is a warning we need to walk up the call stack and make sure that
-            // the project started events back to the root project know a warning has ocured
+            // the project started events back to the root project know a warning has occurred
             // and are not removed when they finish
-            buildEventManager.SetErrorWarningFlagOnCallStack(e.BuildEventContext);
-            TargetStartedEventMinimumFields targetStartedEvent = buildEventManager.GetTargetStartedEvent(e.BuildEventContext);
+            _buildEventManager.SetErrorWarningFlagOnCallStack(e.BuildEventContext);
+            TargetStartedEventMinimumFields targetStartedEvent = _buildEventManager.GetTargetStartedEvent(e.BuildEventContext);
 
-            // Can be null if the error occurred outside of a target, or the error occurres before the targetStartedEvent
+            // Can be null if the error occurred outside of a target, or the error occurs before the targetStartedEvent
             if (targetStartedEvent != null)
             {
                 targetStartedEvent.ErrorInTarget = true;
@@ -922,12 +733,12 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
                 }
 
                 setColor(ConsoleColor.Yellow);
-                WriteMessageAligned(EventArgsFormatting.FormatEventMessage(e, runningWithCharacterFileType), true);
+                WriteMessageAligned(EventArgsFormatting.FormatEventMessage(e, showProjectFile, FindLogOutputProperties(e)), true);
             }
 
             ShownBuildEventContext(e.BuildEventContext);
 
-            if (ShowSummary)
+            if (ShowSummary == true)
             {
                 if (!warningList.Contains(e))
                 {
@@ -947,13 +758,18 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
                 return;
             }
 
+            if (e.BuildEventContext == null && e is AssemblyLoadBuildEventArgs)
+            {
+                return;
+            }
+
             ErrorUtilities.VerifyThrowArgumentNull(e.BuildEventContext, "BuildEventContext");
             bool print = false;
             bool lightenText = false;
 
             if (e is TaskCommandLineEventArgs)
             {
-                if (!showCommandline && verbosity < LoggerVerbosity.Detailed)
+                if ((_showCommandLine.HasValue && !_showCommandLine.Value) || (!_showCommandLine.HasValue && !IsVerbosityAtLeast(LoggerVerbosity.Normal)))
                 {
                     return;
                 }
@@ -961,23 +777,8 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
             }
             else
             {
-                switch (e.Importance)
-                {
-                    case MessageImportance.High:
-                        print = IsVerbosityAtLeast(LoggerVerbosity.Minimal);
-                        break;
-                    case MessageImportance.Normal:
-                        print = IsVerbosityAtLeast(LoggerVerbosity.Normal);
-                        lightenText = true;
-                        break;
-                    case MessageImportance.Low:
-                        print = IsVerbosityAtLeast(LoggerVerbosity.Detailed);
-                        lightenText = true;
-                        break;
-                    default:
-                        ErrorUtilities.VerifyThrow(false, "Impossible");
-                        break;
-                }
+                LoggerVerbosity minimumVerbosity = ImportanceToMinimumVerbosity(e.Importance, out lightenText);
+                print = IsVerbosityAtLeast(minimumVerbosity);
             }
 
             if (print)
@@ -985,21 +786,15 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
                 // If the event has a valid Project contextId but the project started event has not been fired, the message needs to be
                 // buffered until the project started event is fired
                 if (
-                       hasBuildStarted
+                       _hasBuildStarted
                        && e.BuildEventContext.ProjectContextId != BuildEventContext.InvalidProjectContextId
-                       && buildEventManager.GetProjectStartedEvent(e.BuildEventContext) == null
-                       && IsVerbosityAtLeast(LoggerVerbosity.Normal)
-                    )
+                       && _buildEventManager.GetProjectStartedEvent(e.BuildEventContext) == null
+                       && IsVerbosityAtLeast(LoggerVerbosity.Normal))
                 {
-                    List<BuildMessageEventArgs> messageList;
-                    if (deferredMessages.ContainsKey(e.BuildEventContext))
-                    {
-                        messageList = deferredMessages[e.BuildEventContext];
-                    }
-                    else
+                    if (!_deferredMessages.TryGetValue(e.BuildEventContext, out List<BuildMessageEventArgs> messageList))
                     {
                         messageList = new List<BuildMessageEventArgs>();
-                        deferredMessages.Add(e.BuildEventContext, messageList);
+                        _deferredMessages.Add(e.BuildEventContext, messageList);
                     }
                     messageList.Add(e);
                     return;
@@ -1011,6 +806,10 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
                 PrintMessage(e, lightenText);
                 ShownBuildEventContext(e.BuildEventContext);
             }
+        }
+
+        public override void StatusEventHandler(object sender, BuildStatusEventArgs e)
+        {
         }
 
         private void DisplayDeferredStartedEvents(BuildEventContext e)
@@ -1040,10 +839,28 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         /// </summary>
         private void PrintMessage(BuildMessageEventArgs e, bool lightenText)
         {
-            string nonNullMessage = e.Message ?? String.Empty;
+            string nonNullMessage = null;
+
+            if (e is EnvironmentVariableReadEventArgs environmentPropertyReadEventArgs)
+            {
+                nonNullMessage = ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword("EnvironmentDerivedPropertyRead", environmentPropertyReadEventArgs.EnvironmentVariableName, e.Message);
+            }
+
+            // Include file information if present.
+            if (e.File != null)
+            {
+                nonNullMessage = EventArgsFormatting.FormatEventMessage(e, showProjectFile, FindLogOutputProperties(e), nonNullMessage);
+            }
+            else
+            {
+                nonNullMessage ??= e.Message ?? string.Empty;
+            }
+
             int prefixAdjustment = 0;
 
-            if (e.BuildEventContext.TaskId != BuildEventContext.InvalidTaskId)
+            // Do not include prefixAdjustment if TaskId is invalid or file information is present.
+            // We want messages with file information to appear aligned with warning and error messages.
+            if (e.BuildEventContext.TaskId != BuildEventContext.InvalidTaskId && e.File == null)
             {
                 prefixAdjustment = 2;
             }
@@ -1056,15 +873,15 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
             PrintTargetNamePerMessage(e, lightenText);
 
             // On diagnostic or if showEventId is set the task message should also display the taskId to assist debugging
-            if ((IsVerbosityAtLeast(LoggerVerbosity.Diagnostic) || showEventId) && e.BuildEventContext.TaskId != BuildEventContext.InvalidTaskId)
+            if ((IsVerbosityAtLeast(LoggerVerbosity.Diagnostic) || _showEventId) && e.BuildEventContext.TaskId != BuildEventContext.InvalidTaskId)
             {
                 bool prefixAlreadyWritten = WriteTargetMessagePrefix(e, e.BuildEventContext, e.Timestamp);
-                WriteMessageAligned(ResourceUtilities.FormatResourceString("TaskMessageWithId", nonNullMessage, e.BuildEventContext.TaskId), prefixAlreadyWritten, prefixAdjustment);
+                WriteMessageAligned(ResourceUtilities.FormatResourceStringStripCodeAndKeyword("TaskMessageWithId", nonNullMessage, e.BuildEventContext.TaskId), prefixAlreadyWritten, prefixAdjustment);
             }
             else
             {
-                //A time stamp may be shown on verbosities lower than diagnostic
-                if (showTimeStamp || IsVerbosityAtLeast(LoggerVerbosity.Detailed))
+                // A time stamp may be shown on verbosities lower than diagnostic
+                if (_showTimeStamp || IsVerbosityAtLeast(LoggerVerbosity.Detailed))
                 {
                     bool prefixAlreadyWritten = WriteTargetMessagePrefix(e, e.BuildEventContext, e.Timestamp);
                     WriteMessageAligned(nonNullMessage, prefixAlreadyWritten, prefixAdjustment);
@@ -1083,55 +900,54 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
 
         private void PrintTargetNamePerMessage(BuildMessageEventArgs e, bool lightenText)
         {
-            // Event Context of the current message
-            BuildEventContext currentBuildEventContext = e.BuildEventContext;
-
-            // Should the target name be written before the message
-            bool writeTargetName = false;
-            string targetName = string.Empty;
-
-            // Does the context (Project, Node, Context, Target, NOT task) of the previous event match the current message
-            bool contextAreEqual = compareContextNodeIdTargetId.Equals(currentBuildEventContext, lastDisplayedBuildEventContext ?? null);
-
-            TargetStartedEventMinimumFields targetStartedEvent = null;
-            // If the previous event does not have the same target context information, the target name needs to be printed to the console
-            // to give the message some more contextual information
-            if (!contextAreEqual)
+            if (IsVerbosityAtLeast(LoggerVerbosity.Normal))
             {
-                targetStartedEvent = buildEventManager.GetTargetStartedEvent(currentBuildEventContext);
-                // Some messages such as engine messages will not have a target started event, in their case, dont print the targetName
-                if (targetStartedEvent != null)
-                {
-                    targetName = targetStartedEvent.TargetName;
-                    writeTargetName = true;
-                }
-            }
-            else
-            {
-                writeTargetName = false;
-            }
+                // Event Context of the current message
+                BuildEventContext currentBuildEventContext = e.BuildEventContext;
 
-            if (writeTargetName)
-            {
-                bool prefixAlreadyWritten = WriteTargetMessagePrefix(e, targetStartedEvent.ProjectBuildEventContext, targetStartedEvent.TimeStamp);
+                // Should the target name be written before the message
+                bool writeTargetName = false;
+                string targetName = string.Empty;
 
-                setColor(ConsoleColor.Cyan);
-                if (IsVerbosityAtLeast(LoggerVerbosity.Diagnostic) || showEventId)
+                // Does the context (Project, Node, Context, Target, NOT task) of the previous event match the current message
+                bool contextAreEqual = s_compareContextNodeIdTargetId.Equals(currentBuildEventContext, _lastDisplayedBuildEventContext);
+
+                TargetStartedEventMinimumFields targetStartedEvent = null;
+                // If the previous event does not have the same target context information, the target name needs to be printed to the console
+                // to give the message some more contextual information
+                if (!contextAreEqual)
                 {
-                    WriteMessageAligned(ResourceUtilities.FormatResourceString("TargetMessageWithId", targetName, e.BuildEventContext.TargetId), prefixAlreadyWritten);
-                }
-                else
-                {
-                    WriteMessageAligned(targetName + ":", prefixAlreadyWritten);
+                    targetStartedEvent = _buildEventManager.GetTargetStartedEvent(currentBuildEventContext);
+                    // Some messages such as engine messages will not have a target started event, in their case, dont print the targetName
+                    if (targetStartedEvent != null)
+                    {
+                        targetName = targetStartedEvent.TargetName;
+                        writeTargetName = true;
+                    }
                 }
 
-                if (lightenText)
+                if (writeTargetName)
                 {
-                    setColor(ConsoleColor.DarkGray);
-                }
-                else
-                {
-                    resetColor();
+                    bool prefixAlreadyWritten = WriteTargetMessagePrefix(e, targetStartedEvent.ProjectBuildEventContext, targetStartedEvent.TimeStamp);
+
+                    setColor(ConsoleColor.Cyan);
+                    if (IsVerbosityAtLeast(LoggerVerbosity.Diagnostic) || _showEventId)
+                    {
+                        WriteMessageAligned(ResourceUtilities.FormatResourceStringStripCodeAndKeyword("TargetMessageWithId", targetName, e.BuildEventContext.TargetId), prefixAlreadyWritten);
+                    }
+                    else
+                    {
+                        WriteMessageAligned(targetName + ":", prefixAlreadyWritten);
+                    }
+
+                    if (lightenText)
+                    {
+                        setColor(ConsoleColor.DarkGray);
+                    }
+                    else
+                    {
+                        resetColor();
+                    }
                 }
             }
         }
@@ -1140,11 +956,11 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         {
             bool prefixAlreadyWritten = true;
             ProjectFullKey currentProjectFullKey = GetFullProjectKey(e.BuildEventContext);
-            if (!lastProjectFullKey.Equals(currentProjectFullKey))
+            if (!_lastProjectFullKey.Equals(currentProjectFullKey))
             {
                 // Write the prefix information about the target for the message
                 WriteLinePrefix(context, timeStamp, false);
-                lastProjectFullKey = currentProjectFullKey;
+                _lastProjectFullKey = currentProjectFullKey;
             }
             else
             {
@@ -1168,69 +984,24 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         /// </summary>
         /// <param name="message">Message to be formatted to fit on the console</param>
         /// <param name="prefixAlreadyWritten">Has the prefix(timestamp or key been written)</param>
+        /// <param name="prefixAdjustment">An amount to adjust the prefix by.</param>
         private void WriteMessageAligned(string message, bool prefixAlreadyWritten, int prefixAdjustment)
         {
-            // This method may require the splitting of lines inorder to format them to the console, this must be an atomic operation
-            lock (lockObject)
-            {
-                int adjustedPrefixWidth = prefixWidth + prefixAdjustment;
-
-                // The string may contain new lines, treat each new line as a different string to format and send to the console
-                string[] nonNullMessages = SplitStringOnNewLines(message);
-                for (int i = 0; i < nonNullMessages.Length; i++)
-                {
-                    string nonNullMessage = nonNullMessages[i];
-                    // Take into account the new line char which will be added to the end or each reformatted string
-                    int bufferWidthMinusNewLine = bufferWidth - 1;
-
-                    // If the buffer is larger then the prefix information (timestamp and key) then reformat the messages.
-                    // If there is not enough room just print the message out and let the console do the formatting
-                    bool bufferIsLargerThanPrefix = bufferWidthMinusNewLine > adjustedPrefixWidth;
-                    bool messageAndPrefixTooLargeForBuffer = (nonNullMessage.Length + adjustedPrefixWidth) > bufferWidthMinusNewLine;
-                    if (bufferIsLargerThanPrefix && messageAndPrefixTooLargeForBuffer && alignMessages)
-                    {
-                        // Our message may have embedded tab characters, so expand those to their space
-                        // equivalent so that wrapping works as expected.
-                        nonNullMessage = nonNullMessage.Replace("\t", consoleTab);
-
-                        // If the message and the prefix are too large for one line in the console, split the string to fit
-                        int index = 0;
-                        int messageLength = nonNullMessage.Length;
-                        int amountToCopy = 0;
-                        // Loop until all the string has been sent to the console
-                        while (index < messageLength)
-                        {
-                            // Calculate how many chars will fit on the console buffer
-                            amountToCopy = (messageLength - index) < (bufferWidthMinusNewLine - adjustedPrefixWidth) ? (messageLength - index) : (bufferWidthMinusNewLine - adjustedPrefixWidth);
-                            WriteBasedOnPrefix(nonNullMessage.Substring(index, amountToCopy), prefixAlreadyWritten && index == 0 && i == 0, adjustedPrefixWidth);
-                            index += amountToCopy;
-                        }
-                    }
-                    else
-                    {
-                        //there is not enough room just print the message out and let the console do the formatting
-                        WriteBasedOnPrefix(nonNullMessage, prefixAlreadyWritten, adjustedPrefixWidth);
-                    }
-                }
-            }
         }
 
         /// <summary>
-        /// Write message takinginto account whether or not the prefix (timestamp and key) have already been written on the line
+        /// Write message taking into account whether or not the prefix (timestamp and key) have already been written on the line
         /// </summary>
-        /// <param name="nonNullMessage"></param>
-        /// <param name="prefixAlreadyWritten"></param>
         private void WriteBasedOnPrefix(string nonNullMessage, bool prefixAlreadyWritten, int adjustedPrefixWidth)
         {
             if (prefixAlreadyWritten)
             {
-                write(nonNullMessage);
-                WriteNewLine();
+                WriteHandler(nonNullMessage + Environment.NewLine);
             }
             else
             {
                 // No prefix info has been written, indent the line to the proper location
-                write(IndentString(nonNullMessage, adjustedPrefixWidth));
+                WriteHandler(IndentString(nonNullMessage, adjustedPrefixWidth));
             }
         }
 
@@ -1239,53 +1010,6 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         /// </summary>
         private void DisplayDeferredTargetStartedEvent(BuildEventContext e)
         {
-            if (showOnlyErrors || showOnlyWarnings)
-            {
-                return;
-            }
-
-            // Get the deferred target started event
-            TargetStartedEventMinimumFields targetStartedEvent = buildEventManager.GetTargetStartedEvent(e);
-
-            //Make sure we have not shown the event before
-            if (targetStartedEvent?.ShowTargetFinishedEvent == false)
-            {
-                //Since the target started event has been shows, the target finished event should also be shown
-                targetStartedEvent.ShowTargetFinishedEvent = true;
-
-                // If there are any other started events waiting and we are the first message, show them
-                DisplayDeferredStartedEvents(targetStartedEvent.ProjectBuildEventContext);
-
-                WriteLinePrefix(targetStartedEvent.ProjectBuildEventContext, targetStartedEvent.TimeStamp, false);
-
-                setColor(ConsoleColor.Cyan);
-
-                ProjectStartedEventMinimumFields startedEvent = buildEventManager.GetProjectStartedEvent(e);
-                ErrorUtilities.VerifyThrow(startedEvent != null, "Project Started should not be null in deferred target started");
-                string currentProjectFile = startedEvent.ProjectFile ?? string.Empty;
-
-                string targetName;
-                if (IsVerbosityAtLeast(LoggerVerbosity.Diagnostic) || showEventId)
-                {
-                    targetName = ResourceUtilities.FormatResourceString("TargetMessageWithId", targetStartedEvent.TargetName, targetStartedEvent.ProjectBuildEventContext.TargetId);
-                }
-                else
-                {
-                    targetName = targetStartedEvent.TargetName;
-                }
-
-                if (IsVerbosityAtLeast(LoggerVerbosity.Detailed))
-                {
-                    WriteMessageAligned(ResourceUtilities.FormatResourceString("TargetStartedFromFileInProject", targetName, targetStartedEvent.TargetFile, currentProjectFile), true);
-                }
-                else
-                {
-                    WriteMessageAligned(ResourceUtilities.FormatResourceString("TargetStartedPrefixInProject", targetName, currentProjectFile), true);
-                }
-
-                resetColor();
-                ShownBuildEventContext(e);
-            }
         }
 
         /// <summary>
@@ -1301,7 +1025,7 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
             if (!SkipProjectStartedText)
             {
                 // Get the project started event which matched the passed in event context
-                ProjectStartedEventMinimumFields projectStartedEvent = buildEventManager.GetProjectStartedEvent(e);
+                ProjectStartedEventMinimumFields projectStartedEvent = _buildEventManager.GetProjectStartedEvent(e);
 
                 // Make sure the project started event has not been show yet
                 if (projectStartedEvent?.ShowProjectFinishedEvent == false)
@@ -1311,7 +1035,7 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
                     ProjectStartedEventMinimumFields parentStartedEvent = projectStartedEvent.ParentProjectStartedEvent;
                     if (parentStartedEvent != null)
                     {
-                        //Make sure that if there are any events deferred on this event to show them first
+                        // Make sure that if there are any events deferred on this event to show them first
                         DisplayDeferredStartedEvents(parentStartedEvent.ProjectBuildEventContext);
                     }
 
@@ -1329,11 +1053,11 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
                         string message;
                         if (string.IsNullOrEmpty(targetNames))
                         {
-                            message = ResourceUtilities.FormatResourceString("ProjectStartedTopLevelProjectWithDefaultTargets", current, currentProjectNodeId);
+                            message = ResourceUtilities.FormatResourceStringStripCodeAndKeyword("ProjectStartedTopLevelProjectWithDefaultTargets", current, currentProjectNodeId);
                         }
                         else
                         {
-                            message = ResourceUtilities.FormatResourceString("ProjectStartedTopLevelProjectWithTargetNames", current, currentProjectNodeId, targetNames);
+                            message = ResourceUtilities.FormatResourceStringStripCodeAndKeyword("ProjectStartedTopLevelProjectWithTargetNames", current, currentProjectNodeId, targetNames);
                         }
 
                         WriteMessageAligned(message, true);
@@ -1345,16 +1069,18 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
                         setColor(ConsoleColor.Cyan);
                         if (string.IsNullOrEmpty(targetNames))
                         {
-                            WriteMessageAligned(ResourceUtilities.FormatResourceString("ProjectStartedWithDefaultTargetsMultiProc", previous, parentStartedEvent.FullProjectKey, current, projectStartedEvent.FullProjectKey, currentProjectNodeId), true);
+                            WriteMessageAligned(ResourceUtilities.FormatResourceStringStripCodeAndKeyword("ProjectStartedWithDefaultTargetsMultiProc", previous, parentStartedEvent.FullProjectKey, current, projectStartedEvent.FullProjectKey, currentProjectNodeId), true);
                         }
                         else
                         {
-                            WriteMessageAligned(ResourceUtilities.FormatResourceString("ProjectStartedWithTargetsMultiProc", previous, parentStartedEvent.FullProjectKey, current, projectStartedEvent.FullProjectKey, currentProjectNodeId, targetNames), true);
+                            WriteMessageAligned(ResourceUtilities.FormatResourceStringStripCodeAndKeyword("ProjectStartedWithTargetsMultiProc", previous, parentStartedEvent.FullProjectKey, current, projectStartedEvent.FullProjectKey, currentProjectNodeId, targetNames), true);
                         }
                         resetColor();
                     }
 
-                    ShownBuildEventContext(e);
+                    // Make the last shown build event context to be null so that the next message will always print out the target name. If this is not null
+                    // then the first message after the project started event will not have the target name printed out which was causing some confusion.
+                    ShownBuildEventContext(null);
                 }
             }
         }
@@ -1389,13 +1115,13 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         /// </summary>
         private void WriteLinePrefix(BuildEventContext e, DateTime eventTimeStamp, bool isMessagePrefix)
         {
-            WriteLinePrefix(GetFullProjectKey(e).ToString(verbosity), eventTimeStamp, isMessagePrefix);
+            WriteLinePrefix(GetFullProjectKey(e).ToString(Verbosity), eventTimeStamp, isMessagePrefix);
         }
 
         private void WriteLinePrefix(string key, DateTime eventTimeStamp, bool isMessagePrefix)
         {
-            // Dont want any prefix for single proc
-            if (numberOfProcessors == 1)
+            // Don't want any prefix for single proc
+            if (NumberOfProcessors == 1)
             {
                 return;
             }
@@ -1403,27 +1129,28 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
             setColor(ConsoleColor.Cyan);
 
             string context = string.Empty;
-            if (showTimeStamp || IsVerbosityAtLeast(LoggerVerbosity.Diagnostic))
+            if (_showTimeStamp || IsVerbosityAtLeast(LoggerVerbosity.Diagnostic))
             {
                 context = LogFormatter.FormatLogTimeStamp(eventTimeStamp);
             }
 
             string prefixString;
+
             if (!isMessagePrefix || IsVerbosityAtLeast(LoggerVerbosity.Detailed))
             {
-                prefixString = ResourceUtilities.FormatResourceString("BuildEventContext", context, key) + ">";
+                prefixString = ResourceUtilities.FormatResourceStringStripCodeAndKeyword("BuildEventContext", context, key) + ">";
             }
             else
             {
-                prefixString = ResourceUtilities.FormatResourceString("BuildEventContext", context, string.Empty) + " ";
+                prefixString = ResourceUtilities.FormatResourceStringStripCodeAndKeyword("BuildEventContext", context, string.Empty) + " ";
             }
 
             WritePretty(prefixString);
             resetColor();
 
-            if (prefixWidth == 0)
+            if (_prefixWidth == 0)
             {
-                prefixWidth = prefixString.Length;
+                _prefixWidth = prefixString.Length;
             }
         }
 
@@ -1436,19 +1163,14 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
 
             if (e != null)
             {
-                startedEvent = buildEventManager.GetProjectStartedEvent(e);
+                startedEvent = _buildEventManager.GetProjectStartedEvent(e);
             }
 
-            //Project started event can be null, if the message has come before the project started event
+            // Project started event can be null, if the message has come before the project started event
             // or the message is not part of a project such as if the message came from the engine
-            if (startedEvent == null)
-            {
-                return new ProjectFullKey(0, 0);
-            }
-            else
-            {
-                return new ProjectFullKey(startedEvent.ProjectKey, startedEvent.EntryPointKey);
-            }
+            return startedEvent == null
+                ? new ProjectFullKey(0, 0)
+                : new ProjectFullKey(startedEvent.ProjectKey, startedEvent.EntryPointKey);
         }
 
         /// <summary>
@@ -1457,24 +1179,23 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         /// </summary>
         /// <param name="scopeName">Task name or target name.</param>
         /// <param name="table">Table that has tasks or targets.</param>
-        internal static new MPPerformanceCounter GetPerformanceCounter(string scopeName, ref Hashtable table)
+        internal static new MPPerformanceCounter GetPerformanceCounter(string scopeName, ref Dictionary<string, PerformanceCounter> table)
         {
             // Lazily construct the performance counter table.
             if (table == null)
             {
-                table = new Hashtable(StringComparer.OrdinalIgnoreCase);
+                table = new Dictionary<string, PerformanceCounter>(StringComparer.OrdinalIgnoreCase);
             }
 
-            MPPerformanceCounter counter = (MPPerformanceCounter)table[scopeName];
-
             // And lazily construct the performance counter itself.
-            if (counter == null)
+            PerformanceCounter counter;
+            if (!table.TryGetValue(scopeName, out counter))
             {
                 counter = new MPPerformanceCounter(scopeName);
                 table[scopeName] = counter;
             }
 
-            return counter;
+            return (MPPerformanceCounter)counter;
         }
         #endregion
 
@@ -1485,18 +1206,14 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         internal class MPPerformanceCounter : PerformanceCounter
         {
             // Set of performance counters for a project
-            private Hashtable internalPerformanceCounters;
+            private Dictionary<string, PerformanceCounter> _internalPerformanceCounters;
+
             // Dictionary mapping event context to the start number of ticks, this will be used to calculate the amount
             // of time between the start of the performance counter and the end
             // An object is being used to box the start time long value to prevent jitting when this code path is executed.
-            private Dictionary<BuildEventContext, object> startedEvent;
-            private int messageIdentLevel = 2;
+            private Dictionary<BuildEventContext, object> _startedEvent;
 
-            internal int MessageIdentLevel
-            {
-                get { return messageIdentLevel; }
-                set { messageIdentLevel = value; }
-            }
+            internal int MessageIndentLevel { get; set; } = 2;
 
             internal MPPerformanceCounter(string scopeName)
                 : base(scopeName)
@@ -1509,32 +1226,24 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
             /// </summary>
             internal void AddEventStarted(string projectTargetNames, BuildEventContext buildEventContext, DateTime eventTimeStamp, IEqualityComparer<BuildEventContext> comparer)
             {
-                //If the projectTargetNames are set then we should be a projectstarted event
+                // If the projectTargetNames are set then we should be a project started event
                 if (!string.IsNullOrEmpty(projectTargetNames))
                 {
                     // Create a new performance counter for the project entry point to calculate how much time and how many calls
                     // were made to the entry point
-                    MPPerformanceCounter entryPoint = GetPerformanceCounter(projectTargetNames, ref internalPerformanceCounters);
-                    entryPoint.AddEventStarted(null, buildEventContext, eventTimeStamp, compareContextNodeIdTargetId);
-                    // Indent the output so it is intented with respect to its parent project
-                    entryPoint.messageIdentLevel = 7;
+                    MPPerformanceCounter entryPoint = GetPerformanceCounter(projectTargetNames, ref _internalPerformanceCounters);
+                    entryPoint.AddEventStarted(null, buildEventContext, eventTimeStamp, s_compareContextNodeIdTargetId);
+                    // Indent the output so it is indented with respect to its parent project
+                    entryPoint.MessageIndentLevel = 7;
                 }
 
-                if (startedEvent == null)
-                {
-                    if (comparer == null)
-                    {
-                        startedEvent = new Dictionary<BuildEventContext, object>();
-                    }
-                    else
-                    {
-                        startedEvent = new Dictionary<BuildEventContext, object>(comparer);
-                    }
-                }
+                _startedEvent ??= comparer == null
+                    ? new Dictionary<BuildEventContext, object>()
+                    : new Dictionary<BuildEventContext, object>(comparer);
 
-                if (!startedEvent.ContainsKey(buildEventContext))
+                if (!_startedEvent.ContainsKey(buildEventContext))
                 {
-                    startedEvent.Add(buildEventContext, (object)eventTimeStamp.Ticks);
+                    _startedEvent.Add(buildEventContext, eventTimeStamp.Ticks);
                     ++calls;
                 }
             }
@@ -1546,21 +1255,18 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
             {
                 if (!string.IsNullOrEmpty(projectTargetNames))
                 {
-                    MPPerformanceCounter entryPoint = GetPerformanceCounter(projectTargetNames, ref internalPerformanceCounters);
+                    MPPerformanceCounter entryPoint = GetPerformanceCounter(projectTargetNames, ref _internalPerformanceCounters);
                     entryPoint.AddEventFinished(null, buildEventContext, eventTimeStamp);
                 }
 
-                if (startedEvent == null)
-                {
-                    Debug.Assert(startedEvent != null, "Cannot have finished counter without started counter. ");
-                }
+                ErrorUtilities.VerifyThrow(_startedEvent != null, "Cannot have finished counter without started counter. ");
 
-                if (startedEvent.ContainsKey(buildEventContext))
+                if (_startedEvent.TryGetValue(buildEventContext, out object time))
                 {
                     // Calculate the amount of time spent in the event based on the time stamp of when
                     // the started event was created and when the finished event was created
-                    elapsedTime += (TimeSpan.FromTicks(eventTimeStamp.Ticks - (long)startedEvent[buildEventContext]));
-                    startedEvent.Remove(buildEventContext);
+                    elapsedTime += (TimeSpan.FromTicks(eventTimeStamp.Ticks - (long)time));
+                    _startedEvent.Remove(buildEventContext);
                 }
             }
 
@@ -1569,25 +1275,21 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
             /// </summary>
             internal override void PrintCounterMessage(WriteLinePrettyFromResourceDelegate WriteLinePrettyFromResource, ColorSetter setColor, ColorResetter resetColor)
             {
-                // round: submillisecond values are not meaningful
+                // round: sub-millisecond values are not meaningful
                 string time = String.Format(CultureInfo.CurrentCulture,
                        "{0,5}", Math.Round(elapsedTime.TotalMilliseconds, 0));
 
-                WriteLinePrettyFromResource
-                   (
-                       messageIdentLevel,
-                       "PerformanceLine",
-                       time,
-                       String.Format(CultureInfo.CurrentCulture,
-                               "{0,-40}" /* pad to 40 align left */, scopeName),
-                       String.Format(CultureInfo.CurrentCulture,
-                               "{0,3}", calls)
-                   );
+                WriteLinePrettyFromResource(
+                    MessageIndentLevel,
+                    "PerformanceLine",
+                    time,
+                    String.Format(CultureInfo.CurrentCulture, "{0,-40}" /* pad to 40 align left */, scopeName),
+                    String.Format(CultureInfo.CurrentCulture, "{0,3}", calls));
 
-                if (internalPerformanceCounters?.Count > 0)
+                if (_internalPerformanceCounters?.Count > 0)
                 {
                     // For each of the entry points in the project print out the performance numbers for them
-                    foreach (MPPerformanceCounter counter in internalPerformanceCounters.Values)
+                    foreach (var counter in _internalPerformanceCounters.Values)
                     {
                         setColor(ConsoleColor.White);
                         counter.PrintCounterMessage(WriteLinePrettyFromResource, setColor, resetColor);
@@ -1599,28 +1301,28 @@ namespace SelectiveConditionEvaluator.Logging.ParallelLogger
         #endregion
 
         #region internal MemberData
-        private static ComparerContextNodeId<BuildEventContext> compareContextNodeId = new ComparerContextNodeId<BuildEventContext>();
-        private static ComparerContextNodeIdTargetId<BuildEventContext> compareContextNodeIdTargetId = new ComparerContextNodeIdTargetId<BuildEventContext>();
-        private BuildEventContext lastDisplayedBuildEventContext;
-        private int bufferWidth = -1;
-        private object lockObject = new Object();
-        private int prefixWidth = 0;
-        private ProjectFullKey lastProjectFullKey = new ProjectFullKey(-1, -1);
-        private bool alignMessages;
-        private bool forceNoAlign;
-        private bool showEventId;
-        // According to the documentaion for ENABLE_PROCESSED_OUTPUT tab width for the console is 8 characters
-        private const string consoleTab = "        ";
+        private static readonly ComparerContextNodeId<BuildEventContext> s_compareContextNodeId = new ComparerContextNodeId<BuildEventContext>();
+        private static readonly ComparerContextNodeIdTargetId<BuildEventContext> s_compareContextNodeIdTargetId = new ComparerContextNodeIdTargetId<BuildEventContext>();
+        private BuildEventContext _lastDisplayedBuildEventContext;
+        private int _bufferWidth = -1;
+        private readonly object _lockObject = new Object();
+        private int _prefixWidth = 0;
+        private ProjectFullKey _lastProjectFullKey = new ProjectFullKey(-1, -1);
+        private bool _alignMessages;
+        private bool _forceNoAlign;
+        private bool _showEventId;
+        // According to the documentation for ENABLE_PROCESSED_OUTPUT tab width for the console is 8 characters
         #endregion
 
         #region Per-build Members
-        //Holds messages that were going to be shown before the project started event, buffer them until the project started event is shown
-        private Dictionary<BuildEventContext, List<BuildMessageEventArgs>> deferredMessages;
-        private BuildEventManager buildEventManager;
-        //  Has the build started
-        private bool hasBuildStarted;
-        private bool showCommandline;
-        private bool showTimeStamp;
+        // Holds messages that were going to be shown before the project started event, buffer them until the project started event is shown
+        private Dictionary<BuildEventContext, List<BuildMessageEventArgs>> _deferredMessages;
+        private BuildEventManager _buildEventManager;
+        // Has the build started
+        private bool _hasBuildStarted;
+        private bool? _showCommandLine;
+        private bool _showTimeStamp;
+
         #endregion
     }
 }
