@@ -2,9 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Build.Execution;
+using Microsoft.Build.Framework;
 using SelectiveConditionEvaluator.Instance;
 
 #nullable disable

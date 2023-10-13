@@ -8,7 +8,6 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.Build.BackEnd;
 using Microsoft.Build.Shared;
-using Microsoft.Build.Shared.FileSystem;
 using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Instance;

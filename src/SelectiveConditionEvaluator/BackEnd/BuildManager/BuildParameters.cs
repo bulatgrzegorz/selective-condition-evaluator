@@ -19,6 +19,7 @@ using SelectiveConditionEvaluator.BackEnd.Components.ProjectCache;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Instance;
+using NativeMethods = Microsoft.Build.Framework.NativeMethods;
 
 #nullable disable
 

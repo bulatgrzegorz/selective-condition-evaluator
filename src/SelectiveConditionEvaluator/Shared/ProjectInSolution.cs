@@ -12,6 +12,7 @@ using System.IO;
 using System.Security;
 using System.Text;
 using System.Xml;
+using Microsoft.Build.Shared;
 
 namespace Microsoft.Build.BuildEngine.Shared
 {
@@ -87,7 +88,7 @@ namespace Microsoft.Build.BuildEngine.Shared
         /// <summary>
         /// The project configuration in given solution configuration
         /// K: full solution configuration name (cfg + platform)
-        /// V: project configuration 
+        /// V: project configuration
         /// </summary>
         private Dictionary<string, ProjectConfigurationInSolution> projectConfigurations;
 
@@ -356,7 +357,7 @@ namespace Microsoft.Build.BuildEngine.Shared
             // This is where we're going to work on the final string to return to the caller.
             StringBuilder cleanProjectName = new StringBuilder(projectName);
 
-            // Replace each unclean character with a clean one            
+            // Replace each unclean character with a clean one
             foreach (char uncleanChar in charsToCleanse)
             {
                 cleanProjectName.Replace(uncleanChar, cleanCharacter);

@@ -1,29 +1,24 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-// THE ASSEMBLY BUILT FROM THIS SOURCE FILE HAS BEEN DEPRECATED FOR YEARS. IT IS BUILT ONLY TO PROVIDE
-// BACKWARD COMPATIBILITY FOR API USERS WHO HAVE NOT YET MOVED TO UPDATED APIS. PLEASE DO NOT SEND PULL
-// REQUESTS THAT CHANGE THIS FILE WITHOUT FIRST CHECKING WITH THE MAINTAINERS THAT THE FIX IS REQUIRED.
-
 using System;
-using System.Reflection;
 using System.IO;
-
+using System.Reflection;
+using Microsoft.Build.BackEnd;
 using Microsoft.Build.Framework;
-using Microsoft.Build.BuildEngine.Shared;
 using Microsoft.Build.Shared;
-using AssemblyLoadInfo = Microsoft.Build.BuildEngine.Shared.AssemblyLoadInfo;
-using LoadedType = Microsoft.Build.BuildEngine.Shared.LoadedType;
-using TypeLoader = Microsoft.Build.BuildEngine.Shared.TypeLoader;
+using InternalLoggerException = Microsoft.Build.Exceptions.InternalLoggerException;
 
-namespace Microsoft.Build.BuildEngine
+#nullable disable
+
+namespace Microsoft.Build.Logging
 {
     /// <summary>
     /// This class is used to contain information about a logger as a collection of values that
     /// can be used to instantiate the logger and can be serialized to be passed between different
     /// processes.
     /// </summary>
-    public class LoggerDescription
+    public class LoggerDescription : ITranslatable
     {
         #region Constructor
 
@@ -34,19 +29,42 @@ namespace Microsoft.Build.BuildEngine
         /// <summary>
         /// Creates a logger description from given data
         /// </summary>
-        public LoggerDescription
-        (
+        public LoggerDescription(
             string loggerClassName,
             string loggerAssemblyName,
             string loggerAssemblyFile,
             string loggerSwitchParameters,
-            LoggerVerbosity verbosity
-        )
+            LoggerVerbosity verbosity) : this(loggerClassName,
+            loggerAssemblyName,
+            loggerAssemblyFile,
+            loggerSwitchParameters,
+            verbosity,
+            isOptional: false)
         {
-            this.loggerClassName = loggerClassName;
-            this.loggerAssembly = new AssemblyLoadInfo(loggerAssemblyName, loggerAssemblyFile);
-            this.loggerSwitchParameters = loggerSwitchParameters;
-            this.verbosity = verbosity;
+        }
+
+        /// <summary>
+        /// Creates a logger description from given data
+        /// </summary>
+        public LoggerDescription(
+            string loggerClassName,
+            string loggerAssemblyName,
+            string loggerAssemblyFile,
+            string loggerSwitchParameters,
+            LoggerVerbosity verbosity,
+            bool isOptional)
+        {
+            _loggerClassName = loggerClassName;
+
+            if (loggerAssemblyFile != null && !Path.IsPathRooted(loggerAssemblyFile))
+            {
+                loggerAssemblyFile = FileUtilities.NormalizePath(loggerAssemblyFile);
+            }
+
+            _loggerAssembly = AssemblyLoadInfo.Create(loggerAssemblyName, loggerAssemblyFile);
+            _loggerSwitchParameters = loggerSwitchParameters;
+            _verbosity = verbosity;
+            _isOptional = isOptional;
         }
 
         #endregion
@@ -60,11 +78,11 @@ namespace Microsoft.Build.BuildEngine
         {
             get
             {
-                return this.loggerId;
+                return _loggerId;
             }
             set
             {
-                this.loggerId = value;
+                _loggerId = value;
             }
         }
 
@@ -75,18 +93,18 @@ namespace Microsoft.Build.BuildEngine
         {
             get
             {
-                if (!string.IsNullOrEmpty(this.loggerClassName) &&
-                    !string.IsNullOrEmpty(this.loggerAssembly.AssemblyFile))
+                if (!string.IsNullOrEmpty(_loggerClassName) &&
+                    !string.IsNullOrEmpty(_loggerAssembly.AssemblyFile))
                 {
-                    return this.loggerClassName + ":" + this.loggerAssembly.AssemblyFile;
+                    return _loggerClassName + ":" + _loggerAssembly.AssemblyFile;
                 }
-                else if (!string.IsNullOrEmpty(this.loggerClassName))
+                else if (!string.IsNullOrEmpty(_loggerClassName))
                 {
-                    return this.loggerClassName;
+                    return _loggerClassName;
                 }
                 else
                 {
-                    return this.loggerAssembly.AssemblyFile;
+                    return _loggerAssembly.AssemblyFile;
                 }
             }
         }
@@ -98,7 +116,15 @@ namespace Microsoft.Build.BuildEngine
         {
             get
             {
-                return loggerSwitchParameters;
+                return _loggerSwitchParameters;
+            }
+        }
+
+        public bool IsOptional
+        {
+            get
+            {
+                return _isOptional;
             }
         }
 
@@ -109,7 +135,7 @@ namespace Microsoft.Build.BuildEngine
         {
             get
             {
-                return this.verbosity;
+                return _verbosity;
             }
         }
 
@@ -125,7 +151,24 @@ namespace Microsoft.Build.BuildEngine
         /// <returns></returns>
         internal IForwardingLogger CreateForwardingLogger()
         {
-            return (IForwardingLogger)CreateLogger(true);
+            IForwardingLogger forwardingLogger = null;
+            try
+            {
+                forwardingLogger = (IForwardingLogger)CreateLogger(true);
+
+                // Check if the class was not found in the assembly
+                if (forwardingLogger == null)
+                {
+                    InternalLoggerException.Throw(null, null, "LoggerNotFoundError", true, this.Name);
+                }
+            }
+            catch (Exception e) // Wrap other exceptions in a more meaningful exception. LoggerException and InternalLoggerException are already meaningful.
+            when (!(e is LoggerException /* Polite logger Failure*/ || e is InternalLoggerException /* LoggerClass not found*/ || ExceptionHandling.IsCriticalException(e)))
+            {
+                InternalLoggerException.Throw(e, null, "LoggerCreationError", true, Name);
+            }
+
+            return forwardingLogger;
         }
 
         /// <summary>
@@ -134,7 +177,7 @@ namespace Microsoft.Build.BuildEngine
         /// exceptions if desired.
         /// </summary>
         /// <returns></returns>
-        internal ILogger CreateLogger()
+        public ILogger CreateLogger()
         {
             return CreateLogger(false);
         }
@@ -152,7 +195,7 @@ namespace Microsoft.Build.BuildEngine
                 if (forwardingLogger)
                 {
                     // load the logger from its assembly
-                    LoadedType loggerClass = (new TypeLoader(forwardingLoggerClassFilter)).Load(loggerClassName, loggerAssembly);
+                    LoadedType loggerClass = (new TypeLoader(s_forwardingLoggerClassFilter)).Load(_loggerClassName, _loggerAssembly);
 
                     if (loggerClass != null)
                     {
@@ -163,7 +206,7 @@ namespace Microsoft.Build.BuildEngine
                 else
                 {
                     // load the logger from its assembly
-                    LoadedType loggerClass = (new TypeLoader(loggerClassFilter)).Load(loggerClassName, loggerAssembly);
+                    LoadedType loggerClass = (new TypeLoader(s_loggerClassFilter)).Load(_loggerClassName, _loggerAssembly);
 
                     if (loggerClass != null)
                     {
@@ -172,25 +215,21 @@ namespace Microsoft.Build.BuildEngine
                     }
                 }
             }
-            catch (TargetInvocationException e)
+            catch (InvalidCastException e)
+            {
+                // The logger when trying to load has hit an invalid case, this is usually due to the framework assembly being a different version
+                string message = ResourceUtilities.FormatResourceStringStripCodeAndKeyword("LoggerInstantiationFailureErrorInvalidCast", _loggerClassName, _loggerAssembly.AssemblyLocation, e.Message);
+                throw new LoggerException(message, e.InnerException);
+            }
+            catch (TargetInvocationException e) when (e.InnerException is LoggerException le)
             {
                 // At this point, the interesting stack is the internal exception;
                 // the outer exception is System.Reflection stuff that says nothing
                 // about the nature of the logger failure.
-                Exception innerException = e.InnerException;
-
-                if (innerException is LoggerException)
-                {
-                    // Logger failed politely during construction. In order to preserve
-                    // the stack trace at which the error occurred we wrap the original
-                    // exception instead of throwing.
-                    LoggerException l = ((LoggerException)innerException);
-                    throw new LoggerException(l.Message, innerException, l.ErrorCode, l.HelpKeyword);
-                }
-                else
-                {
-                    throw;
-                }
+                // Logger failed politely during construction. In order to preserve
+                // the stack trace at which the error occurred we wrap the original
+                // exception instead of throwing.
+                throw new LoggerException(le.Message, le, le.ErrorCode, le.HelpKeyword);
             }
 
             return logger;
@@ -199,23 +238,23 @@ namespace Microsoft.Build.BuildEngine
         /// <summary>
         /// Used for finding loggers when reflecting through assemblies.
         /// </summary>
-        private static readonly TypeFilter forwardingLoggerClassFilter = new TypeFilter(IsForwardingLoggerClass);
+        private static readonly Func<Type, object, bool> s_forwardingLoggerClassFilter = IsForwardingLoggerClass;
 
         /// <summary>
         /// Used for finding loggers when reflecting through assemblies.
         /// </summary>
-        private static readonly TypeFilter loggerClassFilter = new TypeFilter(IsLoggerClass);
+        private static readonly Func<Type, object, bool> s_loggerClassFilter = IsLoggerClass;
 
         /// <summary>
         /// Checks if the given type is a logger class.
         /// </summary>
-        /// <remarks>This method is used as a TypeFilter delegate.</remarks>
+        /// <remarks>This method is used as a Type Filter delegate.</remarks>
         /// <returns>true, if specified type is a logger</returns>
         private static bool IsForwardingLoggerClass(Type type, object unused)
         {
-            return type.IsClass &&
-                !type.IsAbstract &&
-                (type.GetInterface("IForwardingLogger") != null);
+            return type.GetTypeInfo().IsClass &&
+                !type.GetTypeInfo().IsAbstract &&
+                (type.GetTypeInfo().GetInterface("IForwardingLogger") != null);
         }
 
         /// <summary>
@@ -225,9 +264,9 @@ namespace Microsoft.Build.BuildEngine
         /// <returns>true, if specified type is a logger</returns>
         private static bool IsLoggerClass(Type type, object unused)
         {
-            return type.IsClass &&
-                !type.IsAbstract &&
-                (type.GetInterface("ILogger") != null);
+            return type.GetTypeInfo().IsClass &&
+                !type.GetTypeInfo().IsAbstract &&
+                (type.GetTypeInfo().GetInterface("ILogger") != null);
         }
 
         /// <summary>
@@ -235,129 +274,86 @@ namespace Microsoft.Build.BuildEngine
         /// </summary>
         internal void ConvertPathsToFullPaths()
         {
-            if (loggerAssembly.AssemblyFile != null)
+            if (_loggerAssembly.AssemblyFile != null)
             {
-                loggerAssembly =
-                    new AssemblyLoadInfo(loggerAssembly.AssemblyName, Path.GetFullPath(loggerAssembly.AssemblyFile));
+                _loggerAssembly =
+                    AssemblyLoadInfo.Create(_loggerAssembly.AssemblyName, Path.GetFullPath(_loggerAssembly.AssemblyFile));
             }
         }
 
         #endregion
 
         #region Data
-        private string loggerClassName;
-        private string loggerSwitchParameters;
-        private AssemblyLoadInfo loggerAssembly;
-        private LoggerVerbosity verbosity;
-        private int loggerId;
+        private string _loggerClassName;
+        private string _loggerSwitchParameters;
+        private AssemblyLoadInfo _loggerAssembly;
+        private LoggerVerbosity _verbosity;
+        private int _loggerId;
+        private bool _isOptional;
         #endregion
 
         #region CustomSerializationToStream
         internal void WriteToStream(BinaryWriter writer)
         {
-            #region LoggerClassName
-            if (loggerClassName == null)
-            {
-                writer.Write((byte)0);
-            }
-            else
-            {
-                writer.Write((byte)1);
-                writer.Write(loggerClassName);
-            }
-            #endregion
-            #region LoggerSwitchParameters
-            if (loggerSwitchParameters == null)
-            {
-                writer.Write((byte)0);
-            }
-            else
-            {
-                writer.Write((byte)1);
-                writer.Write(loggerSwitchParameters);
-            }
-            #endregion
-            #region LoggerAssembly
-            if (loggerAssembly == null)
-            {
-                writer.Write((byte)0);
-            }
-            else
-            {
-                writer.Write((byte)1);
-                if (loggerAssembly.AssemblyFile == null)
-                {
-                    writer.Write((byte)0);
-                }
-                else
-                {
-                    writer.Write((byte)1);
-                    writer.Write(loggerAssembly.AssemblyFile);
-                }
+            writer.WriteOptionalString(_loggerClassName);
+            writer.WriteOptionalString(_loggerSwitchParameters);
 
-                if (loggerAssembly.AssemblyName == null)
-                {
-                    writer.Write((byte)0);
-                }
-                else
-                {
-                    writer.Write((byte)1);
-                    writer.Write(loggerAssembly.AssemblyName);
-                }
+            if (_loggerAssembly == null)
+            {
+                writer.Write((byte)0);
             }
-            #endregion
-            writer.Write((Int32)verbosity);
-            writer.Write((Int32)loggerId);
+            else
+            {
+                writer.Write((byte)1);
+
+                writer.WriteOptionalString(_loggerAssembly.AssemblyFile);
+                writer.WriteOptionalString(_loggerAssembly.AssemblyName);
+            }
+
+            writer.Write((Int32)_verbosity);
+            writer.Write((Int32)_loggerId);
         }
 
         internal void CreateFromStream(BinaryReader reader)
         {
-            #region LoggerClassName
+            _loggerClassName = reader.ReadByte() == 0 ? null : reader.ReadString();
+            _loggerSwitchParameters = reader.ReadByte() == 0 ? null : reader.ReadString();
+
             if (reader.ReadByte() == 0)
             {
-                loggerClassName = null;
+                _loggerAssembly = null;
             }
             else
             {
-                loggerClassName = reader.ReadString();
-            }
-            #endregion
-            #region LoggerSwitchParameters
-            if (reader.ReadByte() == 0)
-            {
-                loggerSwitchParameters = null;
-            }
-            else
-            {
-                loggerSwitchParameters = reader.ReadString();
-            }
-            #endregion
-            #region LoggerAssembly
-            if (reader.ReadByte() == 0)
-            {
-                loggerAssembly = null;
-            }
-            else
-            {
-                string assemblyName = null;
-                string assemblyFile = null;
+                string assemblyFile = reader.ReadByte() == 0 ? null : reader.ReadString();
+                string assemblyName = reader.ReadByte() == 0 ? null : reader.ReadString();
 
-                if (reader.ReadByte() != 0)
-                {
-                    assemblyFile = reader.ReadString();
-                }
-
-                if (reader.ReadByte() != 0)
-                {
-                    assemblyName = reader.ReadString();
-                }
-
-                loggerAssembly = new AssemblyLoadInfo(assemblyName, assemblyFile);
+                _loggerAssembly = AssemblyLoadInfo.Create(assemblyName, assemblyFile);
             }
-            #endregion
-            verbosity = (LoggerVerbosity)reader.ReadInt32();
-            loggerId = reader.ReadInt32();
+
+            _verbosity = (LoggerVerbosity)reader.ReadInt32();
+            _loggerId = reader.ReadInt32();
         }
+        #endregion
+
+        #region INodePacketTranslatable Members
+
+        void ITranslatable.Translate(ITranslator translator)
+        {
+            translator.Translate(ref _loggerClassName);
+            translator.Translate(ref _loggerSwitchParameters);
+            translator.Translate(ref _loggerAssembly, AssemblyLoadInfo.FactoryForTranslation);
+            translator.TranslateEnum(ref _verbosity, (int)_verbosity);
+            translator.Translate(ref _loggerId);
+        }
+
+        internal static LoggerDescription FactoryForTranslation(ITranslator translator)
+        {
+            LoggerDescription description = new LoggerDescription();
+            ((ITranslatable)description).Translate(translator);
+            return description;
+        }
+
         #endregion
     }
 }

@@ -22,8 +22,9 @@ using SelectiveConditionEvaluator.BackEnd.Components.Scheduler;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Instance;
 using BuildAbortedException = Microsoft.Build.Exceptions.BuildAbortedException;
-using ILoggingService = Microsoft.Build.BackEnd.Logging.ILoggingService;
-using NodeLoggingContext = Microsoft.Build.BackEnd.Logging.NodeLoggingContext;
+using ILoggingService = SelectiveConditionEvaluator.BackEnd.Components.Logging.ILoggingService;
+using NativeMethods = SelectiveConditionEvaluator.NativeMethods;
+using NodeLoggingContext = SelectiveConditionEvaluator.BackEnd.Components.Logging.NodeLoggingContext;
 
 #nullable disable
 

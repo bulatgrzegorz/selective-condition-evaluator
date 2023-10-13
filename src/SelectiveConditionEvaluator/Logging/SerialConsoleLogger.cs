@@ -8,8 +8,9 @@
 using System;
 using System.Collections;
 using System.Diagnostics;
-
+using Microsoft.Build.BackEnd.Logging;
 using Microsoft.Build.Framework;
+using Microsoft.Build.Logging;
 using Microsoft.Build.Shared;
 using ResourceUtilities = Microsoft.Build.BuildEngine.Shared.ResourceUtilities;
 

@@ -5,7 +5,7 @@
 using System;
 #endif
 using System.Diagnostics;
-
+using Microsoft.Build.BuildEngine;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Logging;
 using SelectiveConditionEvaluator.BackEnd.Node;

@@ -7,7 +7,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Framework.Profiler;
 using Microsoft.Build.Shared;
 using InvalidProjectFileException = Microsoft.Build.Exceptions.InvalidProjectFileException;
-using LoggerDescription = Microsoft.Build.BuildEngine.LoggerDescription;
+using LoggerDescription = Microsoft.Build.Logging.LoggerDescription;
 using TaskItem = SelectiveConditionEvaluator.Instance.ProjectItemInstance.TaskItem;
 
 #nullable disable

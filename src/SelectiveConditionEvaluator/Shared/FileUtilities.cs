@@ -18,6 +18,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.Build.Framework;
 using SelectiveConditionEvaluator;
+using NativeMethods = SelectiveConditionEvaluator.NativeMethods;
 
 #nullable disable
 
