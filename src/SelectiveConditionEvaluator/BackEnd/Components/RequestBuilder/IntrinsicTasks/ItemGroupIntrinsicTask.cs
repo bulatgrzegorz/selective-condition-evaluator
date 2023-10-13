@@ -1,30 +1,20 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
-using Microsoft.Build.BackEnd.Logging;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
-using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Evaluation.Conditionals;
 using SelectiveConditionEvaluator.Instance;
-using ElementLocation = SelectiveConditionEvaluator.ElementLocation.ElementLocation;
-using EngineFileUtilities = Microsoft.Build.Internal.EngineFileUtilities;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Shared.FileSystem;
+using EngineFileUtilities = SelectiveConditionEvaluator.Utilities.EngineFileUtilities;
 using ProjectItemInstanceFactory = SelectiveConditionEvaluator.Instance.ProjectItemInstance.TaskItem.ProjectItemInstanceFactory;
 using TargetLoggingContext = SelectiveConditionEvaluator.BackEnd.Components.Logging.TargetLoggingContext;
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder.IntrinsicTasks
 {
     /// <summary>
     /// Implementation of the ItemGroup intrinsic task
@@ -515,7 +505,7 @@ namespace Microsoft.Build.BackEnd
         /// <param name="excludes">The items to match</param>
         /// <param name="excludeLocation">The specification to match against the items.</param>
         /// <returns>A list of matching items</returns>
-        private HashSet<string> EvaluateExcludePaths(IReadOnlyList<string> excludes, ElementLocation excludeLocation)
+        private HashSet<string> EvaluateExcludePaths(IReadOnlyList<string> excludes, ElementLocation.ElementLocation excludeLocation)
         {
             HashSet<string> excludesUnescapedForComparison = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (string excludeSplit in excludes)
@@ -547,7 +537,7 @@ namespace Microsoft.Build.BackEnd
         private List<ProjectItemInstance> FindItemsMatchingSpecification(
             ICollection<ProjectItemInstance> items,
             string specification,
-            ElementLocation specificationLocation,
+            ElementLocation.ElementLocation specificationLocation,
             Expander<ProjectPropertyInstance, ProjectItemInstance> expander,
             LoggingContext loggingContext = null)
         {

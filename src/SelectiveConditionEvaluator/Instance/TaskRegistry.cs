@@ -5,24 +5,22 @@ using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Reflection;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd;
 using SelectiveConditionEvaluator.Construction;
+using SelectiveConditionEvaluator.Definition;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Evaluation.Conditionals;
 using SelectiveConditionEvaluator.Instance.TaskFactories;
 using SelectiveConditionEvaluator.Resources;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Shared.FileSystem;
 using SelectiveConditionEvaluator.StringTools;
+using SelectiveConditionEvaluator.Xml;
 using ILoggingService = SelectiveConditionEvaluator.BackEnd.Components.Logging.ILoggingService;
-using InvalidProjectFileException = Microsoft.Build.Exceptions.InvalidProjectFileException;
-using LoadedType = Microsoft.Build.BuildEngine.Shared.LoadedType;
+using InvalidProjectFileException = SelectiveConditionEvaluator.Errors.InvalidProjectFileException;
+using LoadedType = SelectiveConditionEvaluator.Deprecated.Engine.Shared.LoadedType;
 using TargetLoggingContext = SelectiveConditionEvaluator.BackEnd.Components.Logging.TargetLoggingContext;
-using TaskEngineAssemblyResolver = Microsoft.Build.BackEnd.Logging.TaskEngineAssemblyResolver;
+using TaskEngineAssemblyResolver = SelectiveConditionEvaluator.Shared.TaskEngineAssemblyResolver;
 
 #nullable disable
 
@@ -1378,7 +1376,7 @@ namespace SelectiveConditionEvaluator.Instance
                     AssemblyLoadInfo taskFactoryLoadInfo = TaskFactoryAssemblyLoadInfo;
                     ErrorUtilities.VerifyThrow(taskFactoryLoadInfo != null, "TaskFactoryLoadInfo should never be null");
                     ITaskFactory factory = null;
-                    Microsoft.Build.Shared.LoadedType loadedType = null;
+                    Shared.LoadedType loadedType = null;
 
                     bool isAssemblyTaskFactory = String.Equals(TaskFactoryAttributeName, AssemblyTaskFactory, StringComparison.OrdinalIgnoreCase);
                     bool isTaskHostFactory = String.Equals(TaskFactoryAttributeName, TaskHostFactory, StringComparison.OrdinalIgnoreCase);

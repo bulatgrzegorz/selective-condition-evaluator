@@ -1,17 +1,14 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Buffers;
-
-#if NET7_0_OR_GREATER
 using System.Runtime.CompilerServices;
+#if NET7_0_OR_GREATER
 #else
 using System.Text;
 #endif
-using Microsoft.Build.Framework;
 
-namespace Microsoft.Build.BackEnd.Logging;
+namespace SelectiveConditionEvaluator.Logging;
 
 /// <summary>
 /// Helper class to indent all the lines of a potentially multi-line string with

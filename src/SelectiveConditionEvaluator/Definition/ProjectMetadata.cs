@@ -1,20 +1,16 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Diagnostics;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Construction;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator.Collections;
-using SelectiveConditionEvaluator.Construction;
-using SelectiveConditionEvaluator.ElementLocation;
-using SelectiveConditionEvaluator.Evaluation;
-using SelectiveConditionEvaluator.ObjectModelRemoting.DefinitionObjectsLinks;
-
 #nullable disable
 
-namespace Microsoft.Build.Evaluation
+using System.Diagnostics;
+using SelectiveConditionEvaluator.Collections;
+using SelectiveConditionEvaluator.Construction;
+using SelectiveConditionEvaluator.Evaluation;
+using SelectiveConditionEvaluator.ObjectModelRemoting.DefinitionObjectsLinks;
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator.Definition
 {
     /// <summary>
     /// An evaluated design-time metadatum.
@@ -224,7 +220,7 @@ namespace Microsoft.Build.Evaluation
         /// <summary>
         /// Location of the element
         /// </summary>
-        public ElementLocation Location
+        public ElementLocation.ElementLocation Location
         {
             get { return _xml.Location; }
         }
@@ -232,7 +228,7 @@ namespace Microsoft.Build.Evaluation
         /// <summary>
         /// Location of the condition attribute
         /// </summary>
-        public ElementLocation ConditionLocation
+        public ElementLocation.ElementLocation ConditionLocation
         {
             get { return _xml.ConditionLocation; }
         }

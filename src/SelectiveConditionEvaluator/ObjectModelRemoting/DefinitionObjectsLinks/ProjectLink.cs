@@ -3,10 +3,9 @@
 
 #nullable disable
 
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Framework;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 using SelectiveConditionEvaluator.Construction;
+using SelectiveConditionEvaluator.Definition;
 using SelectiveConditionEvaluator.Evaluation.Context;
 using SelectiveConditionEvaluator.Instance;
 

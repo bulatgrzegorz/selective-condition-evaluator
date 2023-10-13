@@ -1,20 +1,14 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Concurrent;
-using Microsoft.Build.BackEnd.Logging;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Eventing;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
-using SelectiveConditionEvaluator.BackEnd.Components.Logging;
-using SelectiveConditionEvaluator.ElementLocation;
-
 #nullable disable
 
-namespace Microsoft.Build.BackEnd.SdkResolution
+using System.Collections.Concurrent;
+using SelectiveConditionEvaluator.BackEnd.Components.Logging;
+using SelectiveConditionEvaluator.Sdk;
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator.BackEnd.Components.SdkResolution
 {
     internal sealed class CachingSdkResolverService : SdkResolverService
     {
@@ -37,7 +31,7 @@ namespace Microsoft.Build.BackEnd.SdkResolution
             _cache.Clear();
         }
 
-        public override SdkResult ResolveSdk(int submissionId, SdkReference sdk, LoggingContext loggingContext, ElementLocation sdkReferenceLocation, string solutionPath, string projectPath, bool interactive, bool isRunningInVisualStudio, bool failOnUnresolvedSdk)
+        public override SdkResult ResolveSdk(int submissionId, SdkReference sdk, LoggingContext loggingContext, ElementLocation.ElementLocation sdkReferenceLocation, string solutionPath, string projectPath, bool interactive, bool isRunningInVisualStudio, bool failOnUnresolvedSdk)
         {
             SdkResult result;
 

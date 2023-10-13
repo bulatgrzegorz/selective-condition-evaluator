@@ -1,15 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using SelectiveConditionEvaluator;
-
 #nullable disable
 
-namespace Microsoft.Build.Shared
+using System.Diagnostics.CodeAnalysis;
+using SelectiveConditionEvaluator.Shared.FileSystem;
+
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// This class contains utility methods for file IO.
@@ -461,7 +458,7 @@ namespace Microsoft.Build.Shared
 
                         modifiedItemSpec = GetDirectory(fullPath);
 
-                        if (NativeMethods.IsWindows)
+                        if (SelectiveConditionEvaluator.NativeMethods.IsWindows)
                         {
                             int length = -1;
                             if (FileUtilitiesRegex.StartsWithDrivePattern(modifiedItemSpec))

@@ -4,9 +4,8 @@
 #nullable disable
 
 using System.Diagnostics;
-using Microsoft.Build.Exceptions;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.Errors;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
 {

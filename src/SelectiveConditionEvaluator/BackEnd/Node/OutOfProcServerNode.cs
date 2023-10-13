@@ -1,22 +1,14 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Collections.Concurrent;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.BackEnd.Logging;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Framework.Telemetry;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.BackEnd.BuildManager;
 using SelectiveConditionEvaluator.BackEnd.Components.Communications;
-using SelectiveConditionEvaluator.BackEnd.Node;
-using NativeMethods = Microsoft.Build.Framework.NativeMethods;
+using SelectiveConditionEvaluator.Framework.Telemetry;
+using SelectiveConditionEvaluator.Logging;
+using SelectiveConditionEvaluator.Shared;
 
-namespace Microsoft.Build.Experimental
+namespace SelectiveConditionEvaluator.BackEnd.Node
 {
     /// <summary>
     /// This class represents an implementation of INode for out-of-proc server nodes aka MSBuild server
@@ -248,7 +240,7 @@ namespace Microsoft.Build.Experimental
 
             // On Windows, a process holds a handle to the current directory,
             // so reset it away from a user-requested folder that may get deleted.
-            NativeMethods.SetCurrentDirectory(BuildEnvironmentHelper.Instance.CurrentMSBuildToolsDirectory);
+            Framework.NativeMethods.SetCurrentDirectory(BuildEnvironmentHelper.Instance.CurrentMSBuildToolsDirectory);
 
             exception = _shutdownException;
 
@@ -323,7 +315,7 @@ namespace Microsoft.Build.Experimental
         {
             CommunicationsUtilities.Trace("Received request to cancel build running on MSBuild Server. MSBuild server will shutdown.}");
             _cancelRequested = true;
-            BuildManager.DefaultBuildManager.CancelAllSubmissions();
+            BuildManager.BuildManager.DefaultBuildManager.CancelAllSubmissions();
         }
 
         private void HandleServerNodeBuildCommandAsync(ServerNodeBuildCommand command)
@@ -384,7 +376,7 @@ namespace Microsoft.Build.Experimental
             // Also try our best to increase chance custom Loggers which use Console static members will work as expected.
             try
             {
-                if (NativeMethods.IsWindows && command.ConsoleConfiguration.BufferWidth > 0)
+                if (Framework.NativeMethods.IsWindows && command.ConsoleConfiguration.BufferWidth > 0)
                 {
                     Console.BufferWidth = command.ConsoleConfiguration.BufferWidth;
                 }
@@ -419,7 +411,7 @@ namespace Microsoft.Build.Experimental
 
             // On Windows, a process holds a handle to the current directory,
             // so reset it away from a user-requested folder that may get deleted.
-            NativeMethods.SetCurrentDirectory(BuildEnvironmentHelper.Instance.CurrentMSBuildToolsDirectory);
+            Framework.NativeMethods.SetCurrentDirectory(BuildEnvironmentHelper.Instance.CurrentMSBuildToolsDirectory);
 
             _nodeEndpoint.ClientWillDisconnect();
             var response = new ServerNodeBuildResult(buildResult.exitCode, buildResult.exitType);

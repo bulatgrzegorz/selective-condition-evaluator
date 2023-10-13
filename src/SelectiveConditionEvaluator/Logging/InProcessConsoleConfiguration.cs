@@ -2,11 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 #nullable disable
-using System;
 using System.Diagnostics;
-using SelectiveConditionEvaluator;
 
-namespace Microsoft.Build.BackEnd.Logging;
+namespace SelectiveConditionEvaluator.Logging;
 
 /// <summary>
 /// Console configuration of current process Console.

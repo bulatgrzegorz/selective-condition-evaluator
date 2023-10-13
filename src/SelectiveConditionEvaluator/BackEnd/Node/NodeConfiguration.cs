@@ -4,15 +4,14 @@
 #if FEATURE_APPDOMAIN
 using System;
 #endif
-using System.Diagnostics;
-using Microsoft.Build.BuildEngine;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Logging;
-using SelectiveConditionEvaluator.BackEnd.Node;
-
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+using System.Diagnostics;
+using SelectiveConditionEvaluator.BackEnd.BuildManager;
+using SelectiveConditionEvaluator.Logging;
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator.BackEnd.Node
 {
     /// <summary>
     /// NodeConfiguration contains all of the information necessary for a node to configure itself for building.

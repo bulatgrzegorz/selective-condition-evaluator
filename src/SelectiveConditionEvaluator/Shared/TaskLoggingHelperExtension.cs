@@ -1,15 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Globalization;
 using System.Resources;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
-
-#if !BUILD_ENGINE
-using Microsoft.Build.Utilities;
-#endif
 
 // This is in the Tasks namespace because that's where it was before and it is public.
 
@@ -18,7 +11,7 @@ using Microsoft.Build.Utilities;
 #if BUILD_ENGINE
 namespace Microsoft.Build.BackEnd
 #else
-namespace Microsoft.Build.Tasks
+namespace SelectiveConditionEvaluator.Shared
 #endif
 {
     /// <summary>

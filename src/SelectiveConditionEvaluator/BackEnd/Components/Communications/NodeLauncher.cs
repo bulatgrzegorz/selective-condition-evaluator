@@ -1,23 +1,17 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using Microsoft.Build.Exceptions;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
-using SelectiveConditionEvaluator.BackEnd.Components;
-using SelectiveConditionEvaluator.BackEnd.Components.Communications;
+using SelectiveConditionEvaluator.BackEnd.Shared;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Shared.FileSystem;
 using BackendNativeMethods = SelectiveConditionEvaluator.BackEnd.Node.NativeMethods;
-using NativeMethods = SelectiveConditionEvaluator.NativeMethods;
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Components.Communications
 {
     internal sealed class NodeLauncher : INodeLauncher, IBuildComponent
     {

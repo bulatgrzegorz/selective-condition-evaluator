@@ -3,8 +3,8 @@
 
 #nullable disable
 
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.Instance;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
 {

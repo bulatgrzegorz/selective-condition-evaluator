@@ -1,17 +1,13 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.IO;
 using System.Reflection;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
-using InternalLoggerException = Microsoft.Build.Exceptions.InternalLoggerException;
+using SelectiveConditionEvaluator.Shared;
+using InternalLoggerException = SelectiveConditionEvaluator.Errors.InternalLoggerException;
 
 #nullable disable
 
-namespace Microsoft.Build.Logging
+namespace SelectiveConditionEvaluator.Logging
 {
     /// <summary>
     /// This class is used to contain information about a logger as a collection of values that

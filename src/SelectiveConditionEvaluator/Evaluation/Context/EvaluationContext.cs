@@ -4,9 +4,10 @@
 #nullable disable
 
 using System.Collections.Concurrent;
-using Microsoft.Build.BackEnd.SdkResolution;
-using Microsoft.Build.FileSystem;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.BackEnd.Components.SdkResolution;
+using SelectiveConditionEvaluator.FileSystem;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Shared.FileSystem;
 
 namespace SelectiveConditionEvaluator.Evaluation.Context
 {

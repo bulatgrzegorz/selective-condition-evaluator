@@ -5,16 +5,14 @@
 // BACKWARD COMPATIBILITY FOR API USERS WHO HAVE NOT YET MOVED TO UPDATED APIS. PLEASE DO NOT SEND PULL
 // REQUESTS THAT CHANGE THIS FILE WITHOUT FIRST CHECKING WITH THE MAINTAINERS THAT THE FIX IS REQUIRED.
 
-using System;
-#if !BUILDINGAPPXTASKS && DEBUG
-using System.Resources;
 using System.Diagnostics;
-#endif
 using System.Globalization;
+using System.Resources;
 using System.Text.RegularExpressions;
 using SelectiveConditionEvaluator.Resources;
+using SelectiveConditionEvaluator.Shared;
 
-namespace Microsoft.Build.BuildEngine.Shared
+namespace SelectiveConditionEvaluator.Deprecated.Engine.Shared
 {
     /// <summary>
     /// This class contains utility methods for dealing with resources.

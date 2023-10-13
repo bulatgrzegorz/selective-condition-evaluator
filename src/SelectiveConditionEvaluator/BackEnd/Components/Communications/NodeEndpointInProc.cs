@@ -1,19 +1,16 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Concurrent;
 #if !FEATURE_THREAD_CULTURE
-using System.Globalization;
 #endif
-using System.Threading;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator.BackEnd.Components;
-using BuildParameters = Microsoft.Build.Execution.BuildParameters;
+using System.Collections.Concurrent;
+using System.Globalization;
+using SelectiveConditionEvaluator.Shared;
+using BuildParameters = SelectiveConditionEvaluator.BackEnd.BuildManager.BuildParameters;
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Components.Communications
 {
     /// <summary>
     /// This is an implementation of INodeEndpoint for in-proc nodes.  This endpoint can use either

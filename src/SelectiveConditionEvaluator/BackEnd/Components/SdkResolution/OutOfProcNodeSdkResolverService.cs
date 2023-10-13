@@ -1,26 +1,19 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Concurrent;
-using System.Threading;
-using Microsoft.Build.BackEnd.Logging;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Construction;
-using Microsoft.Build.Eventing;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator.BackEnd.Components;
-using SelectiveConditionEvaluator.BackEnd.Components.Logging;
-using SelectiveConditionEvaluator.ElementLocation;
-
 #nullable disable
 
-namespace Microsoft.Build.BackEnd.SdkResolution
+using System.Collections.Concurrent;
+using SelectiveConditionEvaluator.BackEnd.Components.Logging;
+using SelectiveConditionEvaluator.BackEnd.Node;
+using SelectiveConditionEvaluator.Sdk;
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator.BackEnd.Components.SdkResolution
 {
     /// <summary>
     /// An implementation of <see cref="ISdkResolverService"/> that is hosted in an out-of-proc node for multi-proc builds.  This instance of the service
-    /// sends requests to the main node that SDK resolution is handled in a central location.  This instance is registered in <see cref="Microsoft.Build.Execution.OutOfProcNode"/>
+    /// sends requests to the main node that SDK resolution is handled in a central location.  This instance is registered in <see cref="OutOfProcNode"/>
     /// using a factory so that parameters can be passed to the constructor.  This service caches responses for a given build so that it can avoid sending
     /// a packet where possible.  The cache is always in effect here because the out-of-proc node is only used for builds.
     ///
@@ -67,7 +60,7 @@ namespace Microsoft.Build.BackEnd.SdkResolution
         }
 
         /// <inheritdoc cref="ISdkResolverService.ResolveSdk"/>
-        public override SdkResult ResolveSdk(int submissionId, SdkReference sdk, LoggingContext loggingContext, ElementLocation sdkReferenceLocation, string solutionPath, string projectPath, bool interactive, bool isRunningInVisualStudio, bool failOnUnresolvedSdk)
+        public override SdkResult ResolveSdk(int submissionId, SdkReference sdk, LoggingContext loggingContext, ElementLocation.ElementLocation sdkReferenceLocation, string solutionPath, string projectPath, bool interactive, bool isRunningInVisualStudio, bool failOnUnresolvedSdk)
         {
             bool wasResultCached = true;
 
@@ -118,7 +111,7 @@ namespace Microsoft.Build.BackEnd.SdkResolution
             _responseReceivedEvent.Set();
         }
 
-        private SdkResult RequestSdkPathFromMainNode(int submissionId, SdkReference sdk, LoggingContext loggingContext, ElementLocation sdkReferenceLocation, string solutionPath, string projectPath, bool interactive, bool isRunningInVisualStudio)
+        private SdkResult RequestSdkPathFromMainNode(int submissionId, SdkReference sdk, LoggingContext loggingContext, ElementLocation.ElementLocation sdkReferenceLocation, string solutionPath, string projectPath, bool interactive, bool isRunningInVisualStudio)
         {
             // Clear out the last response for good measure
             _lastResponse = null;

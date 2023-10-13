@@ -1,15 +1,14 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
+#nullable disable
+
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.ElementLocation;
 using SelectiveConditionEvaluator.Instance;
+using SelectiveConditionEvaluator.Shared;
 
-#nullable disable
-
-namespace Microsoft.Build.Evaluation
+namespace SelectiveConditionEvaluator.Definition
 {
     internal class ToolsetLocalReader : ToolsetReader
     {

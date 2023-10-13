@@ -3,8 +3,6 @@
 
 #nullable disable
 
-using Microsoft.Build.BackEnd;
-
 namespace SelectiveConditionEvaluator.BackEnd.Shared
 {
     /// <summary>

@@ -3,8 +3,6 @@
 
 #nullable disable
 
-using Microsoft.Build.Framework;
-
 namespace SelectiveConditionEvaluator
 {
     /// <summary>

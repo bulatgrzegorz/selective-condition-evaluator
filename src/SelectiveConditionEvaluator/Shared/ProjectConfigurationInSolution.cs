@@ -5,9 +5,7 @@
 // BACKWARD COMPATIBILITY FOR API USERS WHO HAVE NOT YET MOVED TO UPDATED APIS. PLEASE DO NOT SEND PULL
 // REQUESTS THAT CHANGE THIS FILE WITHOUT FIRST CHECKING WITH THE MAINTAINERS THAT THE FIX IS REQUIRED.
 
-using System;
-
-namespace Microsoft.Build.BuildEngine.Shared
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// This class represents an entry for a project configuration in a solution configuration.
@@ -43,7 +41,7 @@ namespace Microsoft.Build.BuildEngine.Shared
         /// This is a hacky method to remove the space in the "Any CPU" platform in project configurations.
         /// The problem is that this platform is stored as "AnyCPU" in project files, but the project system
         /// reports it as "Any CPU" to the solution configuration manager. Because of that all solution configurations
-        /// contain the version with a space in it, and when we try and give that name to actual projects, 
+        /// contain the version with a space in it, and when we try and give that name to actual projects,
         /// they have no clue what we're talking about. We need to remove the space in project platforms so that
         /// the platform name matches the one used in projects.
         /// </summary>

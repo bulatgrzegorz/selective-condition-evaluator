@@ -1,14 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using Microsoft.Build.BackEnd.Logging;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator.BackEnd.Node;
+using SelectiveConditionEvaluator.Logging;
+using SelectiveConditionEvaluator.Shared;
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Node
 {
     /// <summary>
     /// Contains all of the information necessary for a entry node to run a command line.

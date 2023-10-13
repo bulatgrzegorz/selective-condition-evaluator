@@ -1,14 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using SelectiveConditionEvaluator;
-
 #nullable disable
 
-namespace Microsoft.Build.FileSystem
+using SelectiveConditionEvaluator.Shared.FileSystem;
+
+namespace SelectiveConditionEvaluator.FileSystem
 {
     /// <summary>
     /// Abstracts away some file system operations.
@@ -29,7 +26,7 @@ namespace Microsoft.Build.FileSystem
         /// <summary>
         /// Use this for new FileStream(path, mode, access, share)
         /// </summary>
-        public virtual Stream GetFileStream(string path, FileMode mode, FileAccess access, FileShare share) => FileSystems.Default.GetFileStream(path, mode, access, share);
+        public virtual Stream GetFileStream(string path, FileMode mode, System.IO.FileAccess access, FileShare share) => FileSystems.Default.GetFileStream(path, mode, access, share);
 
         /// <summary>
         /// Use this for File.ReadAllText(path)

@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace SelectiveConditionEvaluator
+namespace SelectiveConditionEvaluator.Shared.FileSystem
 {
     /// <summary>
     /// Native implementation of file system operations
@@ -69,7 +69,7 @@ namespace SelectiveConditionEvaluator
             public const int PmsfMultiple = 0x1;
 
             /// <summary>
-            /// If PMSF_NORMAL is used, ignore leading spaces in the string pointed to by pszSpec. If PMSF_MULTIPLE is used, 
+            /// If PMSF_NORMAL is used, ignore leading spaces in the string pointed to by pszSpec. If PMSF_MULTIPLE is used,
             /// ignore leading spaces in each file type contained in the string pointed to by pszSpec. This flag can be combined with PMSF_NORMAL and PMSF_MULTIPLE.
             /// </summary>
             public const int PmsfDontStripSpaces = 0x00010000;

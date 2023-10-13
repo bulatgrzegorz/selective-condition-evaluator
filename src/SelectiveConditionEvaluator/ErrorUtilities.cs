@@ -1,12 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using Microsoft.Build.BuildEngine.Shared;
-
 #nullable disable
 
-namespace Microsoft.Build.Framework
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator
 {
     // TODO: this should be unified with Shared\ErrorUtilities.cs, but it is hard to untangle everything
     //       because some of the errors there will use localized resources from different assemblies,

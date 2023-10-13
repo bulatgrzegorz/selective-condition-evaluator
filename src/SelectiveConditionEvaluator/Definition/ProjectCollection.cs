@@ -1,44 +1,32 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Xml;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Construction;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.BackEnd.Components;
-using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Construction;
-using SelectiveConditionEvaluator.ElementLocation;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Instance;
 using SelectiveConditionEvaluator.ObjectModelRemoting;
 using SelectiveConditionEvaluator.Resources;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Utilities;
 using ForwardingLoggerRecord = SelectiveConditionEvaluator.BackEnd.Components.Logging.ForwardingLoggerRecord;
 using ILoggingService = SelectiveConditionEvaluator.BackEnd.Components.Logging.ILoggingService;
-using InternalLoggerException = Microsoft.Build.Exceptions.InternalLoggerException;
-using InvalidProjectFileException = Microsoft.Build.Exceptions.InvalidProjectFileException;
+using InternalLoggerException = SelectiveConditionEvaluator.Errors.InternalLoggerException;
+using InvalidProjectFileException = SelectiveConditionEvaluator.Errors.InvalidProjectFileException;
 using LoggerMode = SelectiveConditionEvaluator.BackEnd.Components.Logging.LoggerMode;
 using ObjectModel = System.Collections.ObjectModel;
 
 #nullable disable
 
-namespace Microsoft.Build.Evaluation
+namespace SelectiveConditionEvaluator.Definition
 {
-    using Utilities = Microsoft.Build.Internal.Utilities;
+    using Utilities = Utilities.Utilities;
 
     /// <summary>
     /// Flags for controlling the toolset initialization.
@@ -360,7 +348,7 @@ namespace Microsoft.Build.Evaluation
                             // Reserved or invalid property name
                             try
                             {
-                                ProjectErrorUtilities.ThrowInvalidProject(ElementLocation.Create("MSBUILD"), "InvalidProperty", ex.Message);
+                                ProjectErrorUtilities.ThrowInvalidProject(ElementLocation.ElementLocation.Create("MSBUILD"), "InvalidProperty", ex.Message);
                             }
                             catch (InvalidProjectFileException ex2)
                             {

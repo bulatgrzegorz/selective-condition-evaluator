@@ -6,7 +6,7 @@
 // REQUESTS THAT CHANGE THIS FILE WITHOUT FIRST CHECKING WITH THE MAINTAINERS THAT THE FIX IS REQUIRED.
 
 using System.Xml;
-using Microsoft.Build.Exceptions;
+using SelectiveConditionEvaluator.Deprecated.Engine.Errors;
 using SelectiveConditionEvaluator.Resources;
 
 /******************************************************************************
@@ -20,7 +20,7 @@ using SelectiveConditionEvaluator.Resources;
  *
  ******************************************************************************/
 
-namespace Microsoft.Build.BuildEngine.Shared
+namespace SelectiveConditionEvaluator.Deprecated.Engine.Shared
 {
     /// <summary>
     /// This class contains methods that are useful for error checking and

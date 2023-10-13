@@ -4,16 +4,15 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.BackEnd.BuildManager;
 using SelectiveConditionEvaluator.BackEnd.Components.Caching;
 using SelectiveConditionEvaluator.BackEnd.Components.Communications;
 using SelectiveConditionEvaluator.BackEnd.Components.ProjectCache;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Instance;
-using BuildAbortedException = Microsoft.Build.Exceptions.BuildAbortedException;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Shared.Debugging;
+using BuildAbortedException = SelectiveConditionEvaluator.BackEnd.Shared.BuildAbortedException;
 using ILoggingService = SelectiveConditionEvaluator.BackEnd.Components.Logging.ILoggingService;
 using NodeLoggingContext = SelectiveConditionEvaluator.BackEnd.Components.Logging.NodeLoggingContext;
 

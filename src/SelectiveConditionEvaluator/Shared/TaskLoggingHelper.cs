@@ -1,27 +1,22 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
+
+
+#nullable disable
+
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Resources;
 using System.Text;
-using Microsoft.Build.Framework;
 #if FEATURE_APPDOMAIN
 using System.Runtime.Remoting.Lifetime;
 using System.Runtime.Remoting;
 #endif
-
-using Microsoft.Build.Shared;
-
-#nullable disable
-
 #if BUILD_ENGINE
 namespace Microsoft.Build.BackEnd
 #else
-namespace Microsoft.Build.Utilities
+namespace SelectiveConditionEvaluator.Shared
 #endif
 {
     /// <summary>

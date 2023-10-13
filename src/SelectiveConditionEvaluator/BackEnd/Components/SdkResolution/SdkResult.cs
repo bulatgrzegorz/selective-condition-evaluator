@@ -1,22 +1,18 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Build.Framework;
-using SelectiveConditionEvaluator.ElementLocation;
-using SdkReference = Microsoft.Build.Framework.SdkReference;
-using SdkResultBase = Microsoft.Build.Framework.SdkResult;
+using SelectiveConditionEvaluator.Sdk;
+using SelectiveConditionEvaluator.Shared;
+using SdkReference = SelectiveConditionEvaluator.Sdk.SdkReference;
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd.SdkResolution
+namespace SelectiveConditionEvaluator.BackEnd.Components.SdkResolution
 {
     /// <summary>
-    /// An internal implementation of <see cref="Microsoft.Build.Framework.SdkResult"/>.
+    /// An internal implementation of <see cref="Sdk.SdkResult"/>.
     /// </summary>
-    internal sealed class SdkResult : SdkResultBase, INodePacket
+    internal sealed class SdkResult : Sdk.SdkResult, INodePacket
     {
         public SdkResult(ITranslator translator)
         {
@@ -74,7 +70,7 @@ namespace Microsoft.Build.BackEnd.SdkResolution
             Warnings = warnings;
         }
 
-        public ElementLocation ElementLocation { get; set; }
+        public ElementLocation.ElementLocation ElementLocation { get; set; }
 
         public IEnumerable<string> Errors { get; }
 

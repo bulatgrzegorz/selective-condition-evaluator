@@ -5,6 +5,7 @@ using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Evaluation.Conditionals;
 using SelectiveConditionEvaluator.Instance;
+using SelectiveConditionEvaluator.Shared.FileSystem;
 
 namespace SelectiveConditionEvaluator;
 

@@ -6,10 +6,9 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Xml;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.ElementLocation;
 using SelectiveConditionEvaluator.ObjectModelRemoting.ConstructionObjectLinks;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.Construction
 {

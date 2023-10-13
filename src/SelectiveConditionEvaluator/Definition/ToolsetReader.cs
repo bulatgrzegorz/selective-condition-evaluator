@@ -1,30 +1,21 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Instance;
 using SelectiveConditionEvaluator.Resources;
-using ErrorUtils = Microsoft.Build.Shared.ErrorUtilities;
-using InvalidProjectFileException = Microsoft.Build.Exceptions.InvalidProjectFileException;
-using InvalidToolsetDefinitionException = Microsoft.Build.Exceptions.InvalidToolsetDefinitionException;
-using NativeMethods = SelectiveConditionEvaluator.NativeMethods;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Shared.FileSystem;
+using ErrorUtils = SelectiveConditionEvaluator.Shared.ErrorUtilities;
+using InvalidProjectFileException = SelectiveConditionEvaluator.Errors.InvalidProjectFileException;
+using InvalidToolsetDefinitionException = SelectiveConditionEvaluator.Errors.InvalidToolsetDefinitionException;
 
 #nullable disable
 
-namespace Microsoft.Build.Evaluation
+namespace SelectiveConditionEvaluator.Definition
 {
     /// <summary>
     /// The abstract base class for all Toolset readers.
@@ -139,7 +130,7 @@ namespace Microsoft.Build.Evaluation
                 // assembly in API consumers.
                 //
                 // https://github.com/microsoft/MSBuildLocator/issues/159
-                [MethodImplAttribute(MethodImplOptions.NoInlining)]
+                [MethodImpl(MethodImplOptions.NoInlining)]
                 void ReadConfigToolset()
                 {
                     // Accumulation of properties is okay in the config file because it's deterministically ordered

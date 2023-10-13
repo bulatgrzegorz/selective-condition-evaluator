@@ -2,11 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Reflection;
-using Microsoft.Build.BuildEngine.Shared;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
-using LoadedType = Microsoft.Build.Shared.LoadedType;
+using SelectiveConditionEvaluator.Shared;
+using LoadedType = SelectiveConditionEvaluator.Shared.LoadedType;
 
 namespace SelectiveConditionEvaluator.Instance
 {

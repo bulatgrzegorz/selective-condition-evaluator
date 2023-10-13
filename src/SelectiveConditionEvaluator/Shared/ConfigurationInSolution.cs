@@ -7,7 +7,7 @@
 
 using System.Globalization;
 
-namespace Microsoft.Build.BuildEngine.Shared
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// This represents basic configuration functionality used in solution and project configurations.

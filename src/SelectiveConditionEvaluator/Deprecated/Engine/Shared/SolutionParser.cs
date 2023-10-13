@@ -5,19 +5,16 @@
 // BACKWARD COMPATIBILITY FOR API USERS WHO HAVE NOT YET MOVED TO UPDATED APIS. PLEASE DO NOT SEND PULL
 // REQUESTS THAT CHANGE THIS FILE WITHOUT FIRST CHECKING WITH THE MAINTAINERS THAT THE FIX IS REQUIRED.
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Xml;
-using System.IO;
-using System.Text;
 using System.Globalization;
 using System.Security;
+using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.Build.Shared;
-using error = Microsoft.Build.Shared.ErrorUtilities;
+using System.Xml;
+using SelectiveConditionEvaluator.Shared;
+using error = SelectiveConditionEvaluator.Shared.ErrorUtilities;
 
-namespace Microsoft.Build.BuildEngine.Shared
+namespace SelectiveConditionEvaluator.Deprecated.Engine.Shared
 {
     /// <remarks>
     /// This class contains the functionality to parse a solution file and return a corresponding

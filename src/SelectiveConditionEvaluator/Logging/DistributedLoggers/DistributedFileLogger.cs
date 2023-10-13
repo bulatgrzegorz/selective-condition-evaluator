@@ -5,15 +5,10 @@
 // BACKWARD COMPATIBILITY FOR API USERS WHO HAVE NOT YET MOVED TO UPDATED APIS. PLEASE DO NOT SEND PULL
 // REQUESTS THAT CHANGE THIS FILE WITHOUT FIRST CHECKING WITH THE MAINTAINERS THAT THE FIX IS REQUIRED.
 
-using System;
-using System.IO;
+using SelectiveConditionEvaluator.Shared;
+using ResourceUtilities = SelectiveConditionEvaluator.Deprecated.Engine.Shared.ResourceUtilities;
 
-using Microsoft.Build.Framework;
-using Microsoft.Build.BuildEngine.Shared;
-using Microsoft.Build.Shared;
-using ResourceUtilities = Microsoft.Build.BuildEngine.Shared.ResourceUtilities;
-
-namespace Microsoft.Build.BuildEngine
+namespace SelectiveConditionEvaluator.Logging.DistributedLoggers
 {
     /// <summary>
     /// This class will create a text file which will contain the build log for that node

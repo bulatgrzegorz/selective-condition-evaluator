@@ -3,8 +3,8 @@
 
 #nullable disable
 
-using Microsoft.Build.Evaluation;
 using SelectiveConditionEvaluator.Construction;
+using SelectiveConditionEvaluator.Definition;
 
 namespace SelectiveConditionEvaluator.Evaluation
 {

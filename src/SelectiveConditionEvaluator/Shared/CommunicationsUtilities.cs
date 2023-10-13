@@ -1,33 +1,25 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.IO.Pipes;
-using System.Runtime.InteropServices;
 #if FEATURE_SECURITY_PRINCIPAL_WINDOWS
 using System.Security.Principal;
 #endif
-using System.Threading;
-using Microsoft.Build.Shared;
-using System.Reflection;
-using System.Security.Cryptography;
-using System.Text;
-using SelectiveConditionEvaluator;
 
 #if !CLR2COMPATIBILITY
 
 #endif
-#if !FEATURE_APM
-using System.Threading.Tasks;
-#endif
+using System.Diagnostics;
+using System.Globalization;
+using System.IO.Pipes;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Text;
+using SelectiveConditionEvaluator.Shared.Debugging;
 
 #nullable disable
 
-namespace Microsoft.Build.Internal
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// Enumeration of all possible (currently supported) options for handshakes.
@@ -267,7 +259,7 @@ namespace Microsoft.Build.Internal
 
             Dictionary<string, string> table = new Dictionary<string, string>(200, StringComparer.OrdinalIgnoreCase); // Razzle has 150 environment variables
 
-            if (NativeMethods.IsWindows)
+            if (SelectiveConditionEvaluator.NativeMethods.IsWindows)
             {
                 unsafe
                 {
@@ -470,7 +462,7 @@ namespace Microsoft.Build.Internal
             byte[] bytes = new byte[4];
 
 #if NETCOREAPP2_1_OR_GREATER || MONO
-            if (!NativeMethods.IsWindows)
+            if (!SelectiveConditionEvaluator.NativeMethods.IsWindows)
             {
                 // Enforce a minimum timeout because the Windows code can pass
                 // a timeout of 0 for the connection, but that doesn't work for

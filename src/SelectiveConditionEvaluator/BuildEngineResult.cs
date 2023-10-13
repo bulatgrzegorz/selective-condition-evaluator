@@ -1,14 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using SelectiveConditionEvaluator;
-
 #nullable disable
 
-namespace Microsoft.Build.Framework
+using System.Diagnostics.CodeAnalysis;
+
+namespace SelectiveConditionEvaluator
 {
     /// <summary>
     /// This structure is used to return the result of the build and the target outputs.

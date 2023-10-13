@@ -9,7 +9,7 @@ using System.Collections.Immutable;
 
 #nullable disable
 
-namespace System.Linq
+namespace SelectiveConditionEvaluator.Utilities
 {
     internal static class ImmutableCollectionsExtensions
     {

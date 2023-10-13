@@ -3,7 +3,7 @@
 
 #nullable disable
 
-namespace Microsoft.Build.Shared
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// Shared Visual Studio related constants

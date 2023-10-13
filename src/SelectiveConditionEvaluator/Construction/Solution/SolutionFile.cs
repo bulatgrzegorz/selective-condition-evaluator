@@ -9,13 +9,14 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Xml;
-using Microsoft.Build.Shared;
-using BuildEventFileInfo = Microsoft.Build.Shared.BuildEventFileInfo;
-using ErrorUtilities = Microsoft.Build.Shared.ErrorUtilities;
-using ExceptionUtilities = Microsoft.Build.Shared.ExceptionHandling;
-using ProjectFileErrorUtilities = Microsoft.Build.Shared.ProjectFileErrorUtilities;
-using ResourceUtilities = Microsoft.Build.Shared.ResourceUtilities;
-using VisualStudioConstants = Microsoft.Build.Shared.VisualStudioConstants;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Shared.FileSystem;
+using BuildEventFileInfo = SelectiveConditionEvaluator.Shared.BuildEventFileInfo;
+using ErrorUtilities = SelectiveConditionEvaluator.Shared.ErrorUtilities;
+using ExceptionUtilities = SelectiveConditionEvaluator.Shared.ExceptionHandling;
+using ProjectFileErrorUtilities = SelectiveConditionEvaluator.Shared.ProjectFileErrorUtilities;
+using ResourceUtilities = SelectiveConditionEvaluator.Shared.ResourceUtilities;
+using VisualStudioConstants = SelectiveConditionEvaluator.Shared.VisualStudioConstants;
 
 #nullable disable
 
@@ -1207,7 +1208,7 @@ namespace SelectiveConditionEvaluator.Construction.Solution
                     // However, 3.5 version of Solution parser can't handle a equal sign in the value.
                     // The "=" in targetframeworkMoniker was escaped to "%3D" for Orcas
                     string targetFrameworkMoniker = TrimQuotes(propertyValue);
-                    proj.TargetFrameworkMoniker = Microsoft.Build.Shared.EscapingUtilities.UnescapeAll(targetFrameworkMoniker);
+                    proj.TargetFrameworkMoniker = EscapingUtilities.UnescapeAll(targetFrameworkMoniker);
                 }
             }
         }

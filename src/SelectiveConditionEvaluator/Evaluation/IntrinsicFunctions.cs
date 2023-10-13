@@ -5,13 +5,12 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
-using Microsoft.Build.Utilities;
 using Microsoft.Win32;
+using SelectiveConditionEvaluator.BackEnd.Components.Communications;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Shared.FileSystem;
+using SelectiveConditionEvaluator.Utilities;
+
 // Needed for DoesTaskHostExistForParameters
 
 #nullable disable

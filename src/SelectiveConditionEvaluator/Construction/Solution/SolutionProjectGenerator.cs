@@ -1,44 +1,32 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 #if FEATURE_ASPNET_COMPILER
 using System.Collections;
 #endif
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Text;
 using System.Xml;
-
-using Microsoft.Build.BackEnd.SdkResolution;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
-
-using Project = Microsoft.Build.Evaluation.Project;
-using ProjectCollection = Microsoft.Build.Evaluation.ProjectCollection;
-using ProjectItem = Microsoft.Build.Evaluation.ProjectItem;
+using SelectiveConditionEvaluator.BackEnd.Components.Logging;
+using SelectiveConditionEvaluator.BackEnd.Components.SdkResolution;
+using SelectiveConditionEvaluator.Evaluation;
+using SelectiveConditionEvaluator.Instance;
+using SelectiveConditionEvaluator.Resources;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.StringTools;
+using Project = SelectiveConditionEvaluator.Definition.Project;
+using ProjectCollection = SelectiveConditionEvaluator.Definition.ProjectCollection;
+using ProjectItem = SelectiveConditionEvaluator.Definition.ProjectItem;
 
 #if FEATURE_ASPNET_COMPILER
 using FrameworkName = System.Runtime.Versioning.FrameworkName;
 #endif
-using Microsoft.Build.Execution;
-
-using SelectiveConditionEvaluator;
-using SelectiveConditionEvaluator.BackEnd.Components.Logging;
-using SelectiveConditionEvaluator.Construction;
-using SelectiveConditionEvaluator.Construction.Solution;
-using SelectiveConditionEvaluator.Evaluation;
-using SelectiveConditionEvaluator.Instance;
-using SelectiveConditionEvaluator.Resources;
-using SelectiveConditionEvaluator.StringTools;
 
 #nullable disable
 
-namespace Microsoft.Build.Construction
+namespace SelectiveConditionEvaluator.Construction.Solution
 {
     /// <summary>
     /// This class is used to generate an MSBuild wrapper project for a solution file.

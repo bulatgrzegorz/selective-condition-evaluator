@@ -1,13 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Globalization;
-using System.IO;
-using System.Text;
-
 #nullable disable
 
-namespace Microsoft.Build.Shared
+using System.Globalization;
+using System.Text;
+
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// StringWriter class that allows Encoding to be specified. In the standard StringWriter

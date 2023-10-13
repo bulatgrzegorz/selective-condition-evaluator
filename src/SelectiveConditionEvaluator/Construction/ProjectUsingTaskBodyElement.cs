@@ -2,10 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.ElementLocation;
 using SelectiveConditionEvaluator.ObjectModelRemoting.ConstructionObjectLinks;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Xml;
 
 #nullable disable
 
@@ -61,7 +61,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// </summary>
         public string TaskBody
         {
-            get => Link != null ? UsingTaskBodyLink.TaskBody : Microsoft.Build.Internal.Utilities.GetXmlNodeInnerContents(XmlElement);
+            get => Link != null ? UsingTaskBodyLink.TaskBody : Utilities.Utilities.GetXmlNodeInnerContents(XmlElement);
 
             set
             {
@@ -72,7 +72,7 @@ namespace SelectiveConditionEvaluator.Construction
                 }
 
                 ErrorUtilities.VerifyThrowArgumentNull(value, nameof(TaskBody));
-                Microsoft.Build.Internal.Utilities.SetXmlNodeInnerContents(XmlElement, value);
+                Utilities.Utilities.SetXmlNodeInnerContents(XmlElement, value);
                 MarkDirty("Set usingtask body {0}", value);
             }
         }

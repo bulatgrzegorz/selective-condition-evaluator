@@ -1,16 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
-using System.Globalization;
-using System.IO;
-using System.IO.Pipes;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 #if FEATURE_PIPE_SECURITY
 using System.Security.Principal;
 #endif
@@ -18,21 +8,19 @@ using System.Security.Principal;
 #if FEATURE_APM
 using Microsoft.Build.Eventing;
 #else
-using System.Threading;
 #endif
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
-using Task = System.Threading.Tasks.Task;
-using Microsoft.Build.Framework;
-using Microsoft.Build.BackEnd.Logging;
-using SelectiveConditionEvaluator;
-using SelectiveConditionEvaluator.BackEnd.Components;
-using SelectiveConditionEvaluator.BackEnd.Components.Communications;
+using System.Buffers.Binary;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO.Pipes;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
+using SelectiveConditionEvaluator.Shared;
+using Task = System.Threading.Tasks.Task;
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Components.Communications
 {
     /// <summary>
     /// Contains the shared pieces of code from NodeProviderOutOfProc
@@ -197,7 +185,7 @@ namespace Microsoft.Build.BackEnd
             int numberOfNodesToCreate)
         {
 #if DEBUG
-            if (Execution.BuildManager.WaitForDebugger)
+            if (BuildManager.BuildManager.WaitForDebugger)
             {
                 commandLineArgs += " /wfd";
             }

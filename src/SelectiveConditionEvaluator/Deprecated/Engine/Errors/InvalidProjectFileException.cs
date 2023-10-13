@@ -5,14 +5,14 @@
 // BACKWARD COMPATIBILITY FOR API USERS WHO HAVE NOT YET MOVED TO UPDATED APIS. PLEASE DO NOT SEND PULL
 // REQUESTS THAT CHANGE THIS FILE WITHOUT FIRST CHECKING WITH THE MAINTAINERS THAT THE FIX IS REQUIRED.
 
-using System;
-using System.Xml;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
-using Microsoft.Build.Shared;
-using XmlUtilities = Microsoft.Build.BuildEngine.Shared.XmlUtilities;
+using System.Xml;
+using SelectiveConditionEvaluator.Deprecated.Engine.Engine;
+using SelectiveConditionEvaluator.Shared;
+using XmlUtilities = SelectiveConditionEvaluator.Deprecated.Engine.Shared.XmlUtilities;
 
-namespace Microsoft.Build.BuildEngine
+namespace SelectiveConditionEvaluator.Deprecated.Engine.Errors
 {
     /// <summary>
     /// This exception is thrown whenever there is a problem with the user's XML project file. The problem might be semantic or
@@ -100,7 +100,7 @@ namespace Microsoft.Build.BuildEngine
         /// </summary>
         /// <param name="info"></param>
         /// <param name="context"></param>
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);

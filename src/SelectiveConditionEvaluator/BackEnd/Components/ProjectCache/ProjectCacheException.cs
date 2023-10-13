@@ -1,13 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using Microsoft.Build.Framework.BuildException;
-using Microsoft.Build.Shared;
-
 #nullable disable
 
-namespace Microsoft.Build.Experimental.ProjectCache
+using SelectiveConditionEvaluator.BuildException;
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator.BackEnd.Components.ProjectCache
 {
     /// <summary>
     /// This exception is used to wrap an unhandled exception from a project cache plugin. This exception aborts the build, and it can only be

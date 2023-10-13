@@ -6,7 +6,7 @@
 using System.Globalization;
 using System.Reflection;
 using System.Resources;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.Resources
 {

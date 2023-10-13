@@ -1,9 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using Microsoft.Build.BackEnd;
 using SelectiveConditionEvaluator.BackEnd.Shared;
-using BuildResult = Microsoft.Build.Execution.BuildResult;
+using BuildResult = SelectiveConditionEvaluator.BackEnd.Shared.BuildResult;
 
 #nullable disable
 

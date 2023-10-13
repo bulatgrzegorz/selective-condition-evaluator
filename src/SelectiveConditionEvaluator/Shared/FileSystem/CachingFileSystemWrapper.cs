@@ -5,7 +5,7 @@
 
 using System.Collections.Concurrent;
 
-namespace SelectiveConditionEvaluator
+namespace SelectiveConditionEvaluator.Shared.FileSystem
 {
     internal sealed class CachingFileSystemWrapper : IFileSystem
     {

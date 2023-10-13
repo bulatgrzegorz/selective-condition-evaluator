@@ -4,10 +4,10 @@
 #nullable disable
 
 using System.Reflection;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
+using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder.IntrinsicTasks;
 using SelectiveConditionEvaluator.Instance;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder
 {

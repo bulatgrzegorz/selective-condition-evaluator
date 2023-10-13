@@ -7,15 +7,14 @@
 
 using System.Collections.Immutable;
 using System.Diagnostics;
-using Microsoft.Build.BackEnd.Logging;
-using Microsoft.Build.Eventing;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Construction;
 using SelectiveConditionEvaluator.Evaluation.Conditionals;
 using SelectiveConditionEvaluator.Evaluation.Context;
 using SelectiveConditionEvaluator.Evaluation.Profiler;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Shared.FileSystem;
 #if DEBUG
 #endif
 namespace SelectiveConditionEvaluator.Evaluation

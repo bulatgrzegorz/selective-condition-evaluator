@@ -3,7 +3,7 @@
 
 #nullable disable
 
-namespace Microsoft.Build.Collections
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// Interface allowing items and metadata and properties to go into keyed collections

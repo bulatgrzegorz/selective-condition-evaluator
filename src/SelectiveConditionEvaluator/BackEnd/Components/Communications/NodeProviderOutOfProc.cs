@@ -1,22 +1,15 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using Microsoft.Build.Exceptions;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
-using SelectiveConditionEvaluator.BackEnd.Components;
-using SelectiveConditionEvaluator.BackEnd.Components.Communications;
-
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using SelectiveConditionEvaluator.BackEnd.Node;
+using SelectiveConditionEvaluator.BackEnd.Shared;
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator.BackEnd.Components.Communications
 {
     /// <summary>
     /// The provider for out-of-proc nodes.  This manages the lifetime of external MSBuild.exe processes

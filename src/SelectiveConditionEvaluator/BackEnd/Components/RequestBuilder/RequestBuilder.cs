@@ -1,39 +1,23 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Build.BackEnd.Logging;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Eventing;
-using Microsoft.Build.Exceptions;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
-using SelectiveConditionEvaluator.BackEnd.Components;
+using SelectiveConditionEvaluator.BackEnd.BuildManager;
 using SelectiveConditionEvaluator.BackEnd.Components.BuildRequestEngine;
 using SelectiveConditionEvaluator.BackEnd.Components.Caching;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
-using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
-using SelectiveConditionEvaluator.BackEnd.Components.Scheduler;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Collections;
+using SelectiveConditionEvaluator.Errors;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Instance;
-using NativeMethods = Microsoft.Build.Framework.NativeMethods;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Xml;
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder
 {
     /// <summary>
     /// Implementation of IRequestBuilder
@@ -918,7 +902,7 @@ namespace Microsoft.Build.BackEnd
 
             if (_componentHost.BuildParameters.SaveOperatingEnvironment)
             {
-                entryToComplete.RequestConfiguration.SavedCurrentDirectory = NativeMethods.GetCurrentDirectory();
+                entryToComplete.RequestConfiguration.SavedCurrentDirectory = Framework.NativeMethods.GetCurrentDirectory();
                 entryToComplete.RequestConfiguration.SavedEnvironmentVariables = CommunicationsUtilities.GetEnvironmentVariables();
             }
 
@@ -1110,7 +1094,7 @@ namespace Microsoft.Build.BackEnd
         {
             if (_componentHost.BuildParameters.SaveOperatingEnvironment)
             {
-                NativeMethods.SetCurrentDirectory(_requestEntry.ProjectRootDirectory);
+                Framework.NativeMethods.SetCurrentDirectory(_requestEntry.ProjectRootDirectory);
             }
         }
 
@@ -1183,7 +1167,7 @@ namespace Microsoft.Build.BackEnd
             // in the results cache.  It is possible that this project has been moved from its original node and when it was its results did not come
             // with it.  This would be signified by the ResultsNode value in the configuration pointing to a different node than the current one.  In that
             // case we will need to request those results be moved from their original node to this one.
-            if ((_requestEntry.RequestConfiguration.ResultsNodeId != Scheduler.InvalidNodeId) &&
+            if ((_requestEntry.RequestConfiguration.ResultsNodeId != Scheduler.Scheduler.InvalidNodeId) &&
                 (_requestEntry.RequestConfiguration.ResultsNodeId != _componentHost.BuildParameters.NodeId))
             {
                 // This indicates to the system that we will block waiting for a results transfer.  We will block here until those results become available.
@@ -1244,7 +1228,7 @@ namespace Microsoft.Build.BackEnd
         {
             if (_componentHost.BuildParameters.SaveOperatingEnvironment)
             {
-                _requestEntry.RequestConfiguration.SavedCurrentDirectory = NativeMethods.GetCurrentDirectory();
+                _requestEntry.RequestConfiguration.SavedCurrentDirectory = Framework.NativeMethods.GetCurrentDirectory();
                 _requestEntry.RequestConfiguration.SavedEnvironmentVariables = CommunicationsUtilities.GetEnvironmentVariables();
             }
         }
@@ -1278,7 +1262,7 @@ namespace Microsoft.Build.BackEnd
 
                 // Restore the saved environment variables.
                 SetEnvironmentVariableBlock(_requestEntry.RequestConfiguration.SavedEnvironmentVariables);
-                NativeMethods.SetCurrentDirectory(_requestEntry.RequestConfiguration.SavedCurrentDirectory);
+                Framework.NativeMethods.SetCurrentDirectory(_requestEntry.RequestConfiguration.SavedCurrentDirectory);
             }
         }
 

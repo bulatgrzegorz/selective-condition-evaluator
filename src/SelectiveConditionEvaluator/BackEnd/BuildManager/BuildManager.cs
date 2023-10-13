@@ -1,56 +1,45 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.BackEnd.Logging;
-using Microsoft.Build.BackEnd.SdkResolution;
-using Microsoft.Build.BuildEngine;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Eventing;
-using Microsoft.Build.Exceptions;
-using Microsoft.Build.Experimental.ProjectCache;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Framework.Telemetry;
-using Microsoft.Build.Graph;
+using Microsoft.Build.Experimental;
 using Microsoft.Build.Logging;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.BackEnd.Components;
 using SelectiveConditionEvaluator.BackEnd.Components.BuildRequestEngine;
 using SelectiveConditionEvaluator.BackEnd.Components.Caching;
 using SelectiveConditionEvaluator.BackEnd.Components.Communications;
+using SelectiveConditionEvaluator.BackEnd.Components.FileAccesses;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 using SelectiveConditionEvaluator.BackEnd.Components.ProjectCache;
 using SelectiveConditionEvaluator.BackEnd.Components.Scheduler;
+using SelectiveConditionEvaluator.BackEnd.Components.SdkResolution;
 using SelectiveConditionEvaluator.BackEnd.Node;
 using SelectiveConditionEvaluator.BackEnd.Shared;
+using SelectiveConditionEvaluator.Definition;
 using SelectiveConditionEvaluator.Evaluation;
+using SelectiveConditionEvaluator.Framework.Telemetry;
+using SelectiveConditionEvaluator.Graph;
 using SelectiveConditionEvaluator.Instance;
+using SelectiveConditionEvaluator.Logging;
 using SelectiveConditionEvaluator.Resources;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Shared.Debugging;
 using SelectiveConditionEvaluator.StringTools;
-using InvalidProjectFileException = Microsoft.Build.Exceptions.InvalidProjectFileException;
-using NativeMethods = SelectiveConditionEvaluator.NativeMethods;
+using ConfigurableForwardingLogger = SelectiveConditionEvaluator.Logging.DistributedLoggers.ConfigurableForwardingLogger;
+using InvalidProjectFileException = SelectiveConditionEvaluator.Errors.InvalidProjectFileException;
 
 #nullable disable
 
-namespace Microsoft.Build.Execution
+namespace SelectiveConditionEvaluator.BackEnd.BuildManager
 {
     /// <summary>
     /// This class is the public entry point for executing builds.
@@ -348,7 +337,7 @@ namespace Microsoft.Build.Execution
 
             /// <summary>
             /// This is the state the BuildManager is in after <see cref="BeginBuild(BuildParameters)"/> has been called but before <see cref="EndBuild()"/> has been called.
-            /// <see cref="BuildManager.PendBuildRequest(Microsoft.Build.Execution.BuildRequestData)"/>, <see cref="BuildManager.BuildRequest(Microsoft.Build.Execution.BuildRequestData)"/>, <see cref="BuildManager.PendBuildRequest(GraphBuildRequestData)"/>, <see cref="BuildRequest"/>, and <see cref="BuildManager.EndBuild()"/> may be called in this state.
+            /// <see cref="BuildManager.PendBuildRequest(SelectiveConditionEvaluator.BackEnd.BuildManager.BuildRequestData)"/>, <see cref="BuildManager.BuildRequest(SelectiveConditionEvaluator.BackEnd.BuildManager.BuildRequestData)"/>, <see cref="BuildManager.PendBuildRequest(GraphBuildRequestData)"/>, <see cref="BuildRequest"/>, and <see cref="BuildManager.EndBuild()"/> may be called in this state.
             /// </summary>
             Building,
 
@@ -1780,7 +1769,7 @@ namespace Microsoft.Build.Execution
         {
             submission.BuildRequest = new BuildRequest(
                 submission.SubmissionId,
-                BackEnd.BuildRequest.InvalidNodeRequestId,
+                Shared.BuildRequest.InvalidNodeRequestId,
                 configurationId,
                 submission.BuildRequestData.TargetNames,
                 submission.BuildRequestData.HostServices,
@@ -1799,7 +1788,7 @@ namespace Microsoft.Build.Execution
         {
             submission.BuildRequest = new BuildRequest(
                 submission.SubmissionId,
-                BackEnd.BuildRequest.InvalidNodeRequestId,
+                Shared.BuildRequest.InvalidNodeRequestId,
                 configurationId,
                 proxyTargets,
                 submission.BuildRequestData.HostServices,

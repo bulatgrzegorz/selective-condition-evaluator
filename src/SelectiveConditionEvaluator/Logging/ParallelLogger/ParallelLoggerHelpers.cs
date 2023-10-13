@@ -5,14 +5,10 @@
 // BACKWARD COMPATIBILITY FOR API USERS WHO HAVE NOT YET MOVED TO UPDATED APIS. PLEASE DO NOT SEND PULL
 // REQUESTS THAT CHANGE THIS FILE WITHOUT FIRST CHECKING WITH THE MAINTAINERS THAT THE FIX IS REQUIRED.
 
-using System;
-using System.Collections.Generic;
-using Microsoft.Build.Framework;
-using Microsoft.Build.BuildEngine.Shared;
 using System.Globalization;
-using SelectiveConditionEvaluator;
+using SelectiveConditionEvaluator.Deprecated.Engine.Shared;
 
-namespace Microsoft.Build.BuildEngine
+namespace SelectiveConditionEvaluator.Logging.ParallelLogger
 {
     /// <summary>
     /// Stores and manages projects and targets events for logging purposes

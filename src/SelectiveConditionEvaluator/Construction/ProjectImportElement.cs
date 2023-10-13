@@ -4,10 +4,10 @@
 #nullable disable
 
 using System.Diagnostics;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.ElementLocation;
 using SelectiveConditionEvaluator.ObjectModelRemoting.ConstructionObjectLinks;
+using SelectiveConditionEvaluator.Sdk;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.Construction
 {
@@ -133,7 +133,7 @@ namespace SelectiveConditionEvaluator.Construction
 
 
         /// <summary>
-        /// <see cref="Microsoft.Build.Framework.SdkReference"/> if applicable to this import element.
+        /// <see cref="SelectiveConditionEvaluator.Sdk.SdkReference"/> if applicable to this import element.
         /// </summary>
         internal SdkReference SdkReference { get; set; }
 

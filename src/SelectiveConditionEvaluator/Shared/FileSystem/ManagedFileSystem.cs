@@ -3,7 +3,7 @@
 
 #nullable disable
 
-namespace SelectiveConditionEvaluator
+namespace SelectiveConditionEvaluator.Shared.FileSystem
 {
     /// <summary>
     /// Implementation of file system operations directly over the dot net managed layer
@@ -19,7 +19,7 @@ namespace SelectiveConditionEvaluator
             get
             {
 #if !MICROSOFT_BUILD_ENGINE_OM_UNITTESTS
-                return NativeMethods.IsWindows;
+                return SelectiveConditionEvaluator.NativeMethods.IsWindows;
 #else
                 // We need to mock usage of ChangeWaves class,
                 // because Microsoft.Build.Engine.OM.UnitTests should not have access to internals of Microsoft.Build.Framework.

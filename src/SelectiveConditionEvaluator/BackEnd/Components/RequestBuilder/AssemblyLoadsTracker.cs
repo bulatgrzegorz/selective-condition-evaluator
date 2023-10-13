@@ -1,18 +1,14 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
+using System.Reflection;
+using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 #if FEATURE_APPDOMAIN
 using System.Collections.Generic;
 using System.Linq;
 #endif
-using System.Reflection;
-using Microsoft.Build.BackEnd.Logging;
-using Microsoft.Build.Framework;
-using SelectiveConditionEvaluator;
-using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 
-namespace Microsoft.Build.BackEnd.Components.RequestBuilder
+namespace SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder
 {
     internal sealed class AssemblyLoadsTracker : MarshalByRefObject, IDisposable
     {

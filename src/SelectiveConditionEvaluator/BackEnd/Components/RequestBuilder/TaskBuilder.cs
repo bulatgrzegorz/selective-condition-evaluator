@@ -1,36 +1,24 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
 #if FEATURE_APARTMENT_STATE
 using System.Diagnostics.CodeAnalysis;
 #endif
-using System.Linq;
-using System.Reflection;
 #if FEATURE_APARTMENT_STATE
 using System.Runtime.ExceptionServices;
 #endif
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Build.BackEnd.Components.RequestBuilder;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Eventing;
-using Microsoft.Build.Exceptions;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
-using SelectiveConditionEvaluator.BackEnd.Components;
-using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
+using System.Reflection;
+using Microsoft.Build.BackEnd;
+using SelectiveConditionEvaluator.BackEnd.BuildManager;
+using SelectiveConditionEvaluator.BackEnd.Components.BuildRequestEngine;
+using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder.IntrinsicTasks;
 using SelectiveConditionEvaluator.BackEnd.Shared;
-using SelectiveConditionEvaluator.ElementLocation;
+using SelectiveConditionEvaluator.Errors;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Evaluation.Conditionals;
 using SelectiveConditionEvaluator.Instance;
-using SelectiveConditionEvaluator.Resources;
-using ElementLocation = SelectiveConditionEvaluator.ElementLocation.ElementLocation;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Shared.FileSystem;
 using ProjectItemInstanceFactory = SelectiveConditionEvaluator.Instance.ProjectItemInstance.TaskItem.ProjectItemInstanceFactory;
 using ReservedPropertyNames = SelectiveConditionEvaluator.Resources.ReservedPropertyNames;
 using TargetLoggingContext = SelectiveConditionEvaluator.BackEnd.Components.Logging.TargetLoggingContext;
@@ -38,7 +26,7 @@ using TaskLoggingContext = SelectiveConditionEvaluator.BackEnd.Components.Loggin
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder
 {
     /// <summary>
     /// The possible values for a task's ContinueOnError attribute.
@@ -254,7 +242,7 @@ namespace Microsoft.Build.BackEnd
 
             List<string> taskParameters = new List<string>(_taskNode.ParametersForBuild.Count + _taskNode.Outputs.Count);
 
-            foreach (KeyValuePair<string, (string, ElementLocation)> taskParameter in _taskNode.ParametersForBuild)
+            foreach (KeyValuePair<string, (string, ElementLocation.ElementLocation)> taskParameter in _taskNode.ParametersForBuild)
             {
                 taskParameters.Add(taskParameter.Value.Item1);
             }
@@ -424,7 +412,7 @@ namespace Microsoft.Build.BackEnd
                     // If that directory does not exist, do nothing. (Do not check first as it is almost always there and it is slow)
                     // This is because if the project has not been saved, this directory may not exist, yet it is often useful to still be able to build the project.
                     // No errors are masked by doing this: errors loading the project from disk are reported at load time, if necessary.
-                    NativeMethodsShared.SetCurrentDirectory(_buildRequestEntry.ProjectRootDirectory);
+                    NativeMethods.SetCurrentDirectory(_buildRequestEntry.ProjectRootDirectory);
                 }
 
                 if (howToExecuteTask == TaskExecutionMode.ExecuteTaskAndGatherOutputs)
@@ -529,8 +517,8 @@ namespace Microsoft.Build.BackEnd
         {
             ErrorUtilities.VerifyThrowInternalNull(_taskNode, "taskNode"); // taskNode should never be null when we're calling this method.
 
-            string msbuildArchitecture = expander.ExpandIntoStringAndUnescape(_taskNode.MSBuildArchitecture ?? String.Empty, ExpanderOptions.ExpandAll, _taskNode.MSBuildArchitectureLocation ?? ElementLocation.EmptyLocation);
-            string msbuildRuntime = expander.ExpandIntoStringAndUnescape(_taskNode.MSBuildRuntime ?? String.Empty, ExpanderOptions.ExpandAll, _taskNode.MSBuildRuntimeLocation ?? ElementLocation.EmptyLocation);
+            string msbuildArchitecture = expander.ExpandIntoStringAndUnescape(_taskNode.MSBuildArchitecture ?? String.Empty, ExpanderOptions.ExpandAll, _taskNode.MSBuildArchitectureLocation ?? ElementLocation.ElementLocation.EmptyLocation);
+            string msbuildRuntime = expander.ExpandIntoStringAndUnescape(_taskNode.MSBuildRuntime ?? String.Empty, ExpanderOptions.ExpandAll, _taskNode.MSBuildRuntimeLocation ?? ElementLocation.ElementLocation.EmptyLocation);
 
             IDictionary<string, string> taskIdentityParameters = null;
 

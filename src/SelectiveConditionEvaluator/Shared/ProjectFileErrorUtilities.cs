@@ -1,13 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using SelectiveConditionEvaluator.Resources;
-using InvalidProjectFileException = Microsoft.Build.Exceptions.InvalidProjectFileException;
+using InvalidProjectFileException = SelectiveConditionEvaluator.Errors.InvalidProjectFileException;
 
 #nullable disable
 
-namespace Microsoft.Build.Shared
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// This class contains methods that are useful for error checking and validation of project files.
@@ -17,7 +16,7 @@ namespace Microsoft.Build.Shared
         /// <summary>
         /// This method is used to flag errors in the project file being processed. Do NOT use this method in place of
         /// ErrorUtilities.VerifyThrow(), because ErrorUtilities.VerifyThrow() is used to flag internal/programming errors.
-        /// 
+        ///
         /// PERF WARNING: calling a method that takes a variable number of arguments is expensive, because memory is allocated for
         /// the array of arguments -- do not call this method repeatedly in performance-critical scenarios
         /// </summary>
@@ -35,7 +34,7 @@ namespace Microsoft.Build.Shared
         /// <summary>
         /// This method is used to flag errors in the project file being processed. Do NOT use this method in place of
         /// ErrorUtilities.VerifyThrow(), because ErrorUtilities.VerifyThrow() is used to flag internal/programming errors.
-        /// 
+        ///
         /// PERF WARNING: calling a method that takes a variable number of arguments is expensive, because memory is allocated for
         /// the array of arguments -- do not call this method repeatedly in performance-critical scenarios
         /// </summary>
@@ -55,7 +54,7 @@ namespace Microsoft.Build.Shared
         /// <summary>
         /// This method is used to flag errors in the project file being processed. Do NOT use this method in place of
         /// ErrorUtilities.VerifyThrow(), because ErrorUtilities.VerifyThrow() is used to flag internal/programming errors.
-        /// 
+        ///
         /// PERF WARNING: calling a method that takes a variable number of arguments is expensive, because memory is allocated for
         /// the array of arguments -- do not call this method repeatedly in performance-critical scenarios
         /// </summary>
@@ -75,7 +74,7 @@ namespace Microsoft.Build.Shared
         /// <summary>
         /// This method is used to flag errors in the project file being processed. Do NOT use this method in place of
         /// ErrorUtilities.VerifyThrow(), because ErrorUtilities.VerifyThrow() is used to flag internal/programming errors.
-        /// 
+        ///
         /// PERF WARNING: calling a method that takes a variable number of arguments is expensive, because memory is allocated for
         /// the array of arguments -- do not call this method repeatedly in performance-critical scenarios
         /// </summary>
@@ -95,7 +94,7 @@ namespace Microsoft.Build.Shared
         /// <summary>
         /// This method is used to flag errors in the project file being processed. Do NOT use this method in place of
         /// ErrorUtilities.VerifyThrow(), because ErrorUtilities.VerifyThrow() is used to flag internal/programming errors.
-        /// 
+        ///
         /// PERF WARNING: calling a method that takes a variable number of arguments is expensive, because memory is allocated for
         /// the array of arguments -- do not call this method repeatedly in performance-critical scenarios
         /// </summary>
@@ -117,7 +116,7 @@ namespace Microsoft.Build.Shared
         /// <summary>
         /// This method is used to flag errors in the project file being processed. Do NOT use this method in place of
         /// ErrorUtilities.VerifyThrow(), because ErrorUtilities.VerifyThrow() is used to flag internal/programming errors.
-        /// 
+        ///
         /// PERF WARNING: calling a method that takes a variable number of arguments is expensive, because memory is allocated for
         /// the array of arguments -- do not call this method repeatedly in performance-critical scenarios
         /// </summary>

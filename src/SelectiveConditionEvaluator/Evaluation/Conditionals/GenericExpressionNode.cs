@@ -3,9 +3,8 @@
 
 #nullable disable
 
-using Microsoft.Build.BackEnd.Logging;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.Evaluation.Conditionals
 {
@@ -43,7 +42,7 @@ namespace SelectiveConditionEvaluator.Evaluation.Conditionals
         internal abstract string GetUnexpandedValue(ConditionEvaluator.IConditionEvaluationState state);
 
         /// <summary>
-        /// If any expression nodes cache any state for the duration of evaluation, 
+        /// If any expression nodes cache any state for the duration of evaluation,
         /// now's the time to clean it up
         /// </summary>
         internal abstract void ResetState();
@@ -90,7 +89,7 @@ namespace SelectiveConditionEvaluator.Evaluation.Conditionals
         internal bool PotentialAndOrConflict()
         {
             // The values of the functions are assigned to boolean locals
-            // in order to force evaluation of the functions even when the 
+            // in order to force evaluation of the functions even when the
             // first one returns false
             bool detectOr = DetectOr();
             bool detectAnd = DetectAnd();

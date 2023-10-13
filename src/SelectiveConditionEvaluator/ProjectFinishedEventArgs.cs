@@ -1,11 +1,9 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.IO;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.Shared;
 
-namespace Microsoft.Build.Framework
+namespace SelectiveConditionEvaluator
 {
     /// <summary>
     /// Arguments for project finished events
@@ -20,7 +18,7 @@ namespace Microsoft.Build.Framework
     public class ProjectFinishedEventArgs : BuildStatusEventArgs
     {
         /// <summary>
-        /// Default constructor 
+        /// Default constructor
         /// </summary>
         protected ProjectFinishedEventArgs()
             : base()

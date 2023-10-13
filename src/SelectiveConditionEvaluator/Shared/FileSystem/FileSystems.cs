@@ -3,7 +3,7 @@
 
 #nullable disable
 
-namespace SelectiveConditionEvaluator
+namespace SelectiveConditionEvaluator.Shared.FileSystem
 {
     /// <summary>
     /// Factory for <see cref="IFileSystem"/>
@@ -17,7 +17,7 @@ namespace SelectiveConditionEvaluator
 #if CLR2COMPATIBILITY
             return MSBuildTaskHostFileSystem.Singleton();
 #else
-            if (NativeMethods.IsWindows)
+            if (SelectiveConditionEvaluator.NativeMethods.IsWindows)
             {
                 return MSBuildOnWindowsFileSystem.Singleton();
             }

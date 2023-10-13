@@ -4,7 +4,7 @@
 #nullable disable
 using System.Text;
 
-namespace Microsoft.Build.Framework;
+namespace SelectiveConditionEvaluator;
 
 /// <summary>
 /// Provider of <see cref="StringBuilder"/> instances.

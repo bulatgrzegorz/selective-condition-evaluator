@@ -1,27 +1,16 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Eventing;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
-using SelectiveConditionEvaluator.BackEnd.Components;
-using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
+using SelectiveConditionEvaluator.BackEnd.Components.BuildRequestEngine;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Evaluation.Conditionals;
 using SelectiveConditionEvaluator.Instance;
-using ElementLocation = SelectiveConditionEvaluator.ElementLocation.ElementLocation;
-using InvalidProjectFileException = Microsoft.Build.Exceptions.InvalidProjectFileException;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Shared.FileSystem;
+using InvalidProjectFileException = SelectiveConditionEvaluator.Errors.InvalidProjectFileException;
 using ProjectLoggingContext = SelectiveConditionEvaluator.BackEnd.Components.Logging.ProjectLoggingContext;
 using TargetLoggingContext = SelectiveConditionEvaluator.BackEnd.Components.Logging.TargetLoggingContext;
 using TaskItem = SelectiveConditionEvaluator.Instance.ProjectItemInstance.TaskItem;
@@ -31,7 +20,7 @@ using Microsoft.VisualStudio.Profiler;
 #endif
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder
 {
     /// <summary>
     /// Represents which state the target entry is currently in.
@@ -202,7 +191,7 @@ namespace Microsoft.Build.BackEnd
         /// <summary>
         /// Sets or sets the location from which this target was referred.
         /// </summary>
-        internal ElementLocation ReferenceLocation
+        internal ElementLocation.ElementLocation ReferenceLocation
         {
             get { return _targetSpecification.ReferenceLocation; }
         }
@@ -590,7 +579,7 @@ namespace Microsoft.Build.BackEnd
                     }
 
                     string targetReturns = _target.Returns;
-                    ElementLocation targetReturnsLocation = _target.ReturnsLocation;
+                    ElementLocation.ElementLocation targetReturnsLocation = _target.ReturnsLocation;
 
                     // If there are no targets in the project file that use the "Returns" attribute, that means that we
                     // revert to the legacy behavior in the case where Returns is not specified (null, rather

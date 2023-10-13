@@ -1,17 +1,15 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.IO;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
-using SdkResolverBase = Microsoft.Build.Framework.SdkResolver;
-using SdkResolverContextBase = Microsoft.Build.Framework.SdkResolverContext;
-using SdkResultBase = Microsoft.Build.Framework.SdkResult;
-using SdkResultFactoryBase = Microsoft.Build.Framework.SdkResultFactory;
+using SelectiveConditionEvaluator.Sdk;
+using SelectiveConditionEvaluator.Shared;
+using SdkResolverContextBase = SelectiveConditionEvaluator.Sdk.SdkResolverContext;
+using SdkResultBase = SelectiveConditionEvaluator.Sdk.SdkResult;
+using SdkResultFactoryBase = SelectiveConditionEvaluator.Sdk.SdkResultFactory;
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd.SdkResolution
+namespace SelectiveConditionEvaluator.BackEnd.Components.SdkResolution
 {
     /// <summary>
     ///     Default SDK resolver for compatibility with VS2017 RTM.
@@ -22,7 +20,7 @@ namespace Microsoft.Build.BackEnd.SdkResolution
     ///         3) Outside of Visual Studio (MSBuild Root)\Sdks\
     /// </remarks>
     /// </summary>
-    internal class DefaultSdkResolver : SdkResolverBase
+    internal class DefaultSdkResolver : SdkResolver
     {
         public override string Name => "DefaultSdkResolver";
 

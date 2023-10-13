@@ -3,7 +3,7 @@
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// Objects which wish to receive packets from the NodePacketRouter must implement this interface.

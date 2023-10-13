@@ -1,10 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Threading;
-
-namespace Microsoft.Build.Internal;
+namespace SelectiveConditionEvaluator.Utilities;
 
 // This type inspired by https://github.com/dotnet/roslyn/blob/ec6da663c592238cca8e145044e7410c4ca9213a/src/Compilers/Core/Portable/InternalUtilities/SemaphoreSlimExtensions.cs
 

@@ -1,13 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.IO;
-using Microsoft.Build.Shared;
-
 #nullable disable
 
-namespace Microsoft.Build.Framework
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator
 {
     /// <summary>
     /// Arguments for target started events
@@ -17,7 +15,7 @@ namespace Microsoft.Build.Framework
     // promise to never change the type's fields i.e. the type is
     // immutable; adding new fields in the next version of the type
     // without following certain special FX guidelines, can break both
-    // forward and backward compatibility    
+    // forward and backward compatibility
     [Serializable]
     public class TargetStartedEventArgs : BuildStatusEventArgs
     {
@@ -158,7 +156,7 @@ namespace Microsoft.Build.Framework
         public string ParentTarget => parentTarget;
 
         /// <summary>
-        /// Project file associated with event.   
+        /// Project file associated with event.
         /// </summary>
         public string ProjectFile => projectFile;
 

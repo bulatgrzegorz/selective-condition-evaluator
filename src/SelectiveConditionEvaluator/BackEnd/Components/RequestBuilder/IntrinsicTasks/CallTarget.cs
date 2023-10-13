@@ -1,18 +1,13 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
-using SelectiveConditionEvaluator;
+using SelectiveConditionEvaluator.Shared;
 
 // This CallTarget intrinsic task replaces the one on Microsoft.Build.Tasks, which is now deprecated.
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder.IntrinsicTasks
 {
     /// <remarks>
     /// This class implements the "CallTarget" task, which invokes other targets within the same

@@ -1,16 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Shared;
-
 #nullable disable
 
-namespace Microsoft.Build.Evaluation
+using System.Configuration;
+
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// Helper class for reading toolsets out of the configuration file.

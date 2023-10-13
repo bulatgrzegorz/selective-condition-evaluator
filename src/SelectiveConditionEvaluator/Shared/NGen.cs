@@ -3,15 +3,15 @@
 
 #nullable disable
 
-namespace Microsoft.Build.Shared
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// To avoid CA908 warnings (types that in ngen images that will JIT)
-    /// wrap each problematic value type in the collection in 
+    /// wrap each problematic value type in the collection in
     /// one of these objects.
     /// </summary>
     /// <comment>
-    /// This trick is based on advice from 
+    /// This trick is based on advice from
     /// http://sharepoint/sites/codeanalysis/Wiki%20Pages/Rule%20-%20Avoid%20Types%20That%20Require%20JIT%20Compilation%20In%20Precompiled%20Assemblies.aspx.
     /// It works because although this is a value type, it is not defined in mscorlib.
     /// </comment>

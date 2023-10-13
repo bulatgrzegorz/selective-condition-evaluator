@@ -3,9 +3,7 @@
 
 #nullable disable
 
-using SelectiveConditionEvaluator;
-
-namespace Microsoft.Build.Framework
+namespace SelectiveConditionEvaluator
 {
     /// <summary>
     /// This interface defines a "task" in the build system. A task is an atomic unit of build operation. All task classes must

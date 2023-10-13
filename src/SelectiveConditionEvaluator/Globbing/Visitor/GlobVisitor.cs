@@ -3,7 +3,7 @@
 
 #nullable disable
 
-namespace Microsoft.Build.Globbing.Visitor
+namespace SelectiveConditionEvaluator.Globbing.Visitor
 {
     internal abstract class GlobVisitor
     {

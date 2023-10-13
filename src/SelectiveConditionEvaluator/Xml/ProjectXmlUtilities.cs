@@ -1,18 +1,14 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Xml;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Framework.BuildException;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator.ElementLocation;
-
 #nullable disable
 
-namespace Microsoft.Build.Internal
+using System.Xml;
+using SelectiveConditionEvaluator.BuildException;
+using SelectiveConditionEvaluator.ElementLocation;
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator.Xml
 {
     /// <summary>
     /// Exception indicating that we tried to build a type of project MSBuild did not recognize.
@@ -76,7 +72,7 @@ namespace Microsoft.Build.Internal
         /// <summary>
         /// Throw an invalid project exception indicating that the child is not valid beneath the element
         /// </summary>
-        internal static void ThrowProjectInvalidChildElement(string name, string parentName, ElementLocation location)
+        internal static void ThrowProjectInvalidChildElement(string name, string parentName, ElementLocation.ElementLocation location)
         {
             ProjectErrorUtilities.ThrowInvalidProject(location, "UnrecognizedChildElement", name, parentName);
         }

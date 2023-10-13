@@ -1,24 +1,10 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.BuildEngine.Shared;
-using Microsoft.Build.Framework;
-using SelectiveConditionEvaluator;
-using SelectiveConditionEvaluator.BackEnd;
-using SelectiveConditionEvaluator.Collections;
-
-#if !TASKHOST && !MSBUILDENTRYPOINTEXE
-using Microsoft.Build.Collections;
-using Microsoft.Build.Framework.Profiler;
 using System.Collections;
-using System.Linq;
-#endif
+using System.Reflection;
+using SelectiveConditionEvaluator.Collections;
+using SelectiveConditionEvaluator.Profiler;
 
 #if FEATURE_APPDOMAIN
 using TaskEngineAssemblyResolver = Microsoft.Build.BackEnd.Logging.TaskEngineAssemblyResolver;
@@ -26,7 +12,7 @@ using TaskEngineAssemblyResolver = Microsoft.Build.BackEnd.Logging.TaskEngineAss
 
 #nullable disable
 
-namespace Microsoft.Build.Shared
+namespace SelectiveConditionEvaluator.Shared
 {
     #region Enumerations
     /// <summary>
@@ -1043,7 +1029,7 @@ namespace Microsoft.Build.Shared
             // it is expensive to access a ThreadStatic field every time
             var list = reusablePropertyList;
 
-            Internal.Utilities.EnumerateProperties(properties, list, static (list, kvp) => list.Add(kvp));
+            Utilities.Utilities.EnumerateProperties(properties, list, static (list, kvp) => list.Add(kvp));
 
             BinaryWriterExtensions.Write7BitEncodedInt(writer, list.Count);
 
@@ -1072,7 +1058,7 @@ namespace Microsoft.Build.Shared
 
             var list = reusableItemList;
 
-            Internal.Utilities.EnumerateItems(items, dictionaryEntry =>
+            Utilities.Utilities.EnumerateItems(items, dictionaryEntry =>
             {
                 list.Add((dictionaryEntry.Key as string, dictionaryEntry.Value));
             });

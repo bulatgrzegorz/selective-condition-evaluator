@@ -1,20 +1,15 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using Microsoft.Build.Shared;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using SelectiveConditionEvaluator;
-
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Shared.FileSystem;
 #if FEATURE_MSIOREDIST
 using Path = Microsoft.IO.Path;
 #endif
 
 #nullable disable
 
-namespace Microsoft.Build.FileSystem
+namespace SelectiveConditionEvaluator.FileSystem
 {
     internal class DirectoryCacheFileSystemWrapper : IFileSystem
     {
@@ -113,7 +108,7 @@ namespace Microsoft.Build.FileSystem
 
         public TextReader ReadFile(string path) => _fileSystem.ReadFile(path);
 
-        public Stream GetFileStream(string path, FileMode mode, FileAccess access, FileShare share) => _fileSystem.GetFileStream(path, mode, access, share);
+        public Stream GetFileStream(string path, FileMode mode, System.IO.FileAccess access, FileShare share) => _fileSystem.GetFileStream(path, mode, access, share);
 
         public string ReadFileAllText(string path) => _fileSystem.ReadFileAllText(path);
 

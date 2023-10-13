@@ -2,12 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.BackEnd.Components.BuildRequestEngine;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Instance;
+using SelectiveConditionEvaluator.Shared;
 using TaskItem = SelectiveConditionEvaluator.Instance.ProjectItemInstance.TaskItem;
 
 #nullable disable
@@ -52,7 +51,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
             BuildRequest request,
             string projectFullPath,
             string toolsVersion,
-            int evaluationId = ((LoggingContext)this).BuildEventContext.InvalidEvaluationId)
+            int evaluationId = BuildEventContext.InvalidEvaluationId)
             : this
             (
             nodeLoggingContext,

@@ -1,16 +1,15 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+
+using SelectiveConditionEvaluator.Shared;
 #if RUNTIME_TYPE_NETCORE || MONO
 using System.Diagnostics;
-using System.IO;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
 #endif
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Components.Communications
 {
     internal static class CurrentHost
     {

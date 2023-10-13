@@ -1,17 +1,15 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Concurrent;
-using Microsoft.Build.Framework;
-
 #nullable disable
+
+using System.Collections.Concurrent;
 
 #if BUILD_ENGINE
 using Microsoft.Build.Shared;
 namespace Microsoft.Build.BackEnd.Components.Caching
 #else
-namespace Microsoft.Build.Shared
+namespace SelectiveConditionEvaluator.Shared
 #endif
 {
     /// <summary>
@@ -44,7 +42,7 @@ namespace Microsoft.Build.Shared
 
         #region IRegisteredTaskObjectCache
 
-        /// <summary> 
+        /// <summary>
         /// Disposes of all of the cached objects registered with the specified lifetime.
         /// </summary>
         public void DisposeCacheObjects(RegisteredTaskObjectLifetime lifetime)

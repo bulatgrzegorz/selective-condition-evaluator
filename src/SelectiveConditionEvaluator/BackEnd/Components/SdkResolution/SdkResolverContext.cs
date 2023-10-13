@@ -1,20 +1,16 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-
-using SdkResolverContextBase = Microsoft.Build.Framework.SdkResolverContext;
-
 #nullable disable
 
-namespace Microsoft.Build.BackEnd.SdkResolution
+namespace SelectiveConditionEvaluator.BackEnd.Components.SdkResolution
 {
     /// <summary>
-    /// An internal implementation of <see cref="Framework.SdkResolverContext"/>.
+    /// An internal implementation of <see cref="Sdk.SdkResolverContext"/>.
     /// </summary>
-    internal sealed class SdkResolverContext : SdkResolverContextBase
+    internal sealed class SdkResolverContext : Sdk.SdkResolverContext
     {
-        public SdkResolverContext(Framework.SdkLogger logger, string projectFilePath, string solutionPath, Version msBuildVersion, bool interactive, bool isRunningInVisualStudio)
+        public SdkResolverContext(Sdk.SdkLogger logger, string projectFilePath, string solutionPath, Version msBuildVersion, bool interactive, bool isRunningInVisualStudio)
         {
             Logger = logger;
             ProjectFilePath = projectFilePath;

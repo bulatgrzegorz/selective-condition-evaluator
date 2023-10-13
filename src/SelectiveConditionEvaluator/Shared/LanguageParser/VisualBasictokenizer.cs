@@ -1,12 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Collections;
-using System.IO;
-
 #nullable disable
 
-namespace Microsoft.Build.Shared.LanguageParser
+using System.Collections;
+
+namespace SelectiveConditionEvaluator.Shared.LanguageParser
 {
     /*
      * Class:   VisualBasicTokenizer
@@ -38,7 +37,7 @@ namespace Microsoft.Build.Shared.LanguageParser
 
         /*
          * Method:  VisualBasicTokenizer
-         * 
+         *
          * Construct
          */
         internal VisualBasicTokenizer(Stream binaryStream, bool forceANSI)
@@ -49,7 +48,7 @@ namespace Microsoft.Build.Shared.LanguageParser
 
         /*
          * Method:  GetEnumerator
-         * 
+         *
          * Return a new token enumerator.
          */
         public IEnumerator GetEnumerator()

@@ -1,20 +1,18 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Xml;
-using SelectiveConditionEvaluator.ElementLocation;
-
 #nullable disable
 
-namespace Microsoft.Build.Shared
+using System.Xml;
+
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// This class encapsulates information about a file that is associated with a build event.
     /// </summary>
     internal sealed class BuildEventFileInfo
     {
-        internal static BuildEventFileInfo Empty = new BuildEventFileInfo(ElementLocation.EmptyLocation);
+        internal static BuildEventFileInfo Empty = new BuildEventFileInfo(ElementLocation.ElementLocation.EmptyLocation);
 
         #region Constructors
 
@@ -23,7 +21,7 @@ namespace Microsoft.Build.Shared
         /// Filename may be an empty string, if there is truly no file associated.
         /// This overload may also be used if there is a file but truly no line/column,
         /// for example when failing to load a project file.
-        /// 
+        ///
         /// IF AN IELEMENTLOCATION IS AVAILABLE, USE THE OVERLOAD ACCEPTING THAT INSTEAD.
         /// </summary>
         /// <param name="file"></param>
@@ -46,7 +44,7 @@ namespace Microsoft.Build.Shared
 
         /// <summary>
         /// Creates an instance of this class using the given filename/path and a line/column of interest in the file.
-        /// 
+        ///
         /// IF AN IELEMENTLOCATION IS AVAILABLE, USE THE OVERLOAD ACCEPTING THAT INSTEAD.
         /// </summary>
         /// <param name="file"></param>
@@ -60,7 +58,7 @@ namespace Microsoft.Build.Shared
 
         /// <summary>
         /// Creates an instance of this class using the given filename/path and a range of lines/columns of interest in the file.
-        /// 
+        ///
         /// IF AN IELEMENTLOCATION IS AVAILABLE, USE THE OVERLOAD ACCEPTING THAT INSTEAD.
         /// </summary>
         /// <param name="file"></param>

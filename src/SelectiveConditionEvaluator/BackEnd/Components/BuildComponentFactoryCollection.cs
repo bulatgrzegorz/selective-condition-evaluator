@@ -3,12 +3,11 @@
 
 #nullable disable
 
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.BackEnd.Components.Caching;
-using Microsoft.Build.BackEnd.SdkResolution;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Components.Caching;
 using SelectiveConditionEvaluator.BackEnd.Components.Communications;
+using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
+using SelectiveConditionEvaluator.BackEnd.Components.SdkResolution;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.BackEnd.Components
 {

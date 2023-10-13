@@ -1,16 +1,14 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Collections.Generic;
-using System.Diagnostics;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator.Instance;
-
 #nullable disable
 
-namespace Microsoft.Build.Graph
+using System.Diagnostics;
+using SelectiveConditionEvaluator.BackEnd.Shared;
+using SelectiveConditionEvaluator.Instance;
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator.Graph
 {
     /// <summary>
     /// Represents the node for a particular project in a project graph.

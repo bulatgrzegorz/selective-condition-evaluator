@@ -1,15 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Build.Shared;
-
 #nullable disable
 
-namespace Microsoft.Build.Collections
+using System.Collections;
+
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// A special singleton enumerable that enumerates a read-only empty dictionary

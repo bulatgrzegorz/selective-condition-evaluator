@@ -1,14 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections;
-using System.IO;
-using Microsoft.Build.Shared;
-
 #nullable disable
 
-namespace Microsoft.Build.Framework
+using System.Collections;
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator
 {
     /// <summary>
     /// Arguments for target finished events
@@ -23,7 +21,7 @@ namespace Microsoft.Build.Framework
     public class TargetFinishedEventArgs : BuildStatusEventArgs
     {
         /// <summary>
-        /// Default constructor 
+        /// Default constructor
         /// </summary>
         protected TargetFinishedEventArgs()
             : base()

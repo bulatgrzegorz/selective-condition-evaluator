@@ -8,11 +8,11 @@ using System.Collections.ObjectModel;
 using System.Security;
 using System.Text;
 using System.Xml;
-using Microsoft.Build.Shared;
-using XMakeAttributes = Microsoft.Build.Shared.XMakeAttributes;
-using ProjectFileErrorUtilities = Microsoft.Build.Shared.ProjectFileErrorUtilities;
-using BuildEventFileInfo = Microsoft.Build.Shared.BuildEventFileInfo;
-using ErrorUtilities = Microsoft.Build.Shared.ErrorUtilities;
+using SelectiveConditionEvaluator.Shared;
+using XMakeAttributes = SelectiveConditionEvaluator.Shared.XMakeAttributes;
+using ProjectFileErrorUtilities = SelectiveConditionEvaluator.Shared.ProjectFileErrorUtilities;
+using BuildEventFileInfo = SelectiveConditionEvaluator.Shared.BuildEventFileInfo;
+using ErrorUtilities = SelectiveConditionEvaluator.Shared.ErrorUtilities;
 
 #nullable disable
 
@@ -102,7 +102,7 @@ namespace SelectiveConditionEvaluator.Construction.Solution
         /// <summary>
         /// The project configuration in given solution configuration
         /// K: full solution configuration name (cfg + platform)
-        /// V: project configuration 
+        /// V: project configuration
         /// </summary>
         private readonly Dictionary<string, ProjectConfigurationInSolution> _projectConfigurations;
         private IReadOnlyDictionary<string, ProjectConfigurationInSolution> _projectConfigurationsReadOnly;
@@ -203,14 +203,14 @@ namespace SelectiveConditionEvaluator.Construction.Solution
         public string ProjectGuid { get; internal set; }
 
         /// <summary>
-        /// The guid, in "{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}" form, of this project's 
-        /// parent project, if any. 
+        /// The guid, in "{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}" form, of this project's
+        /// parent project, if any.
         /// </summary>
         public string ParentProjectGuid { get; internal set; }
 
         /// <summary>
-        /// List of guids, in "{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}" form, mapping to projects 
-        /// that this project has a build order dependency on, as defined in the solution file. 
+        /// List of guids, in "{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}" form, mapping to projects
+        /// that this project has a build order dependency on, as defined in the solution file.
         /// </summary>
         public IReadOnlyList<string> Dependencies => _dependenciesAsReadonly ?? (_dependenciesAsReadonly = _dependencies.AsReadOnly());
 
@@ -234,9 +234,9 @@ namespace SelectiveConditionEvaluator.Construction.Solution
         public SolutionProjectType ProjectType { get; set; }
 
         /// <summary>
-        /// Only applies to websites -- for other project types, references are 
+        /// Only applies to websites -- for other project types, references are
         /// either specified as Dependencies above, or as ProjectReferences in the
-        /// project file, which the solution doesn't have insight into. 
+        /// project file, which the solution doesn't have insight into.
         /// </summary>
         internal List<string> ProjectReferences { get; } = new List<string>();
 
@@ -265,7 +265,7 @@ namespace SelectiveConditionEvaluator.Construction.Solution
         }
 
         /// <summary>
-        /// Set the requested project configuration. 
+        /// Set the requested project configuration.
         /// </summary>
         internal void SetProjectConfiguration(string configurationName, ProjectConfigurationInSolution configuration)
         {
@@ -300,7 +300,7 @@ namespace SelectiveConditionEvaluator.Construction.Solution
                 FileStream fs = File.OpenRead(AbsolutePath);
                 using (XmlReader xmlReader = XmlReader.Create(fs, xrSettings))
                 {
-                    // Load the project file and get the first node    
+                    // Load the project file and get the first node
                     projectDocument.Load(xmlReader);
                 }
 
@@ -497,7 +497,7 @@ namespace SelectiveConditionEvaluator.Construction.Solution
             // This is where we're going to work on the final string to return to the caller.
             var cleanProjectName = new StringBuilder(projectName);
 
-            // Replace each unclean character with a clean one            
+            // Replace each unclean character with a clean one
             foreach (char uncleanChar in s_charsToCleanse)
             {
                 cleanProjectName.Replace(uncleanChar, cleanCharacter);

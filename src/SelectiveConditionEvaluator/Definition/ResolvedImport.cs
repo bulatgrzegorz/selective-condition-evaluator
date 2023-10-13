@@ -1,15 +1,14 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Diagnostics.CodeAnalysis;
-using Microsoft.Build.Construction;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator.Construction;
-
 #nullable disable
 
-namespace Microsoft.Build.Evaluation
+using System.Diagnostics.CodeAnalysis;
+using SelectiveConditionEvaluator.Construction;
+using SelectiveConditionEvaluator.Sdk;
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator.Definition
 {
     /// <summary>
     /// Encapsulates an import relationship in an evaluated project

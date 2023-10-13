@@ -1,17 +1,17 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using Microsoft.Build.BackEnd.SdkResolution;
-using Microsoft.Build.BuildEngine.Shared;
-using Microsoft.Build.Exceptions;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Experimental.ProjectCache;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Framework.BuildException;
-using Microsoft.Build.Internal;
+using SelectiveConditionEvaluator.BackEnd.Components.ProjectCache;
+using SelectiveConditionEvaluator.BackEnd.Components.Scheduler;
+using SelectiveConditionEvaluator.BackEnd.Components.SdkResolution;
+using SelectiveConditionEvaluator.BackEnd.Shared;
+using SelectiveConditionEvaluator.BuildException;
+using SelectiveConditionEvaluator.Errors;
 using SelectiveConditionEvaluator.Instance;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Xml;
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Components.Communications
 {
     internal static class SerializationContractInitializer
     {
@@ -33,7 +33,7 @@ namespace Microsoft.Build.BackEnd
                 new(typeof(InvalidProjectFileException), (msg, inner) => new InvalidProjectFileException(msg, inner)),
                 new(typeof(InvalidToolsetDefinitionException), (msg, inner) => new InvalidToolsetDefinitionException(msg, inner)),
                 new(typeof(ProjectCacheException), (msg, inner) => new ProjectCacheException(msg, inner)),
-                new(typeof(InternalErrorException), InternalErrorException.CreateFromRemote),
+                new(typeof(InternalErrorException), Microsoft.Build.Framework.InternalErrorException.CreateFromRemote),
                 new(typeof(LoggerException), (msg, inner) => new LoggerException(msg, inner)),
                 new(typeof(NodeFailedToLaunchException), (msg, inner) => new NodeFailedToLaunchException(msg, inner)),
                 new(typeof(SchedulerCircularDependencyException), (msg, inner) => new SchedulerCircularDependencyException(msg, inner)),

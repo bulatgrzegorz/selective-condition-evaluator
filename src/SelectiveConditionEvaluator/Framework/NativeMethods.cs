@@ -1,25 +1,20 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-
-using Microsoft.Build.Shared;
 using Microsoft.Win32;
 using Microsoft.Win32.SafeHandles;
-using SelectiveConditionEvaluator;
+using SelectiveConditionEvaluator.Shared;
 using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
 
 #nullable disable
 
-namespace Microsoft.Build.Framework;
+namespace SelectiveConditionEvaluator.Framework;
 
 internal static class NativeMethods
 {

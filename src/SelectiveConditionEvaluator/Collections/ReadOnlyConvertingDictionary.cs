@@ -3,7 +3,7 @@
 
 #nullable disable
 
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.Collections
 {

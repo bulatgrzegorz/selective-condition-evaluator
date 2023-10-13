@@ -1,10 +1,9 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using Microsoft.Build.Execution;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Instance;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.BackEnd.Components.ProjectCache
 {
@@ -38,8 +37,8 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.ProjectCache
     /// <summary>
     ///     Represents the cache result a plugin returns back to MSBuild when queried about a certain project.
     ///     Results representing cache hits (with <see cref="ResultType"/> == <see cref="CacheResultType.CacheHit"/>)
-    ///     contain information about what <see cref="Microsoft.Build.Execution.BuildResult"/> MSBuild should use for the queried project.
-    ///     It is assumed that all cache hits result in a successful <see cref="Microsoft.Build.Execution.BuildResult"/>.
+    ///     contain information about what <see cref="Shared.BuildResult"/> MSBuild should use for the queried project.
+    ///     It is assumed that all cache hits result in a successful <see cref="Shared.BuildResult"/>.
     /// </summary>
     public class CacheResult
     {

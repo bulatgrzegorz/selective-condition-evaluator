@@ -2,17 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
-using System;
-using System.IO;
-using System.Text.RegularExpressions;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator.Collections;
-using SelectiveConditionEvaluator.StringTools;
-
 #nullable disable
 
-namespace Microsoft.Build.Globbing
+using System.Text.RegularExpressions;
+using SelectiveConditionEvaluator.Collections;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.StringTools;
+
+namespace SelectiveConditionEvaluator.Globbing
 {
     /// <summary>
     ///     Represents a parsed MSBuild glob.

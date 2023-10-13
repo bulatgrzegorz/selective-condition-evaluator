@@ -1,21 +1,19 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Microsoft.Build.Framework.BuildException;
+using SelectiveConditionEvaluator.BuildException;
 #if FEATURE_SECURITY_PERMISSIONS
 using System.Security.Permissions; // for SecurityPermissionAttribute
 #endif
 
 #nullable disable
 
-namespace Microsoft.Build.Framework
+namespace SelectiveConditionEvaluator
 {
     /// <summary>
     /// Exception that should be thrown by a logger when it cannot continue.
-    /// Allows a logger to force the build to stop in an explicit way, when, for example, it 
+    /// Allows a logger to force the build to stop in an explicit way, when, for example, it
     /// receives invalid parameters, or cannot write to disk.
     /// </summary>
     // WARNING: marking a type [Serializable] without implementing ISerializable imposes a serialization contract -- it is a
@@ -77,7 +75,7 @@ namespace Microsoft.Build.Framework
         #region Serialization (update when adding new class members)
 
         /// <summary>
-        /// Protected constructor used for (de)serialization. 
+        /// Protected constructor used for (de)serialization.
         /// If we ever add new members to this class, we'll need to update this.
         /// </summary>
         /// <param name="info">Serialization info</param>

@@ -5,20 +5,15 @@
 // BACKWARD COMPATIBILITY FOR API USERS WHO HAVE NOT YET MOVED TO UPDATED APIS. PLEASE DO NOT SEND PULL
 // REQUESTS THAT CHANGE THIS FILE WITHOUT FIRST CHECKING WITH THE MAINTAINERS THAT THE FIX IS REQUIRED.
 
-using System;
-using System.Text;
 using System.Collections;
 using System.Diagnostics;
 using System.Globalization;
-using System.Collections.Generic;
-using Microsoft.Build.BackEnd.Logging;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Logging;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
-using ResourceUtilities = Microsoft.Build.BuildEngine.Shared.ResourceUtilities;
+using System.Text;
+using Microsoft.Build.BuildEngine;
+using SelectiveConditionEvaluator.Shared;
+using ResourceUtilities = SelectiveConditionEvaluator.Deprecated.Engine.Shared.ResourceUtilities;
 
-namespace Microsoft.Build.BuildEngine
+namespace SelectiveConditionEvaluator.Logging.ParallelLogger
 {
     /// <summary>
     /// This class implements the default logger that outputs event data

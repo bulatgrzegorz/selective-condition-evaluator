@@ -1,23 +1,16 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
-
-using Microsoft.Build.Framework;
 using Microsoft.Win32;
-using SelectiveConditionEvaluator;
-using NativeMethods = SelectiveConditionEvaluator.NativeMethods;
 
 #nullable disable
 
-namespace Microsoft.Build.Shared
+namespace SelectiveConditionEvaluator
 {
     /// <summary>
     /// This class contains utility methods for dealing with encoding.
@@ -171,7 +164,7 @@ namespace Microsoft.Build.Shared
         /// <returns>True when the first 3 bytes of the file are equal to the UTF8 BOM.</returns>
         internal static bool FileStartsWithPreamble(string file)
         {
-            using (var stream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var stream = new FileStream(file, FileMode.Open, System.IO.FileAccess.Read, FileShare.Read))
             {
                 return StartsWithPreamble(stream);
             }

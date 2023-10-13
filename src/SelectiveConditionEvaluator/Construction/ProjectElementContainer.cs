@@ -6,10 +6,10 @@
 using System.Collections;
 using System.Diagnostics;
 using System.Xml;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.ElementLocation;
 using SelectiveConditionEvaluator.ObjectModelRemoting.ConstructionObjectLinks;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Xml;
 
 namespace SelectiveConditionEvaluator.Construction
 {
@@ -76,7 +76,7 @@ namespace SelectiveConditionEvaluator.Construction
             [DebuggerStepThrough]
             get => FirstChild == null
                 ? Array.Empty<ProjectElement>()
-                : new Microsoft.Build.Collections.ReadOnlyCollection<ProjectElement>(new ProjectElementSiblingEnumerable(FirstChild));
+                : new ReadOnlyCollection<ProjectElement>(new ProjectElementSiblingEnumerable(FirstChild));
         }
 
 #pragma warning disable RS0030 // The ref to the banned API is in a doc comment
@@ -100,7 +100,7 @@ namespace SelectiveConditionEvaluator.Construction
             [DebuggerStepThrough]
             get => LastChild == null
                 ? Array.Empty<ProjectElement>()
-                : new Microsoft.Build.Collections.ReadOnlyCollection<ProjectElement>(new ProjectElementSiblingEnumerable(LastChild, forwards: false));
+                : new ReadOnlyCollection<ProjectElement>(new ProjectElementSiblingEnumerable(LastChild, forwards: false));
         }
 
         internal ProjectElementSiblingSubTypeCollection<T> GetChildrenReversedOfType<T>()
@@ -442,7 +442,7 @@ namespace SelectiveConditionEvaluator.Construction
             Debug.Assert(child.ExpressedAsAttribute, nameof(SetElementAsAttributeValue) + " method requires that " +
                 nameof(child.ExpressedAsAttribute) + " property of child is true");
 
-            string value = Microsoft.Build.Internal.Utilities.GetXmlNodeInnerContents(child.XmlElement);
+            string value = Utilities.Utilities.GetXmlNodeInnerContents(child.XmlElement);
             ProjectXmlUtilities.SetOrRemoveAttribute(XmlElement, child.XmlElement.Name, value);
         }
 

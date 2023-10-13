@@ -1,16 +1,16 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Runtime.InteropServices;
-
 #nullable disable
 
-namespace Microsoft.Build.Framework
+using System.Runtime.InteropServices;
+
+namespace SelectiveConditionEvaluator
 {
     /// <summary>
-    /// This interface defines a "parallel aware logger" in the build system. A parallel aware logger 
+    /// This interface defines a "parallel aware logger" in the build system. A parallel aware logger
     /// will accept a cpu count and be aware that any cpu count greater than 1 means the events will
-    /// be received from the logger from each cpu as the events are logged. 
+    /// be received from the logger from each cpu as the events are logged.
     /// </summary>
     [ComVisible(true)]
     public interface INodeLogger : ILogger

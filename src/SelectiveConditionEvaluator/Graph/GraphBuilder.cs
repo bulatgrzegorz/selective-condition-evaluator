@@ -1,29 +1,23 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Construction;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Exceptions;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
-using SelectiveConditionEvaluator.Collections;
-using SelectiveConditionEvaluator.Construction.Solution;
-using SelectiveConditionEvaluator.Instance;
-
 #nullable disable
 
-namespace Microsoft.Build.Graph
+using System.Collections.Concurrent;
+using System.Collections.Immutable;
+using System.Text;
+using SelectiveConditionEvaluator.BackEnd.Shared;
+using SelectiveConditionEvaluator.Collections;
+using SelectiveConditionEvaluator.Construction.Solution;
+using SelectiveConditionEvaluator.Definition;
+using SelectiveConditionEvaluator.Errors;
+using SelectiveConditionEvaluator.Instance;
+using SelectiveConditionEvaluator.Shared;
+using ProjectConfigurationInSolution = SelectiveConditionEvaluator.Construction.Solution.ProjectConfigurationInSolution;
+using ProjectInSolution = SelectiveConditionEvaluator.Construction.Solution.ProjectInSolution;
+using SolutionProjectType = SelectiveConditionEvaluator.Construction.Solution.SolutionProjectType;
+
+namespace SelectiveConditionEvaluator.Graph
 {
     internal class GraphBuilder
     {

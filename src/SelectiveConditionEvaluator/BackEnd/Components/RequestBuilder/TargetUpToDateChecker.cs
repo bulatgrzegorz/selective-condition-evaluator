@@ -1,29 +1,18 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-using Microsoft.Build.Collections;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
+using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder.IntrinsicTasks;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Instance;
-using ElementLocation = SelectiveConditionEvaluator.ElementLocation.ElementLocation;
-using NativeMethods = SelectiveConditionEvaluator.NativeMethods;
+using SelectiveConditionEvaluator.Shared;
 using ProjectItemInstanceFactory = SelectiveConditionEvaluator.Instance.ProjectItemInstance.TaskItem.ProjectItemInstanceFactory;
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder
 {
-    using ILoggingService = SelectiveConditionEvaluator.BackEnd.Components.Logging.ILoggingService;
+    using ILoggingService = Logging.ILoggingService;
     using ItemVectorPartition = System.Collections.Generic.Dictionary<string, System.Collections.Generic.IList<ProjectItemInstance>>;
     // ItemVectorPartitionCollection is designed to contains a set of project items which have possibly undergone transforms.
     // The outer dictionary it usually keyed by item type, so if items originally came from
@@ -796,7 +785,7 @@ namespace Microsoft.Build.BackEnd
             out ItemVectorPartitionCollection itemVectors,
             ItemVectorPartitionCollection itemVectorTransforms,
             out Dictionary<string, string> discreteItems,
-            ElementLocation elementLocation)
+            ElementLocation.ElementLocation elementLocation)
         {
             itemVectors = new ItemVectorPartitionCollection(MSBuildNameIgnoreCaseComparer.Default);
             discreteItems = new Dictionary<string, string>(MSBuildNameIgnoreCaseComparer.Default);

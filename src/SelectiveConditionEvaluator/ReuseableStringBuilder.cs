@@ -2,16 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 #nullable enable
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
-using System.Threading;
-using Microsoft.Build.Eventing;
 
-namespace Microsoft.Build.Framework
+namespace SelectiveConditionEvaluator
 {
     /// <summary>
     /// A StringBuilder lookalike that reuses its internal storage.
@@ -245,7 +241,7 @@ namespace Microsoft.Build.Framework
 
             /// <summary>
             /// Obtains a string builder which may or may not already
-            /// have been used. 
+            /// have been used.
             /// Never returns null.
             /// </summary>
             internal static StringBuilder Get(int capacity)
@@ -310,7 +306,7 @@ namespace Microsoft.Build.Framework
                 //
                 // If some code has a bug and forgets to return their builder
                 // (or we refuse it here because it's too big) the next user will
-                // get given a new one, and then return it soon after. 
+                // get given a new one, and then return it soon after.
                 // So the shared builder will be "replaced".
                 if (returningBuilder.Capacity > MaxBuilderSizeCapacity)
                 {

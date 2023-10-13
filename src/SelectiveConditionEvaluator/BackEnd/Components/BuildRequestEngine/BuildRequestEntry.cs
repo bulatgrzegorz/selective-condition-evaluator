@@ -1,20 +1,15 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using Microsoft.Build.Shared;
-using Microsoft.Build.Execution;
 using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
 using SelectiveConditionEvaluator.BackEnd.Shared;
-using BuildAbortedException = Microsoft.Build.Exceptions.BuildAbortedException;
+using SelectiveConditionEvaluator.Shared;
+using BuildAbortedException = SelectiveConditionEvaluator.BackEnd.Shared.BuildAbortedException;
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Components.BuildRequestEngine
 {
     /// <summary>
     /// Delegate is called when the state for a build request entry has changed.

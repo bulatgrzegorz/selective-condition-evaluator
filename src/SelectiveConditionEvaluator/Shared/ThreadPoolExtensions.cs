@@ -1,13 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Globalization;
-using System.Threading;
-
 #nullable disable
 
-namespace Microsoft.Build.Shared
+using System.Globalization;
+
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// Class to wrap the saving and restoring of the culture of a threadpool thread

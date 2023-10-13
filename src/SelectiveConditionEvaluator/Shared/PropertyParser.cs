@@ -1,19 +1,14 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator.StringTools;
 #nullable disable
 
 #if BUILD_ENGINE
 namespace Microsoft.Build.BackEnd
 #else
-using Microsoft.Build.Utilities;
+using SelectiveConditionEvaluator.StringTools;
 
-namespace Microsoft.Build.Tasks
+namespace SelectiveConditionEvaluator.Shared
 #endif
 {
     internal static class PropertyParser
