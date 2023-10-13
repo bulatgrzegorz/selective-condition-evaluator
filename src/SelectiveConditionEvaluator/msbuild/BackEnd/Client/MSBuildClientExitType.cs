@@ -3,7 +3,7 @@
 
 namespace SelectiveConditionEvaluator.msbuild.BackEnd.Client
 {
-    public enum MSBuildClientExitType
+    internal enum MSBuildClientExitType
     {
         /// <summary>
         /// The MSBuild client successfully processed the build request.

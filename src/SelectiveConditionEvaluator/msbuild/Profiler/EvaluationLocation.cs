@@ -12,7 +12,7 @@ namespace SelectiveConditionEvaluator.msbuild.Profiler
     /// Order matters since the profiler pretty printer orders profiled items from top to bottom using
     /// the pass they belong to
     /// </remarks>
-    public enum EvaluationPass : byte
+    internal enum EvaluationPass : byte
     {
         /// <nodoc/>
         TotalEvaluation = 0,
@@ -37,7 +37,7 @@ namespace SelectiveConditionEvaluator.msbuild.Profiler
     /// <summary>
     /// The kind of the evaluated location being tracked
     /// </summary>
-    public enum EvaluationLocationKind : byte
+    internal enum EvaluationLocationKind : byte
     {
         /// <nodoc/>
         Element = 0,

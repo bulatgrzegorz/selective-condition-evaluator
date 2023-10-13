@@ -8,7 +8,7 @@ namespace SelectiveConditionEvaluator.msbuild
     /// <summary>
     /// The reason that a target was built by its parent target.
     /// </summary>
-    public enum TargetBuiltReason
+    internal enum TargetBuiltReason
     {
         /// <summary>
         /// This wasn't built on because of a parent.

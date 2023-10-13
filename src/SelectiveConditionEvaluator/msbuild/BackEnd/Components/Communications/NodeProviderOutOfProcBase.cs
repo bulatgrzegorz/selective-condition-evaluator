@@ -12,6 +12,7 @@ using Microsoft.Build.Eventing;
 using System.Buffers.Binary;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO.Pipes;
 using System.Security.Principal;
@@ -19,6 +20,7 @@ using SelectiveConditionEvaluator.msbuild.BackEnd.Client;
 using SelectiveConditionEvaluator.msbuild.BackEnd.Components.Logging;
 using SelectiveConditionEvaluator.msbuild.Shared;
 using Task = System.Threading.Tasks.Task;
+// ReSharper disable PossibleNullReferenceException
 
 #nullable disable
 
@@ -28,6 +30,7 @@ namespace SelectiveConditionEvaluator.msbuild.BackEnd.Components.Communications
     /// Contains the shared pieces of code from NodeProviderOutOfProc
     /// and NodeProviderOutOfProcTaskHost.
     /// </summary>
+    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
     internal abstract class NodeProviderOutOfProcBase
     {
         /// <summary>
@@ -213,7 +216,9 @@ namespace SelectiveConditionEvaluator.msbuild.BackEnd.Components.Communications
             // Processes from this queue will be concurrently consumed by TryReusePossibleRunningNodes while
             //    trying to connect to them and reuse them. When queue is empty, no process to reuse left
             //    new node process will be started.
+#pragma warning disable CS0219
             string expectedProcessName = null;
+#pragma warning restore CS0219
             ConcurrentQueue<Process> possibleRunningNodes = null;
 #if FEATURE_NODE_REUSE
             // Try to connect to idle nodes if node reuse is enabled.

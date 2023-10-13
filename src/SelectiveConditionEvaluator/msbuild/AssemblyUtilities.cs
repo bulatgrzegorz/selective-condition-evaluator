@@ -3,6 +3,9 @@
 
 using System.Globalization;
 using System.Reflection;
+#pragma warning disable SYSLIB0017
+#pragma warning disable SYSLIB0044
+#pragma warning disable SYSLIB0037
 
 namespace SelectiveConditionEvaluator.msbuild;
 

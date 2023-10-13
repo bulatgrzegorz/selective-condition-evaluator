@@ -78,7 +78,7 @@ namespace SelectiveConditionEvaluator.msbuild.Shared.FileSystem
         /// <summary>
         /// Status of attempting to enumerate a directory.
         /// </summary>
-        public enum EnumerateDirectoryStatus
+        internal enum EnumerateDirectoryStatus
         {
             /// <summary>
             /// Enumeration of an existent directory succeeded.

@@ -10,6 +10,10 @@ using SelectiveConditionEvaluator.msbuild.Evaluation;
 using SelectiveConditionEvaluator.msbuild.Evaluation.Conditionals;
 using SelectiveConditionEvaluator.msbuild.Shared;
 using SelectiveConditionEvaluator.msbuild.Utilities;
+// ReSharper disable ConditionIsAlwaysTrueOrFalse
+// ReSharper disable InconsistentNaming
+#pragma warning disable CS0649
+#pragma warning disable CS0472
 
 #nullable disable
 

@@ -43,7 +43,7 @@ namespace SelectiveConditionEvaluator.msbuild.BackEnd.Components.ProjectCache
         /// <summary>
         ///     Called for each file access from an MSBuild node or one of its children.
         /// </summary>
-        [CLSCompliant(false)]
+        
         public virtual void HandleFileAccess(FileAccessContext fileAccessContext, FileAccessData fileAccessData)
         {
         }
@@ -51,7 +51,7 @@ namespace SelectiveConditionEvaluator.msbuild.BackEnd.Components.ProjectCache
         /// <summary>
         ///     Called for each new child process created by an MSBuild node or one of its children.
         /// </summary>
-        [CLSCompliant(false)]
+        
         public virtual void HandleProcess(FileAccessContext fileAccessContext, ProcessData processData)
         {
         }

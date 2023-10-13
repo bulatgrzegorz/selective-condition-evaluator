@@ -16,7 +16,7 @@ namespace SelectiveConditionEvaluator.msbuild.BackEnd.BuildManager
     /// Flags providing additional control over the build request
     /// </summary>
     [Flags]
-    public enum BuildRequestDataFlags
+    internal enum BuildRequestDataFlags
     {
         /// <summary>
         /// No flags.

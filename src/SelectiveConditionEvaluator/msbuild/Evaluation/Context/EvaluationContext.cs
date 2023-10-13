@@ -20,7 +20,7 @@ namespace SelectiveConditionEvaluator.msbuild.Evaluation.Context
     /// </summary>
     internal class EvaluationContext
     {
-        public enum SharingPolicy
+        internal enum SharingPolicy
         {
             /// <summary>
             /// Instructs the <see cref="EvaluationContext"/> to reuse state between the different project evaluations that use it.

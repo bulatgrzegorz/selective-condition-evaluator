@@ -123,6 +123,7 @@ namespace SelectiveConditionEvaluator.msbuild.Evaluation
     /// </remarks>
     /// <typeparam name="P">Type of the properties used.</typeparam>
     /// <typeparam name="I">Type of the items used.</typeparam>
+    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
     internal class Expander<P, I>
         where P : class, IProperty
         where I : class, IItem

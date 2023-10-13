@@ -4,6 +4,8 @@
 using System.Collections;
 using System.Globalization;
 using SelectiveConditionEvaluator.msbuild.Shared;
+// ReSharper disable InconsistentNaming
+#pragma warning disable CS0414
 
 #nullable disable
 

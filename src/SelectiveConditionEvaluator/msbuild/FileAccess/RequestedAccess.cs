@@ -13,7 +13,7 @@ namespace SelectiveConditionEvaluator.msbuild.FileAccess
     /// Level of access requested by a reported file operation.
     /// </summary>
     [Flags]
-    public enum RequestedAccess : byte
+    internal enum RequestedAccess : byte
     {
         /// <summary>
         /// No access requested.

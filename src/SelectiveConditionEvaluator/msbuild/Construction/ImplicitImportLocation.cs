@@ -8,7 +8,7 @@ namespace SelectiveConditionEvaluator.msbuild.Construction
     /// <summary>
     /// Represents the location of an implicit import.
     /// </summary>
-    public enum ImplicitImportLocation
+    internal enum ImplicitImportLocation
     {
         /// <summary>
         /// The import is not implicitly added and is explicitly added in a user-specified location.

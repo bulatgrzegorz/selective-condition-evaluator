@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
@@ -21,6 +22,7 @@ namespace SelectiveConditionEvaluator.msbuild.Evaluation
     /// The Intrinsic class provides static methods that can be accessed from MSBuild's
     /// property functions using $([MSBuild]::Function(x,y))
     /// </summary>
+    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
     internal static class IntrinsicFunctions
     {
 #pragma warning disable CA1416 // Platform compatibility: we'll only use this on Windows

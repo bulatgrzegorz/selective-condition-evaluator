@@ -7,6 +7,8 @@
 
 using System.Reflection;
 using SelectiveConditionEvaluator.msbuild.Shared;
+// ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+#pragma warning disable CS8618
 
 namespace SelectiveConditionEvaluator.msbuild.Deprecated.Engine.Shared
 {

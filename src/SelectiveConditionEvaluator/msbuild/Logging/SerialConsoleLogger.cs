@@ -9,6 +9,7 @@ using System.Collections;
 using System.Diagnostics;
 using SelectiveConditionEvaluator.msbuild.Shared;
 using ResourceUtilities = SelectiveConditionEvaluator.msbuild.Deprecated.Engine.Shared.ResourceUtilities;
+#pragma warning disable CS8605
 
 namespace SelectiveConditionEvaluator.msbuild.Logging
 {

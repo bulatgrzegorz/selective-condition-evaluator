@@ -3,7 +3,7 @@
 
 namespace SelectiveConditionEvaluator.msbuild;
 
-public enum AssemblyLoadingContext
+internal enum AssemblyLoadingContext
 {
     TaskRun,
     Evaluation,

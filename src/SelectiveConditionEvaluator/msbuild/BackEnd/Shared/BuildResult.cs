@@ -15,7 +15,7 @@ namespace SelectiveConditionEvaluator.msbuild.BackEnd.Shared
     /// <summary>
     /// Overall results for targets and requests
     /// </summary>
-    public enum BuildResultCode
+    internal enum BuildResultCode
     {
         /// <summary>
         /// The target or request was a complete success.

@@ -12,7 +12,7 @@ namespace SelectiveConditionEvaluator.msbuild
     /// This enumeration provides three levels of importance for messages.
     /// </summary>
     [Serializable]
-    public enum MessageImportance
+    internal enum MessageImportance
     {
         /// <summary>
         /// High importance, appears in less verbose logs

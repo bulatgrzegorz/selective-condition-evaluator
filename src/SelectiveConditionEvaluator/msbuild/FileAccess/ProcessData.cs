@@ -12,8 +12,8 @@ namespace SelectiveConditionEvaluator.msbuild.FileAccess
     /// <param name="CreationDateTime">The creation date time.</param>
     /// <param name="ExitDateTime">The exit date time.</param>
     /// <param name="ExitCode">The exit code.</param>
-    [CLSCompliant(false)]
-    public readonly record struct ProcessData(
+    
+    internal readonly record struct ProcessData(
         string ProcessName,
         uint ProcessId,
         uint ParentProcessId,

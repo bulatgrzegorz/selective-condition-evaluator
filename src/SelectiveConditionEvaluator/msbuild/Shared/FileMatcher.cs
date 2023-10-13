@@ -2033,7 +2033,7 @@ namespace SelectiveConditionEvaluator.msbuild.Shared
             }
         }
 
-        public enum SearchAction
+        internal enum SearchAction
         {
             None,
             RunSearch,

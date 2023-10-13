@@ -74,7 +74,7 @@ namespace SelectiveConditionEvaluator.msbuild.Logging.BinaryLogger
         /// Describes whether to collect the project files (including imported project files) used during the build.
         /// If the project files are collected they can be embedded in the log file or as a separate zip archive.
         /// </summary>
-        public enum ProjectImportsCollectionMode
+        internal enum ProjectImportsCollectionMode
         {
             /// <summary>
             /// Don't collect any files during the build.

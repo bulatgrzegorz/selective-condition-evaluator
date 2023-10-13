@@ -9,7 +9,7 @@ using SelectiveConditionEvaluator.msbuild.Shared;
 
 namespace SelectiveConditionEvaluator.msbuild
 {
-    public enum TaskParameterMessageKind
+    internal enum TaskParameterMessageKind
     {
         TaskInput,
         TaskOutput,

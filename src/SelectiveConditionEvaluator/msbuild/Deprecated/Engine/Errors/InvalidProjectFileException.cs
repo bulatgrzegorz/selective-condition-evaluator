@@ -80,8 +80,9 @@ namespace SelectiveConditionEvaluator.msbuild.Deprecated.Engine.Errors
         /// </summary>
         /// <param name="info"></param>
         /// <param name="context"></param>
-        private InvalidProjectFileException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
+#pragma warning disable SYSLIB0051
+        private InvalidProjectFileException(SerializationInfo info, StreamingContext context) : base(info, context)
+#pragma warning restore SYSLIB0051
         {
             this.projectFile = info.GetString("projectFile");
             this.lineNumber = info.GetInt32("lineNumber");
@@ -100,7 +101,7 @@ namespace SelectiveConditionEvaluator.msbuild.Deprecated.Engine.Errors
         /// </summary>
         /// <param name="info"></param>
         /// <param name="context"></param>
-        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+        [Obsolete("Override of obsolete method")]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);

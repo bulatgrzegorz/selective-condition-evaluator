@@ -12,7 +12,7 @@ namespace SelectiveConditionEvaluator.msbuild.FileAccess
     /// <summary>
     /// Which operation resulted in a reported file access.
     /// </summary>
-    public enum ReportedFileOperation : byte
+    internal enum ReportedFileOperation : byte
     {
         /// <summary>
         /// Unknown operation.
