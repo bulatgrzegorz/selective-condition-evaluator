@@ -72,16 +72,5 @@ namespace SelectiveConditionEvaluator.Shared
         {
             get { return this.fullName; }
         }
-
-        private BuildItemGroup projectBuildItems;
-
-        /// <summary>
-        /// Build items corresponding to projects built in this configuration
-        /// </summary>
-        internal BuildItemGroup ProjectBuildItems
-        {
-            get { return this.projectBuildItems; }
-            set { this.projectBuildItems = value; }
-        }
     }
 }
