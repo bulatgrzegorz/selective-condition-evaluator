@@ -9,12 +9,17 @@
         <PackageId>SelectiveConditionEvaluator</PackageId>
         <Authors>Grzegorz Bułat</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <Description>SelectiveConditionEvaluator is a library build on top of msBuild. It allows to evaluate conditions (from csproj attribute for example) in selective way, taking into consideration only given properties.</Description>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
       <NoWarn>1701;1702;CS8981;CS8765;CS8767;CS8604;CS8625;CS8618;CS8603;CS8602;CS8601;CS8600;</NoWarn>
     </PropertyGroup>
+    
+    <ItemGroup>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
     
   <ItemGroup>
     <PackageReference Include="System.Collections.Immutable" Version="7.0.0" />
