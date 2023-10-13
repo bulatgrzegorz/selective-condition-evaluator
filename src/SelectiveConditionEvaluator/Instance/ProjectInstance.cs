@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections;
-using System.Collections.ObjectModel;
+using Microsoft.Build.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -10,15 +10,17 @@ using System.Runtime.CompilerServices;
 using System.Xml;
 using Microsoft.Build.BackEnd;
 using Microsoft.Build.BackEnd.Logging;
+using Microsoft.Build.BackEnd.SdkResolution;
 using Microsoft.Build.Collections;
+using Microsoft.Build.Definition;
+using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
+using Microsoft.Build.FileSystem;
+using Microsoft.Build.Framework;
 using Microsoft.Build.Shared;
-using Microsoft.VisualBasic;
 using SelectiveConditionEvaluator.BackEnd;
-using SelectiveConditionEvaluator.BackEnd.BuildManager;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
-using SelectiveConditionEvaluator.BackEnd.Components.SdkResolution;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Collections.RetrievableEntryHashSet;
@@ -27,10 +29,13 @@ using SelectiveConditionEvaluator.Construction.Solution;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Evaluation.Conditionals;
 using SelectiveConditionEvaluator.Evaluation.Context;
+using SelectiveConditionEvaluator.Resources;
+using Constants = Microsoft.VisualBasic.Constants;
 using ForwardingLoggerRecord = SelectiveConditionEvaluator.BackEnd.Components.Logging.ForwardingLoggerRecord;
 using ObjectModel = System.Collections.ObjectModel;
 using ProjectItemInstanceFactory = SelectiveConditionEvaluator.Instance.ProjectItemInstance.TaskItem.ProjectItemInstanceFactory;
-using SdkResult = SelectiveConditionEvaluator.BackEnd.Components.SdkResolution.SdkResult;
+using SdkResult = Microsoft.Build.BackEnd.SdkResolution.SdkResult;
+
 
 #nullable disable
 

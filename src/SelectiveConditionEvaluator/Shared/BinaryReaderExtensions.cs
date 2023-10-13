@@ -3,7 +3,6 @@
 
 using System.Runtime.CompilerServices;
 using Microsoft.Build.Framework;
-using BuildEventContext = SelectiveConditionEvaluator.BackEnd.BuildEventContext;
 
 namespace SelectiveConditionEvaluator
 {

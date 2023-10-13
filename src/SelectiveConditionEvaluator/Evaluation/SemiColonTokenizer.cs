@@ -4,6 +4,7 @@
 #nullable disable
 
 using System.Collections;
+using SelectiveConditionEvaluator.StringTools;
 
 namespace SelectiveConditionEvaluator.Evaluation
 {
@@ -66,7 +67,7 @@ namespace SelectiveConditionEvaluator.Evaluation
                 string segment;
 
                 // Walk along the string, keeping track of whether we are in an item list expression.
-                // If we hit a semi-colon or the end of the string and we aren't in an item list, 
+                // If we hit a semi-colon or the end of the string and we aren't in an item list,
                 // add the segment to the list.
                 for (; _index < _expression.Length; _index++)
                 {

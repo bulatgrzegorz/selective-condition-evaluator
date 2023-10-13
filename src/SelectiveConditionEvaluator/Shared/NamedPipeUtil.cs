@@ -3,6 +3,7 @@
 
 using System.Diagnostics;
 using System.IO;
+using SelectiveConditionEvaluator;
 
 namespace Microsoft.Build.Shared
 {
@@ -22,7 +23,7 @@ namespace Microsoft.Build.Shared
 
         internal static string GetPlatformSpecificPipeName(string pipeName)
         {
-            if (NativeMethodsShared.IsUnixLike)
+            if (NativeMethods.IsUnixLike)
             {
                 // If we're on a Unix machine then named pipes are implemented using Unix Domain Sockets.
                 // Most Unix systems have a maximum path length limit for Unix Domain Sockets, with

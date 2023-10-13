@@ -3,6 +3,7 @@
 
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using Microsoft.Build.BackEnd;
 using Microsoft.Build.Collections;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd;
@@ -331,7 +332,7 @@ namespace SelectiveConditionEvaluator.Instance
         {
             get
             {
-                return new ReadOnlyCollection<ProjectTaskInstance>(Children.OfType<ProjectTaskInstance>());
+                return new Microsoft.Build.Collections.ReadOnlyCollection<ProjectTaskInstance>(Children.OfType<ProjectTaskInstance>());
             }
         }
 

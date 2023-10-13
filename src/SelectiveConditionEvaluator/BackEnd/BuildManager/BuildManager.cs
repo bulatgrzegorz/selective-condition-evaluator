@@ -478,7 +478,7 @@ namespace Microsoft.Build.Execution
             {
                 if (parameters.LowPriority != _previousLowPriority)
                 {
-                    if (NativeMethodsShared.IsWindows || parameters.LowPriority)
+                    if (NativeMethods.IsWindows || parameters.LowPriority)
                     {
                         ProcessPriorityClass priority = parameters.LowPriority ? ProcessPriorityClass.BelowNormal : ProcessPriorityClass.Normal;
                         IEnumerable<Process> processes = _nodeManager?.GetProcesses();
@@ -742,7 +742,7 @@ namespace Microsoft.Build.Execution
         private void EnableDetouredNodeLauncher()
         {
             // Currently BuildXL only supports x64. Once this feature moves out of the experimental phase, this will need to be addressed.
-            ErrorUtilities.VerifyThrowInvalidOperation(NativeMethodsShared.ProcessorArchitecture == NativeMethodsShared.ProcessorArchitectures.X64, "ReportFileAccessesX64Only");
+            ErrorUtilities.VerifyThrowInvalidOperation(NativeMethods.ProcessorArchitecture == NativeMethods.ProcessorArchitectures.X64, "ReportFileAccessesX64Only");
 
             // To properly report file access, we need to disable the in-proc node which won't be detoured.
             _buildParameters.DisableInProcNode = true;
@@ -1086,7 +1086,7 @@ namespace Microsoft.Build.Execution
                             _buildTelemetry.Success = _overallBuildSuccess;
                             _buildTelemetry.Version = ProjectCollection.Version;
                             _buildTelemetry.DisplayVersion = ProjectCollection.DisplayVersion;
-                            _buildTelemetry.FrameworkName = NativeMethodsShared.FrameworkName;
+                            _buildTelemetry.FrameworkName = NativeMethods.FrameworkName;
 
                             string host = null;
                             if (BuildEnvironmentState.s_runningInVisualStudio)

@@ -5,6 +5,7 @@
 
 using System.Diagnostics;
 using System.Text;
+using Microsoft.Build.Framework.Profiler;
 
 namespace SelectiveConditionEvaluator.Evaluation.Profiler
 {

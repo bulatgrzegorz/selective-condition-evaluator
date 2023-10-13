@@ -3,6 +3,8 @@
 
 #nullable disable
 
+using Microsoft.Build.BackEnd;
+using Microsoft.Build.Evaluation;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd;
 using SelectiveConditionEvaluator.Collections;

@@ -3,6 +3,8 @@
 
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Microsoft.Build.Framework;
+using Microsoft.Build.Shared;
 using CommonWriterType = System.Action<string, string, System.Collections.Generic.IEnumerable<string>>;
 
 #nullable disable

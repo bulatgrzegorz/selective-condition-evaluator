@@ -39,15 +39,15 @@ namespace Microsoft.Build.Shared
         private static string CreateFolderUnderTemp()
         {
             // On windows Username with Unicode chars can give issues, so we dont append username to the temp folder name.
-            string msbuildTempFolder = NativeMethodsShared.IsWindows ?
+            string msbuildTempFolder = NativeMethods.IsWindows ?
                 msbuildTempFolderPrefix :
                 msbuildTempFolderPrefix + Environment.UserName;
 
             string basePath = Path.Combine(Path.GetTempPath(), msbuildTempFolder);
 
-            if (NativeMethodsShared.IsLinux && NativeMethodsShared.mkdir(basePath, userRWX) != 0)
+            if (NativeMethods.IsLinux && NativeMethods.mkdir(basePath, userRWX) != 0)
             {
-                if (NativeMethodsShared.chmod(basePath, userRWX) == 0)
+                if (NativeMethods.chmod(basePath, userRWX) == 0)
                 {
                     // Current user owns this file; we can read and write to it. It is reasonable here to assume it was created properly by MSBuild and can be used
                     // for temporary files.
@@ -57,7 +57,7 @@ namespace Microsoft.Build.Shared
                     // Another user created a folder pretending to be us! Find a folder we can actually use.
                     int extraBits = 0;
                     string pathToCheck = basePath + extraBits;
-                    while (NativeMethodsShared.mkdir(pathToCheck, userRWX) != 0 && NativeMethodsShared.chmod(pathToCheck, userRWX) != 0)
+                    while (NativeMethods.mkdir(pathToCheck, userRWX) != 0 && NativeMethods.chmod(pathToCheck, userRWX) != 0)
                     {
                         extraBits++;
                         pathToCheck = basePath + extraBits;

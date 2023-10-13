@@ -21,7 +21,7 @@ namespace SelectiveConditionEvaluator.Instance
 
         public RunningObjectTable()
         {
-            if (!NativeMethodsShared.IsWindows)
+            if (!NativeMethods.IsWindows)
             {
                 return;
             }

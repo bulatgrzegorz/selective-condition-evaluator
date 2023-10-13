@@ -6,6 +6,7 @@
 using System.Diagnostics;
 using System.Xml;
 using Microsoft.Build.Collections;
+using Microsoft.Build.Framework;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.Collections.RetrievableEntryHashSet;
 using SelectiveConditionEvaluator.Construction;

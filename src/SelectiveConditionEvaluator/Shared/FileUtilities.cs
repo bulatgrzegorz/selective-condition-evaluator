@@ -16,8 +16,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading;
-using Microsoft.Build.Shared.FileSystem;
+using Microsoft.Build.Framework;
 using SelectiveConditionEvaluator;
 
 #nullable disable
@@ -157,7 +156,7 @@ namespace Microsoft.Build.Shared
                     if (directoryPath.Length > 0)
                     {
                         DateTime lastModifiedTime;
-                        if (NativeMethodsShared.GetLastWriteDirectoryUtcTime(directoryPath, out lastModifiedTime))
+                        if (NativeMethods.GetLastWriteDirectoryUtcTime(directoryPath, out lastModifiedTime))
                         {
                             builder.Append(lastModifiedTime.Ticks);
                             builder.Append('|');
@@ -481,13 +480,13 @@ namespace Microsoft.Build.Shared
         private static string GetFullPath(string path)
         {
 #if FEATURE_LEGACY_GETFULLPATH
-            if (NativeMethodsShared.IsWindows)
+            if (NativeMethods.IsWindows)
             {
-                string uncheckedFullPath = NativeMethodsShared.GetFullPath(path);
+                string uncheckedFullPath = NativeMethods.GetFullPath(path);
 
                 if (IsPathTooLong(uncheckedFullPath))
                 {
-                    string message = ResourceUtilities.FormatString(AssemblyResources.GetString("Shared.PathTooLong"), path, NativeMethodsShared.MaxPath);
+                    string message = ResourceUtilities.FormatString(AssemblyResources.GetString("Shared.PathTooLong"), path, NativeMethods.MaxPath);
                     throw new PathTooLongException(message);
                 }
 
@@ -506,7 +505,7 @@ namespace Microsoft.Build.Shared
 #if FEATURE_LEGACY_GETFULLPATH
         private static bool IsUNCPath(string path)
         {
-            if (!NativeMethodsShared.IsWindows || !path.StartsWith(@"\\", StringComparison.Ordinal))
+            if (!NativeMethods.IsWindows || !path.StartsWith(@"\\", StringComparison.Ordinal))
             {
                 return false;
             }
@@ -561,7 +560,7 @@ namespace Microsoft.Build.Shared
 
             // Don't bother with arrays or properties or network paths, or those that
             // have no slashes.
-            if (NativeMethodsShared.IsWindows || string.IsNullOrEmpty(value)
+            if (NativeMethods.IsWindows || string.IsNullOrEmpty(value)
                 || value.StartsWith("$(", comparisonType) || value.StartsWith("@(", comparisonType)
                 || value.StartsWith("\\\\", comparisonType))
             {
@@ -582,7 +581,7 @@ namespace Microsoft.Build.Shared
         /// </summary>
         internal static ReadOnlyMemory<char> MaybeAdjustFilePath(ReadOnlyMemory<char> value, string baseDirectory = "")
         {
-            if (NativeMethodsShared.IsWindows || value.IsEmpty)
+            if (NativeMethods.IsWindows || value.IsEmpty)
             {
                 return value;
             }
@@ -667,7 +666,7 @@ namespace Microsoft.Build.Shared
 
         internal static bool LooksLikeUnixFilePath(ReadOnlySpan<char> value, string baseDirectory = "")
         {
-            if (NativeMethodsShared.IsWindows)
+            if (NativeMethods.IsWindows)
             {
                 return false;
             }
@@ -761,7 +760,7 @@ namespace Microsoft.Build.Shared
             // Data coming back from the filesystem into the engine, so time to escape it back.
             string fullPath = EscapingUtilities.Escape(NormalizePath(Path.Combine(currentDirectory, fileSpec)));
 
-            if (NativeMethodsShared.IsWindows && !EndsWithSlash(fullPath))
+            if (NativeMethods.IsWindows && !EndsWithSlash(fullPath))
             {
                 if (FileUtilitiesRegex.IsDrivePattern(fileSpec) ||
                     FileUtilitiesRegex.IsUncPattern(fullPath))
@@ -1202,15 +1201,15 @@ namespace Microsoft.Build.Shared
         private static bool IsPathTooLong(string path)
         {
             // >= not > because MAX_PATH assumes a trailing null
-            return path.Length >= NativeMethodsShared.MaxPath;
+            return path.Length >= NativeMethods.MaxPath;
         }
 
         private static bool IsPathTooLongIfRooted(string path)
         {
-            bool hasMaxPath = NativeMethodsShared.HasMaxPath;
-            int maxPath = NativeMethodsShared.MaxPath;
+            bool hasMaxPath = NativeMethods.HasMaxPath;
+            int maxPath = NativeMethods.MaxPath;
             // >= not > because MAX_PATH assumes a trailing null
-            return hasMaxPath && !IsRootedNoThrow(path) && NativeMethodsShared.GetCurrentDirectory().Length + path.Length + 1 /* slash */ >= maxPath;
+            return hasMaxPath && !IsRootedNoThrow(path) && NativeMethods.GetCurrentDirectory().Length + path.Length + 1 /* slash */ >= maxPath;
         }
 
         /// <summary>

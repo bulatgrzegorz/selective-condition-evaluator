@@ -5,8 +5,11 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.Build.Evaluation;
+using Microsoft.Build.Framework;
 using Microsoft.Build.Internal;
 using Microsoft.Build.Shared;
+using Microsoft.Build.Utilities;
 using Microsoft.Win32;
 // Needed for DoesTaskHostExistForParameters
 using NodeProviderOutOfProcTaskHost = SelectiveConditionEvaluator.BackEnd.Components.Communications.NodeProviderOutOfProcTaskHost;
@@ -181,7 +184,7 @@ namespace SelectiveConditionEvaluator.Evaluation
             // .NET Core MSBuild used to always return empty, so match that behavior
             // on non-Windows (no registry), and with a changewave (in case someone
             // had a registry property and it breaks when it lights up).
-            if (!NativeMethodsShared.IsWindows || !ChangeWaves.AreFeaturesEnabled(ChangeWaves.Wave17_4))
+            if (!NativeMethods.IsWindows || !ChangeWaves.AreFeaturesEnabled(ChangeWaves.Wave17_4))
             {
                 return null;
             }
@@ -198,7 +201,7 @@ namespace SelectiveConditionEvaluator.Evaluation
             // .NET Core MSBuild used to always return empty, so match that behavior
             // on non-Windows (no registry), and with a changewave (in case someone
             // had a registry property and it breaks when it lights up).
-            if (!NativeMethodsShared.IsWindows || !ChangeWaves.AreFeaturesEnabled(ChangeWaves.Wave17_4))
+            if (!NativeMethods.IsWindows || !ChangeWaves.AreFeaturesEnabled(ChangeWaves.Wave17_4))
             {
                 return defaultValue;
             }
@@ -212,7 +215,7 @@ namespace SelectiveConditionEvaluator.Evaluation
             // .NET Core MSBuild used to always return empty, so match that behavior
             // on non-Windows (no registry), and with a changewave (in case someone
             // had a registry property and it breaks when it lights up).
-            if (!NativeMethodsShared.IsWindows || !ChangeWaves.AreFeaturesEnabled(ChangeWaves.Wave17_4))
+            if (!NativeMethods.IsWindows || !ChangeWaves.AreFeaturesEnabled(ChangeWaves.Wave17_4))
             {
                 return defaultValue;
             }
@@ -235,7 +238,7 @@ namespace SelectiveConditionEvaluator.Evaluation
             // .NET Core MSBuild used to always return empty, so match that behavior
             // on non-Windows (no registry), and with a changewave (in case someone
             // had a registry property and it breaks when it lights up).
-            if (!NativeMethodsShared.IsWindows || !ChangeWaves.AreFeaturesEnabled(ChangeWaves.Wave17_4))
+            if (!NativeMethods.IsWindows || !ChangeWaves.AreFeaturesEnabled(ChangeWaves.Wave17_4))
             {
                 return defaultValue;
             }
@@ -266,7 +269,7 @@ namespace SelectiveConditionEvaluator.Evaluation
                     // of that error.
                     RegistryView view = (RegistryView)Enum.Parse(typeof(RegistryView), viewAsString, true);
 
-                    if (!NativeMethodsShared.IsWindows && !keyName.StartsWith("HKEY_CURRENT_USER", StringComparison.OrdinalIgnoreCase))
+                    if (!NativeMethods.IsWindows && !keyName.StartsWith("HKEY_CURRENT_USER", StringComparison.OrdinalIgnoreCase))
                     {
                         // Fake common requests to HKLM that we can resolve
 
@@ -275,7 +278,7 @@ namespace SelectiveConditionEvaluator.Evaluation
 
                         if (m.Success && m.Groups.Count >= 1 && valueName.Equals("InstallRoot", StringComparison.OrdinalIgnoreCase))
                         {
-                            return Path.Combine(NativeMethodsShared.FrameworkBasePath, m.Groups[0].Value) + Path.DirectorySeparatorChar;
+                            return Path.Combine(NativeMethods.FrameworkBasePath, m.Groups[0].Value) + Path.DirectorySeparatorChar;
                         }
 
                         return string.Empty;
@@ -489,7 +492,7 @@ namespace SelectiveConditionEvaluator.Evaluation
         /// <returns></returns>
         internal static bool IsOsUnixLike()
         {
-            return NativeMethodsShared.IsUnixLike;
+            return NativeMethods.IsUnixLike;
         }
 
         /// <summary>
@@ -498,7 +501,7 @@ namespace SelectiveConditionEvaluator.Evaluation
         /// <returns></returns>
         internal static bool IsOsBsdLike()
         {
-            return NativeMethodsShared.IsBSD;
+            return NativeMethods.IsBSD;
         }
 
         internal static bool VersionEquals(string a, string b)

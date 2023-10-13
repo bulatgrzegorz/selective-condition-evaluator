@@ -40,7 +40,7 @@ namespace Microsoft.Build.Framework
         ///     StringComparison used for comparing paths on current OS.
         /// </summary>
         /// <remarks>
-        ///     TODO: Replace RuntimeInformation.IsOSPlatform(OSPlatform.Linux) by NativeMethodsShared.OSUsesCaseSensitivePaths once it is moved out from Shared
+        ///     TODO: Replace RuntimeInformation.IsOSPlatform(OSPlatform.Linux) by NativeMethods.OSUsesCaseSensitivePaths once it is moved out from Shared
         /// </remarks>
         private static readonly StringComparison PathComparison = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
 

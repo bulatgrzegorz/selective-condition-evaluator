@@ -529,7 +529,7 @@ namespace Microsoft.Build.Evaluation
             get
             {
 #if FEATURE_WIN32_REGISTRY
-                if (!NativeMethodsShared.IsWindows)
+                if (!NativeMethods.IsWindows)
                 {
                     return false;
                 }
@@ -918,7 +918,7 @@ namespace Microsoft.Build.Evaluation
 #if RUNTIME_TYPE_NETCORE
                     Traits.Instance.ForceEvaluateAsFullFramework ? "Full" : "Core",
 #elif MONO
-                    NativeMethodsShared.IsMono ? "Mono" : "Full");
+                    NativeMethods.IsMono ? "Mono" : "Full");
 #else
                     "Full",
 #endif

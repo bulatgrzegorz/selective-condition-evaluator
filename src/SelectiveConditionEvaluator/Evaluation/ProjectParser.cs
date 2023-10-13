@@ -2,9 +2,13 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Xml;
+using Microsoft.Build.Eventing;
+using Microsoft.Build.Framework;
+using Microsoft.Build.Internal;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.Construction;
 using SelectiveConditionEvaluator.ElementLocation;
+using SelectiveConditionEvaluator.Resources;
 using Expander = SelectiveConditionEvaluator.Evaluation.Expander<Microsoft.Build.Evaluation.ProjectProperty, Microsoft.Build.Evaluation.ProjectItem>;
 
 #nullable disable

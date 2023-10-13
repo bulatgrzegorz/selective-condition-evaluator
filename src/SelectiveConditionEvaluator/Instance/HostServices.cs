@@ -84,7 +84,7 @@ namespace SelectiveConditionEvaluator.Instance
             {
                 if (monikerNameOrITaskHost.IsMoniker)
                 {
-                    if (NativeMethodsShared.IsWindows)
+                    if (NativeMethods.IsWindows)
                     {
                         try
                         {

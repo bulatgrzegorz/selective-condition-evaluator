@@ -6,7 +6,8 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Loader;
-using Microsoft.Build.Shared.FileSystem;
+using Microsoft.Build.Framework;
+using SelectiveConditionEvaluator;
 
 namespace Microsoft.Build.Shared
 {

@@ -18,12 +18,11 @@ using System.Security;
 using System.Text;
 using System.Threading;
 using System.Xml;
-using Microsoft.Build.Shared.FileSystem;
 using System.Xml.Schema;
 using System.Runtime.Serialization;
+using Microsoft.Build.BuildEngine.Shared;
 using SelectiveConditionEvaluator;
 #if !CLR2COMPATIBILITY && !MICROSOFT_BUILD_ENGINE_OM_UNITTESTS
-using Microsoft.Build.Shared.Debugging;
 #endif
 
 namespace Microsoft.Build.Shared

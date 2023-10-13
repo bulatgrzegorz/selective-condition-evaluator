@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using Microsoft.Build.BackEnd;
+using Microsoft.Build.Evaluation;
+using Microsoft.Build.Framework;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
@@ -9,7 +11,7 @@ using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Construction;
 using SelectiveConditionEvaluator.Evaluation.Context;
 using SelectiveConditionEvaluator.Instance;
-using SdkResult = SelectiveConditionEvaluator.BackEnd.Components.SdkResolution.SdkResult;
+using SdkResult = Microsoft.Build.BackEnd.SdkResolution.SdkResult;
 
 #nullable disable
 

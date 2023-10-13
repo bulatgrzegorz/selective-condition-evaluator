@@ -8,6 +8,7 @@
 using System.Collections.Immutable;
 using System.Diagnostics;
 using Microsoft.Build.BackEnd.Logging;
+using Microsoft.Build.Eventing;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 using SelectiveConditionEvaluator.Collections;

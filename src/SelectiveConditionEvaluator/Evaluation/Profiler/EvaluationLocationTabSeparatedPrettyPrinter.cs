@@ -4,6 +4,7 @@
 #nullable disable
 
 using System.Text;
+using Microsoft.Build.Framework.Profiler;
 
 namespace SelectiveConditionEvaluator.Evaluation.Profiler
 {
@@ -14,7 +15,7 @@ namespace SelectiveConditionEvaluator.Evaluation.Profiler
     {
         private const string Separator = "\t";
 
-        /// <inheritdoc/> 
+        /// <inheritdoc/>
         internal override void AppendHeader(StringBuilder stringBuilder)
         {
             AppendDefaultHeaderWithSeparator(stringBuilder, Separator);

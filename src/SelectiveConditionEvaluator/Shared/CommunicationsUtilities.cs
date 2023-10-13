@@ -19,7 +19,7 @@ using System.Text;
 using SelectiveConditionEvaluator;
 
 #if !CLR2COMPATIBILITY
-using Microsoft.Build.Shared.Debugging;
+
 #endif
 #if !FEATURE_APM
 using System.Threading.Tasks;
@@ -267,7 +267,7 @@ namespace Microsoft.Build.Internal
 
             Dictionary<string, string> table = new Dictionary<string, string>(200, StringComparer.OrdinalIgnoreCase); // Razzle has 150 environment variables
 
-            if (NativeMethodsShared.IsWindows)
+            if (NativeMethods.IsWindows)
             {
                 unsafe
                 {
@@ -470,7 +470,7 @@ namespace Microsoft.Build.Internal
             byte[] bytes = new byte[4];
 
 #if NETCOREAPP2_1_OR_GREATER || MONO
-            if (!NativeMethodsShared.IsWindows)
+            if (!NativeMethods.IsWindows)
             {
                 // Enforce a minimum timeout because the Windows code can pass
                 // a timeout of 0 for the connection, but that doesn't work for

@@ -19,7 +19,7 @@ namespace SelectiveConditionEvaluator
             get
             {
 #if !MICROSOFT_BUILD_ENGINE_OM_UNITTESTS
-                return NativeMethodsShared.IsWindows;
+                return NativeMethods.IsWindows;
 #else
                 // We need to mock usage of ChangeWaves class,
                 // because Microsoft.Build.Engine.OM.UnitTests should not have access to internals of Microsoft.Build.Framework.

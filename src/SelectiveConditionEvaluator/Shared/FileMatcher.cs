@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.Build.Framework;
 using SelectiveConditionEvaluator;
 
 #nullable disable
@@ -1049,7 +1050,7 @@ namespace Microsoft.Build.Shared
             // it is case sensitive. If the flag is true and matching is handled with MatchFileRecursionStep, it is case-insensitive.
             // TODO: Can we fix this by using case-insensitive file I/O on Linux?
             string filespec;
-            if (NativeMethodsShared.IsLinux && recursionState.SearchData.DirectoryPattern != null)
+            if (NativeMethods.IsLinux && recursionState.SearchData.DirectoryPattern != null)
             {
                 filespec = "*.*";
                 stepResult.NeedsToProcessEachFile = true;
@@ -1190,7 +1191,7 @@ namespace Microsoft.Build.Shared
                 + FileSpecRegexParts.EndOfLine.Length,
                 "Checked-in length of known regex components differs from computed length. Update checked-in constant.");
 #endif
-            using (var matchFileExpression = new ReuseableStringBuilder(FileSpecRegexMinLength + NativeMethodsShared.MAX_PATH))
+            using (var matchFileExpression = new ReuseableStringBuilder(FileSpecRegexMinLength + NativeMethods.MAX_PATH))
             {
                 AppendRegularExpressionFromFixedDirectory(matchFileExpression, fixedDirectoryPart);
                 AppendRegularExpressionFromWildcardDirectory(matchFileExpression, wildcardDirectoryPart);
@@ -1255,7 +1256,7 @@ namespace Microsoft.Build.Shared
         {
             regex.Append(FileSpecRegexParts.BeginningOfLine);
 
-            bool isUncPath = NativeMethodsShared.IsWindows && fixedDir.Length > 1
+            bool isUncPath = NativeMethods.IsWindows && fixedDir.Length > 1
                              && fixedDir[0] == '\\' && fixedDir[1] == '\\';
             if (isUncPath)
             {
@@ -2258,7 +2259,7 @@ namespace Microsoft.Build.Shared
             int wildcardPartLength = wildcardPart.Length;
 
             // Handles detection of <drive letter>:<slashes>** pattern for Windows.
-            if (NativeMethodsShared.IsWindows &&
+            if (NativeMethods.IsWindows &&
                 directoryPartLength >= 3 &&
                 wildcardPartLength >= 2 &&
                 IsDrivePatternWithoutSlash(directoryPart[0], directoryPart[1]))
@@ -2579,7 +2580,7 @@ namespace Microsoft.Build.Shared
                 // Set to use only half processors when we have 4 or more of them, in order to not be too aggresive
                 // By setting MaxTasksPerIteration to the maximum amount of tasks, which means that only one
                 // Parallel.ForEach will run at once, we get a stable number of threads being created.
-                var maxTasks = Math.Max(1, NativeMethodsShared.GetLogicalCoreCount() / 2);
+                var maxTasks = Math.Max(1, NativeMethods.GetLogicalCoreCount() / 2);
                 var taskOptions = new TaskOptions(maxTasks)
                 {
                     AvailableTasks = maxTasks,
