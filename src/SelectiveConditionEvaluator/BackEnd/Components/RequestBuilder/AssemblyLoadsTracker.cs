@@ -9,6 +9,8 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Build.BackEnd.Logging;
 using Microsoft.Build.Framework;
+using SelectiveConditionEvaluator;
+using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 
 namespace Microsoft.Build.BackEnd.Components.RequestBuilder
 {

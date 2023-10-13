@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Runtime.Versioning;
 using Microsoft.Build.Utilities;
 using Microsoft.Win32;
+using SelectiveConditionEvaluator;
 using ProcessorArchitecture = System.Reflection.ProcessorArchitecture;
 
 #nullable disable

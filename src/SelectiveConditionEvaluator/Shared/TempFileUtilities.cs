@@ -4,7 +4,7 @@
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
-using Microsoft.Build.Shared.FileSystem;
+using SelectiveConditionEvaluator;
 
 #nullable disable
 

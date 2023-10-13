@@ -3,6 +3,8 @@
 
 #nullable disable
 
+using Microsoft.Build.Framework.BuildException;
+
 namespace SelectiveConditionEvaluator.Instance
 {
     [Serializable]

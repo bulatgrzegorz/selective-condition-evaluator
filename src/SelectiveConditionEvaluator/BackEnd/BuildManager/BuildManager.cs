@@ -24,17 +24,8 @@ using Microsoft.Build.BackEnd.SdkResolution;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Eventing;
 using Microsoft.Build.Exceptions;
-using Microsoft.Build.Experimental;
-using Microsoft.Build.Experimental.ProjectCache;
-using Microsoft.Build.FileAccesses;
 using Microsoft.Build.Framework;
-using Microsoft.Build.Framework.Telemetry;
-using Microsoft.Build.Graph;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Logging;
 using Microsoft.Build.Shared;
-using Microsoft.Build.Shared.Debugging;
-using Microsoft.NET.StringTools;
 using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.BackEnd.Components;
 using SelectiveConditionEvaluator.BackEnd.Components.BuildRequestEngine;
@@ -48,8 +39,8 @@ using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Instance;
 using SelectiveConditionEvaluator.Resources;
-using ForwardingLoggerRecord = Microsoft.Build.Logging.ForwardingLoggerRecord;
-using LoggerDescription = Microsoft.Build.Logging.LoggerDescription;
+using SelectiveConditionEvaluator.StringTools;
+using NativeMethods = SelectiveConditionEvaluator.NativeMethods;
 
 #nullable disable
 

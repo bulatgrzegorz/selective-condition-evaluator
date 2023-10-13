@@ -1,9 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using BuildParameters = SelectiveConditionEvaluator.BackEnd.BuildManager.BuildParameters;
+using Microsoft.Build.Execution;
 using ILoggingService = SelectiveConditionEvaluator.BackEnd.Components.Logging.ILoggingService;
-using LegacyThreadingData = SelectiveConditionEvaluator.BackEnd.BuildManager.LegacyThreadingData;
 
 #nullable disable
 

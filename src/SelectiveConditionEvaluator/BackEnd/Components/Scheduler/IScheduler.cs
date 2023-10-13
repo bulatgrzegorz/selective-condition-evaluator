@@ -3,6 +3,7 @@
 
 #nullable disable
 
+using Microsoft.Build.Execution;
 using SelectiveConditionEvaluator.BackEnd.Components.Communications;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 
