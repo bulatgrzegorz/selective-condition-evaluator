@@ -1,34 +1,25 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.Build.BackEnd;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
-using SelectiveConditionEvaluator.BackEnd.Components;
 using SelectiveConditionEvaluator.BackEnd.Components.Caching;
 using SelectiveConditionEvaluator.BackEnd.Components.Communications;
 using SelectiveConditionEvaluator.BackEnd.Components.ProjectCache;
-using SelectiveConditionEvaluator.BackEnd.Components.Scheduler;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Instance;
 using BuildAbortedException = Microsoft.Build.Exceptions.BuildAbortedException;
 using ILoggingService = SelectiveConditionEvaluator.BackEnd.Components.Logging.ILoggingService;
-using NativeMethods = SelectiveConditionEvaluator.NativeMethods;
 using NodeLoggingContext = SelectiveConditionEvaluator.BackEnd.Components.Logging.NodeLoggingContext;
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Components.Scheduler
 {
     /// <summary>
     /// The MSBuild Scheduler

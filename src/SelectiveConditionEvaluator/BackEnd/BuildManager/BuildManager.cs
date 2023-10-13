@@ -21,10 +21,15 @@ using System.Threading.Tasks.Dataflow;
 using Microsoft.Build.BackEnd;
 using Microsoft.Build.BackEnd.Logging;
 using Microsoft.Build.BackEnd.SdkResolution;
+using Microsoft.Build.BuildEngine;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Eventing;
 using Microsoft.Build.Exceptions;
+using Microsoft.Build.Experimental.ProjectCache;
 using Microsoft.Build.Framework;
+using Microsoft.Build.Framework.Telemetry;
+using Microsoft.Build.Graph;
+using Microsoft.Build.Logging;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.BackEnd.Components;
@@ -40,6 +45,7 @@ using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Instance;
 using SelectiveConditionEvaluator.Resources;
 using SelectiveConditionEvaluator.StringTools;
+using InvalidProjectFileException = Microsoft.Build.Exceptions.InvalidProjectFileException;
 using NativeMethods = SelectiveConditionEvaluator.NativeMethods;
 
 #nullable disable

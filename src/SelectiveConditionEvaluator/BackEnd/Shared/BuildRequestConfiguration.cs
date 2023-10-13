@@ -16,6 +16,7 @@ using Microsoft.Build.Globbing;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.BackEnd.Components;
+using SelectiveConditionEvaluator.BackEnd.Components.Scheduler;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Evaluation;

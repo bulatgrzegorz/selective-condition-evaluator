@@ -9,6 +9,7 @@ using Microsoft.Build.Internal;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.BackEnd.Components.Caching;
+using SelectiveConditionEvaluator.BackEnd.Components.Scheduler;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 
 #nullable disable

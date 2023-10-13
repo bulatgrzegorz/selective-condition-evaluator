@@ -19,6 +19,7 @@ using SelectiveConditionEvaluator.BackEnd.Components.BuildRequestEngine;
 using SelectiveConditionEvaluator.BackEnd.Components.Caching;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
+using SelectiveConditionEvaluator.BackEnd.Components.Scheduler;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.ElementLocation;
 using BuildAbortedException = Microsoft.Build.Exceptions.BuildAbortedException;
