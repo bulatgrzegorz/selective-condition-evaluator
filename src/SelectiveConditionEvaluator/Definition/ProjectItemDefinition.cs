@@ -8,7 +8,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.Build.Collections;
 using Microsoft.Build.Construction;
-using Microsoft.Build.ObjectModelRemoting;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Construction;

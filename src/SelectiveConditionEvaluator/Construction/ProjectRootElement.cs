@@ -292,7 +292,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// <summary>
         /// Get a read-only collection of the child item definitions, if any, in all item definition groups anywhere in the project file.
         /// </summary>
-        public ICollection<ProjectItemDefinitionElement> ItemDefinitions => new System.Collections.ObjectModel.ReadOnlyCollection<ProjectItemDefinitionElement>(GetAllChildrenOfType<ProjectItemDefinitionElement>());
+        public ICollection<ProjectItemDefinitionElement> ItemDefinitions => new ReadOnlyCollection<ProjectItemDefinitionElement>(GetAllChildrenOfType<ProjectItemDefinitionElement>());
 
         /// <summary>
         /// Get a read-only collection over the child item groups, if any.
@@ -304,7 +304,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// Get a read-only collection of the child items, if any, in all item groups anywhere in the project file.
         /// Not restricted to root item groups: traverses through Choose elements.
         /// </summary>
-        public ICollection<ProjectItemElement> Items => new System.Collections.ObjectModel.ReadOnlyCollection<ProjectItemElement>(GetAllChildrenOfType<ProjectItemElement>());
+        public ICollection<ProjectItemElement> Items => new ReadOnlyCollection<ProjectItemElement>(GetAllChildrenOfType<ProjectItemElement>());
 
         /// <summary>
         /// Get a read-only collection of the child import groups, if any.
@@ -314,7 +314,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// <summary>
         /// Get a read-only collection of the child imports
         /// </summary>
-        public ICollection<ProjectImportElement> Imports => new System.Collections.ObjectModel.ReadOnlyCollection<ProjectImportElement>(GetAllChildrenOfType<ProjectImportElement>());
+        public ICollection<ProjectImportElement> Imports => new ReadOnlyCollection<ProjectImportElement>(GetAllChildrenOfType<ProjectImportElement>());
 
         /// <summary>
         /// Get a read-only collection of the child property groups, if any.
@@ -326,7 +326,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// Geta read-only collection of the child properties, if any, in all property groups anywhere in the project file.
         /// Not restricted to root property groups: traverses through Choose elements.
         /// </summary>
-        public ICollection<ProjectPropertyElement> Properties => new System.Collections.ObjectModel.ReadOnlyCollection<ProjectPropertyElement>(GetAllChildrenOfType<ProjectPropertyElement>());
+        public ICollection<ProjectPropertyElement> Properties => new ReadOnlyCollection<ProjectPropertyElement>(GetAllChildrenOfType<ProjectPropertyElement>());
 
         /// <summary>
         /// Get a read-only collection of the child targets
@@ -1795,7 +1795,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// </summary>
         internal ProjectMetadataElement CreateMetadataElement(XmlAttributeWithLocation attribute)
         {
-            return CreateMetadataElement(attribute.Name, attribute.Value, attribute.ElementLocation.ElementLocationLocation);
+            return CreateMetadataElement(attribute.Name, attribute.Value, attribute.Location);
         }
 
         /// <summary>
@@ -2082,7 +2082,7 @@ namespace SelectiveConditionEvaluator.Construction
                     document.Load(xtr.Reader);
                 }
 
-                _projectFileLocation = ElementLocation.Create(fullPath);
+                _projectFileLocation = ElementLocation.ElementLocation.Create(fullPath);
                 _escapedFullPath = null;
                 _directory = Path.GetDirectoryName(fullPath);
 

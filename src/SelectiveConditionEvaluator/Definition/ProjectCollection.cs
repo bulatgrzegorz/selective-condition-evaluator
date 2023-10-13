@@ -16,7 +16,6 @@ using Microsoft.Build.Construction;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Internal;
-using Microsoft.Build.ObjectModelRemoting;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.BackEnd.Components;
@@ -28,11 +27,11 @@ using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Instance;
 using SelectiveConditionEvaluator.ObjectModelRemoting;
 using SelectiveConditionEvaluator.Resources;
-using ForwardingLoggerRecord = Microsoft.Build.Logging.ForwardingLoggerRecord;
-using ILoggingService = Microsoft.Build.BackEnd.Logging.ILoggingService;
+using ForwardingLoggerRecord = SelectiveConditionEvaluator.BackEnd.Components.Logging.ForwardingLoggerRecord;
+using ILoggingService = SelectiveConditionEvaluator.BackEnd.Components.Logging.ILoggingService;
 using InternalLoggerException = Microsoft.Build.Exceptions.InternalLoggerException;
 using InvalidProjectFileException = Microsoft.Build.Exceptions.InvalidProjectFileException;
-using LoggerMode = Microsoft.Build.BackEnd.Logging.LoggerMode;
+using LoggerMode = SelectiveConditionEvaluator.BackEnd.Components.Logging.LoggerMode;
 using ObjectModel = System.Collections.ObjectModel;
 
 #nullable disable
@@ -1769,7 +1768,7 @@ namespace Microsoft.Build.Evaluation
         /// </summary>
         private void CreateLoggingService(int maxCPUCount, bool onlyLogCriticalEvents)
         {
-            _loggingService = BackEnd.Logging.LoggingService.CreateLoggingService(_loggerMode, 0 /*Evaluation can be done as if it was on node "0"*/);
+            _loggingService = SelectiveConditionEvaluator.BackEnd.Components.Logging.LoggingService.CreateLoggingService(_loggerMode, 0 /*Evaluation can be done as if it was on node "0"*/);
             _loggingService.MaxCPUCount = maxCPUCount;
             _loggingService.OnlyLogCriticalEvents = onlyLogCriticalEvents;
         }

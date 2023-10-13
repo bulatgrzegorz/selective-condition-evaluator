@@ -12,11 +12,13 @@ using Microsoft.Build.BackEnd;
 using Microsoft.Build.BackEnd.Logging;
 using Microsoft.Build.BackEnd.SdkResolution;
 using Microsoft.Build.Collections;
+using Microsoft.Build.Construction;
 using Microsoft.Build.Definition;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
 using Microsoft.Build.FileSystem;
 using Microsoft.Build.Framework;
+using Microsoft.Build.Internal;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
@@ -2313,11 +2315,11 @@ namespace SelectiveConditionEvaluator.Instance
                         toolsVersion = visualStudioVersion.ToString(CultureInfo.InvariantCulture) + ".0";
                     }
 
-                    string toolsVersionToUse = Microsoft.Build.Utilities.GenerateToolsVersionToUse(
+                    string toolsVersionToUse = Utilities.GenerateToolsVersionToUse(
                         explicitToolsVersion: null,
                         toolsVersionFromProject: FileUtilities.IsSolutionFilterFilename(projectFile) ? "Current" : toolsVersion,
                         getToolset: buildParameters.GetToolset,
-                        defaultToolsVersion: Constants.defaultSolutionWrapperProjectToolsVersion,
+                        defaultToolsVersion: Resources.Constants.defaultSolutionWrapperProjectToolsVersion,
                         usingDifferentToolsVersionFromProjectFile: out _);
                     projectInstances = GenerateSolutionWrapper(projectFile, globalProperties, toolsVersionToUse, loggingService, projectBuildEventContext, targetNames, sdkResolverService, submissionId);
                 }
@@ -2752,7 +2754,7 @@ namespace SelectiveConditionEvaluator.Instance
                 toolsVersionLocation = xml.ToolsVersionLocation;
             }
 
-            var toolsVersionToUse = Microsoft.Build.Utilities.GenerateToolsVersionToUse(
+            var toolsVersionToUse = Utilities.GenerateToolsVersionToUse(
                 explicitToolsVersion,
                 xml.ToolsVersion,
                 buildParameters.GetToolset,
@@ -2765,7 +2767,7 @@ namespace SelectiveConditionEvaluator.Instance
 
             if (this.Toolset == null)
             {
-                string toolsVersionList = Microsoft.Build.Utilities.CreateToolsVersionListString(buildParameters.Toolsets);
+                string toolsVersionList = Utilities.CreateToolsVersionListString(buildParameters.Toolsets);
                 ProjectErrorUtilities.ThrowInvalidProject(toolsVersionLocation, "UnrecognizedToolsVersion", toolsVersionToUse, toolsVersionList);
             }
 
@@ -2785,7 +2787,7 @@ namespace SelectiveConditionEvaluator.Instance
             {
                 foreach (KeyValuePair<string, string> globalProperty in globalProperties)
                 {
-                    if (String.Equals(globalProperty.Key, Constants.SubToolsetVersionPropertyName, StringComparison.OrdinalIgnoreCase) && explicitSubToolsetVersion != null)
+                    if (String.Equals(globalProperty.Key, Resources.Constants.SubToolsetVersionPropertyName, StringComparison.OrdinalIgnoreCase) && explicitSubToolsetVersion != null)
                     {
                         // if we have a sub-toolset version explicitly provided by the ProjectInstance constructor, AND a sub-toolset version provided as a global property,
                         // make sure that the one passed in with the constructor wins.  If there isn't a matching global property, the sub-toolset version will be set at

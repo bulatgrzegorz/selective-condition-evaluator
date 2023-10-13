@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections.Immutable;
+using Microsoft.Build.Eventing;
+using Microsoft.Build.Internal;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.Construction;
 
@@ -13,7 +15,7 @@ namespace SelectiveConditionEvaluator.Evaluation
         {
             private readonly int _elementOrder;
             private readonly string? _rootDirectory;
-            private readonly ImmutableSegmentedList<string> _excludes;
+            private readonly ImmutableArray<string> _excludes;
             private readonly ImmutableArray<ProjectMetadataElement> _metadata;
 
             public IncludeOperation(IncludeOperationBuilder builder, LazyItemEvaluator<P, I, M, D> lazyEvaluator)
@@ -165,7 +167,7 @@ namespace SelectiveConditionEvaluator.Evaluation
             public int ElementOrder { get; set; }
             public string? RootDirectory { get; set; }
 
-            public ImmutableSegmentedList<string>.Builder Excludes { get; } = ImmutableSegmentedList.CreateBuilder<string>();
+            public ImmutableArray<string>.Builder Excludes { get; } = ImmutableArray.CreateBuilder<string>();
 
             public IncludeOperationBuilder(ProjectItemElement itemElement, bool conditionResult) : base(itemElement, conditionResult)
             {

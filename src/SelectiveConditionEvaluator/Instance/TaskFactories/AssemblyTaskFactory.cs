@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 #endif
 using System.Reflection;
 using Microsoft.Build.BackEnd;
+using Microsoft.Build.BackEnd.Components.RequestBuilder;
+using Microsoft.Build.Framework;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Components;
 using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;

@@ -16,12 +16,10 @@ using Microsoft.Build.BackEnd.Logging;
 using Microsoft.Build.Collections;
 using Microsoft.Build.Construction;
 using Microsoft.Build.Definition;
-using Microsoft.Build.Evaluation.Context;
 using Microsoft.Build.Execution;
 using Microsoft.Build.FileSystem;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Globbing;
-using Microsoft.Build.ObjectModelRemoting;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
@@ -33,11 +31,11 @@ using SelectiveConditionEvaluator.Evaluation.Context;
 using SelectiveConditionEvaluator.Instance;
 using SelectiveConditionEvaluator.ObjectModelRemoting;
 using SelectiveConditionEvaluator.ObjectModelRemoting.DefinitionObjectsLinks;
-using Constants = Microsoft.Build.Internal.Constants;
-using EvaluationItemExpressionFragment = Microsoft.Build.Evaluation.ItemSpec<Microsoft.Build.Evaluation.ProjectProperty, Microsoft.Build.Evaluation.ProjectItem>.ItemExpressionFragment;
-using EvaluationItemSpec = Microsoft.Build.Evaluation.ItemSpec<Microsoft.Build.Evaluation.ProjectProperty, Microsoft.Build.Evaluation.ProjectItem>;
-using ForwardingLoggerRecord = Microsoft.Build.Logging.ForwardingLoggerRecord;
-using ILoggingService = Microsoft.Build.BackEnd.Logging.ILoggingService;
+using Constants = SelectiveConditionEvaluator.Resources.Constants;
+using EvaluationItemExpressionFragment = SelectiveConditionEvaluator.Evaluation.ItemSpec<Microsoft.Build.Evaluation.ProjectProperty, Microsoft.Build.Evaluation.ProjectItem>.ItemExpressionFragment;
+using EvaluationItemSpec = SelectiveConditionEvaluator.Evaluation.ItemSpec<Microsoft.Build.Evaluation.ProjectProperty, Microsoft.Build.Evaluation.ProjectItem>;
+using ForwardingLoggerRecord = SelectiveConditionEvaluator.BackEnd.Components.Logging.ForwardingLoggerRecord;
+using ILoggingService = SelectiveConditionEvaluator.BackEnd.Components.Logging.ILoggingService;
 using InvalidProjectFileException = Microsoft.Build.Exceptions.InvalidProjectFileException;
 using ObjectModel = System.Collections.ObjectModel;
 using ProjectItemFactory = Microsoft.Build.Evaluation.ProjectItem.ProjectItemFactory;
@@ -4448,7 +4446,7 @@ namespace Microsoft.Build.Evaluation
             /// <summary>
             /// Sets a property which is not derived from Xml.
             /// </summary>
-            public ProjectProperty SetProperty(string name, string evaluatedValueEscaped, bool isGlobalProperty, bool mayBeReserved, bool isEnvironmentVariable = false, BackEnd.Logging.LoggingContext loggingContext = null)
+            public ProjectProperty SetProperty(string name, string evaluatedValueEscaped, bool isGlobalProperty, bool mayBeReserved, bool isEnvironmentVariable = false, LoggingContext loggingContext = null)
             {
                 ProjectProperty property = ProjectProperty.Create(Project, name, evaluatedValueEscaped, isGlobalProperty, mayBeReserved, loggingContext);
                 Properties.Set(property);

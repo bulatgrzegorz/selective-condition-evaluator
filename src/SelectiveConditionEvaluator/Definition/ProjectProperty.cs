@@ -14,7 +14,6 @@ using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Construction;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Resources;
-using ReservedPropertyNames = Microsoft.Build.Internal.ReservedPropertyNames;
 
 #nullable disable
 

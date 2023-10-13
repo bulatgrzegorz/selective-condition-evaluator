@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.Build.BackEnd;
 using Microsoft.Build.BackEnd.Components.RequestBuilder;
 using Microsoft.Build.BackEnd.SdkResolution;
+using Microsoft.Build.Construction;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Eventing;
 using Microsoft.Build.Execution;
