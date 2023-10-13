@@ -358,7 +358,7 @@ namespace SelectiveConditionEvaluator.Shared
         /// </summary>
         internal static void VerifyThrowArgument(bool condition, string resourceName, object arg0)
         {
-            VerifyThrowArgument(condition, null, resourceName, arg0);
+            if (!condition) throw new Exception($"{resourceName}: arg: {arg0}");
         }
 
         /// <summary>
@@ -549,7 +549,7 @@ namespace SelectiveConditionEvaluator.Shared
         /// </summary>
         internal static void VerifyThrowArgumentNull(object parameter, string parameterName)
         {
-            VerifyThrowArgumentNull(parameter, parameterName, "Shared.ParameterCannotBeNull");
+            if (parameter is null) throw new ArgumentException(@"Parameter cannot be null", parameterName);
         }
 
         /// <summary>
