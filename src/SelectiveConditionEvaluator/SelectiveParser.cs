@@ -12,7 +12,7 @@ namespace SelectiveConditionEvaluator;
 
 public class SelectiveParser
 {
-    private static readonly GenericExpressionNode s_trueNode = new StringExpressionNode("true", false);
+    private static readonly GenericExpressionNode TrueNode = new StringExpressionNode("true", false);
     private readonly string[] _propertyPrefixQuery;
     private readonly PropertyDictionary<ProjectPropertyInstance> _projectPropertyInstances = new();
 
@@ -86,7 +86,7 @@ public class SelectiveParser
             }
 
             // From all implemented functions, there are no that would accept property as parameter. We can just replace it
-            simplifiedNode = s_trueNode;
+            simplifiedNode = TrueNode;
             return false;
         }
 
@@ -94,8 +94,8 @@ public class SelectiveParser
         {
             simplifiedNode = new AndExpressionNode()
             {
-                LeftChild = SimplifyNode(state, andNode.LeftChild, out var left) ? left : s_trueNode,
-                RightChild = SimplifyNode(state, andNode.RightChild, out var right) ? right : s_trueNode,
+                LeftChild = SimplifyNode(state, andNode.LeftChild, out var left) ? left : TrueNode,
+                RightChild = SimplifyNode(state, andNode.RightChild, out var right) ? right : TrueNode,
                 PossibleAndCollision = andNode.PossibleAndCollision,
                 PossibleOrCollision = andNode.PossibleOrCollision
             };
@@ -107,8 +107,8 @@ public class SelectiveParser
         {
             simplifiedNode = new OrExpressionNode()
             {
-                LeftChild = SimplifyNode(state, orNode.LeftChild, out var left) ? left : s_trueNode,
-                RightChild = SimplifyNode(state, orNode.RightChild, out var right) ? right : s_trueNode,
+                LeftChild = SimplifyNode(state, orNode.LeftChild, out var left) ? left : TrueNode,
+                RightChild = SimplifyNode(state, orNode.RightChild, out var right) ? right : TrueNode,
                 PossibleAndCollision = orNode.PossibleAndCollision,
                 PossibleOrCollision = orNode.PossibleOrCollision
             };
@@ -121,7 +121,7 @@ public class SelectiveParser
             string? unexpandedValue = stringNode.GetUnexpandedValue(state);
             if (unexpandedValue is null)
             {
-                simplifiedNode = s_trueNode;
+                simplifiedNode = TrueNode;
                 return false;
             }
 
@@ -134,7 +134,7 @@ public class SelectiveParser
 
             if (!_propertyPrefixQuery.Any(x => unexpandedValue.StartsWith(x)))
             {
-                simplifiedNode = s_trueNode;
+                simplifiedNode = TrueNode;
                 return false;
             }
 
@@ -150,7 +150,7 @@ public class SelectiveParser
                 return true;
             }
 
-            simplifiedNode = s_trueNode;
+            simplifiedNode = TrueNode;
             return false;
         }
 
