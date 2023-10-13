@@ -565,6 +565,7 @@ namespace SelectiveConditionEvaluator
             /// </summary>
             /// <typeparam name="T">The reference type.</typeparam>
             /// <param name="value">The value to be translated.</param>
+            [Obsolete("BinaryFormatter is obsolete")]
             public void TranslateDotNet<T>(ref T value)
             {
                 if (!TranslateNullable(value))
@@ -1268,6 +1269,7 @@ namespace SelectiveConditionEvaluator
             /// </summary>
             /// <typeparam name="T">The reference type.</typeparam>
             /// <param name="value">The value to be translated.</param>
+            [Obsolete("BinaryFormatter is obsolete")]
             public void TranslateDotNet<T>(ref T value)
             {
                 if (!TranslateNullable(value))

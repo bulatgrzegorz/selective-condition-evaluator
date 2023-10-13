@@ -14,6 +14,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO.Pipes;
+using System.Security.Principal;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 using SelectiveConditionEvaluator.Shared;
 using Task = System.Threading.Tasks.Task;
@@ -414,12 +415,8 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Communications
         private static void ValidateRemotePipeSecurityOnWindows(NamedPipeClientStream nodeStream)
         {
             SecurityIdentifier identifier = WindowsIdentity.GetCurrent().Owner;
-#if FEATURE_PIPE_SECURITY
-            PipeSecurity remoteSecurity = nodeStream.GetAccessControl();
-#else
-            var remoteSecurity = new PipeSecurity(nodeStream.SafePipeHandle, System.Security.AccessControl.AccessControlSections.Access |
-                System.Security.AccessControl.AccessControlSections.Owner | System.Security.AccessControl.AccessControlSections.Group);
-#endif
+            var remoteSecurity = nodeStream.GetAccessControl();
+
             IdentityReference remoteOwner = remoteSecurity.GetOwner(typeof(SecurityIdentifier));
             if (remoteOwner != identifier)
             {
@@ -482,7 +479,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Communications
             nodeStream.Connect(timeout);
 
 #if !FEATURE_PIPEOPTIONS_CURRENTUSERONLY
-            if (NativeMethodsShared.IsWindows && !NativeMethodsShared.IsMono)
+            if (NativeMethods.IsWindows && !NativeMethods.IsMono)
             {
                 // Verify that the owner of the pipe is us.  This prevents a security hole where a remote node has
                 // been faked up with ACLs that would let us attach to it.  It could then issue fake build requests back to
