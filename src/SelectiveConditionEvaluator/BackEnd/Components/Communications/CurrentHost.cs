@@ -5,6 +5,7 @@
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator;
 #endif
 
 #nullable disable
@@ -28,7 +29,7 @@ namespace Microsoft.Build.BackEnd
             if (s_currentHost == null)
             {
                 string dotnetExe = Path.Combine(FileUtilities.GetFolderAbove(BuildEnvironmentHelper.Instance.CurrentMSBuildToolsDirectory, 2),
-                    NativeMethodsShared.IsWindows ? "dotnet.exe" : "dotnet");
+                    NativeMethods.IsWindows ? "dotnet.exe" : "dotnet");
                 if (File.Exists(dotnetExe))
                 {
                     s_currentHost = dotnetExe;

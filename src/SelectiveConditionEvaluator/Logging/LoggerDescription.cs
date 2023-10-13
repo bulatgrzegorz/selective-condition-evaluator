@@ -11,6 +11,10 @@ using System.IO;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.BuildEngine.Shared;
+using Microsoft.Build.Shared;
+using AssemblyLoadInfo = Microsoft.Build.BuildEngine.Shared.AssemblyLoadInfo;
+using LoadedType = Microsoft.Build.BuildEngine.Shared.LoadedType;
+using TypeLoader = Microsoft.Build.BuildEngine.Shared.TypeLoader;
 
 namespace Microsoft.Build.BuildEngine
 {
@@ -317,7 +321,7 @@ namespace Microsoft.Build.BuildEngine
             {
                 loggerClassName = reader.ReadString();
             }
-            #endregion 
+            #endregion
             #region LoggerSwitchParameters
             if (reader.ReadByte() == 0)
             {

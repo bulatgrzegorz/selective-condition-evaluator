@@ -9,13 +9,12 @@ using Microsoft.Build.BackEnd;
 using Microsoft.Build.Collections;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Shared;
-using Microsoft.Build.Shared.FileSystem;
 using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Instance;
-using TaskItem = Microsoft.Build.Execution.ProjectItemInstance.TaskItem;
+using TaskItem = SelectiveConditionEvaluator.Instance.ProjectItemInstance.TaskItem;
 
 #nullable disable
 

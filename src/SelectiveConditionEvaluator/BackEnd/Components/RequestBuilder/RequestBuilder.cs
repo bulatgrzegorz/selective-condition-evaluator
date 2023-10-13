@@ -28,8 +28,7 @@ using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Instance;
-using NodeLoggingContext = Microsoft.Build.BackEnd.Logging.NodeLoggingContext;
-using ProjectLoggingContext = Microsoft.Build.BackEnd.Logging.ProjectLoggingContext;
+using NativeMethods = Microsoft.Build.Framework.NativeMethods;
 
 #nullable disable
 
@@ -918,7 +917,7 @@ namespace Microsoft.Build.BackEnd
 
             if (_componentHost.BuildParameters.SaveOperatingEnvironment)
             {
-                entryToComplete.RequestConfiguration.SavedCurrentDirectory = NativeMethodsShared.GetCurrentDirectory();
+                entryToComplete.RequestConfiguration.SavedCurrentDirectory = NativeMethods.GetCurrentDirectory();
                 entryToComplete.RequestConfiguration.SavedEnvironmentVariables = CommunicationsUtilities.GetEnvironmentVariables();
             }
 
@@ -1110,7 +1109,7 @@ namespace Microsoft.Build.BackEnd
         {
             if (_componentHost.BuildParameters.SaveOperatingEnvironment)
             {
-                NativeMethodsShared.SetCurrentDirectory(_requestEntry.ProjectRootDirectory);
+                NativeMethods.SetCurrentDirectory(_requestEntry.ProjectRootDirectory);
             }
         }
 
@@ -1187,7 +1186,7 @@ namespace Microsoft.Build.BackEnd
                 (_requestEntry.RequestConfiguration.ResultsNodeId != _componentHost.BuildParameters.NodeId))
             {
                 // This indicates to the system that we will block waiting for a results transfer.  We will block here until those results become available.
-                await BlockOnTargetInProgress(Microsoft.Build.BackEnd.BuildRequest.InvalidGlobalRequestId, null);
+                await BlockOnTargetInProgress(SelectiveConditionEvaluator.BackEnd.Shared.BuildRequest.InvalidGlobalRequestId, null);
 
                 // All of the results should now be on this node.
                 ErrorUtilities.VerifyThrow(_requestEntry.RequestConfiguration.ResultsNodeId == _componentHost.BuildParameters.NodeId, "Results for configuration {0} were not retrieved from node {1}", _requestEntry.RequestConfiguration.ConfigurationId, _requestEntry.RequestConfiguration.ResultsNodeId);
@@ -1244,7 +1243,7 @@ namespace Microsoft.Build.BackEnd
         {
             if (_componentHost.BuildParameters.SaveOperatingEnvironment)
             {
-                _requestEntry.RequestConfiguration.SavedCurrentDirectory = NativeMethodsShared.GetCurrentDirectory();
+                _requestEntry.RequestConfiguration.SavedCurrentDirectory = NativeMethods.GetCurrentDirectory();
                 _requestEntry.RequestConfiguration.SavedEnvironmentVariables = CommunicationsUtilities.GetEnvironmentVariables();
             }
         }
@@ -1278,7 +1277,7 @@ namespace Microsoft.Build.BackEnd
 
                 // Restore the saved environment variables.
                 SetEnvironmentVariableBlock(_requestEntry.RequestConfiguration.SavedEnvironmentVariables);
-                NativeMethodsShared.SetCurrentDirectory(_requestEntry.RequestConfiguration.SavedCurrentDirectory);
+                NativeMethods.SetCurrentDirectory(_requestEntry.RequestConfiguration.SavedCurrentDirectory);
             }
         }
 

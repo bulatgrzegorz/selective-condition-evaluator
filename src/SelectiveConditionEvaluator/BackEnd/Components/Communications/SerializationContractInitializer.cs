@@ -5,7 +5,6 @@ using Microsoft.Build.BackEnd.SdkResolution;
 using Microsoft.Build.BuildEngine.Shared;
 using Microsoft.Build.Exceptions;
 using Microsoft.Build.Execution;
-using Microsoft.Build.Experimental.ProjectCache;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Framework.BuildException;
 using Microsoft.Build.Internal;

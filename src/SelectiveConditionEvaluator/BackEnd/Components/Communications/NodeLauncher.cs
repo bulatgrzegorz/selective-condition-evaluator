@@ -9,11 +9,11 @@ using Microsoft.Build.Exceptions;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Internal;
 using Microsoft.Build.Shared;
-using Microsoft.Build.Shared.FileSystem;
 using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.BackEnd.Components;
 using SelectiveConditionEvaluator.BackEnd.Components.Communications;
-using BackendNativeMethods = Microsoft.Build.BackEnd.NativeMethods;
+using BackendNativeMethods = SelectiveConditionEvaluator.BackEnd.Node.NativeMethods;
+using NativeMethods = SelectiveConditionEvaluator.NativeMethods;
 
 #nullable disable
 
@@ -98,14 +98,14 @@ namespace Microsoft.Build.BackEnd
 
 #if RUNTIME_TYPE_NETCORE || MONO
             // Mono automagically uses the current mono, to execute a managed assembly
-            if (!NativeMethodsShared.IsMono)
+            if (!NativeMethods.IsMono)
             {
                 // Run the child process with the same host as the currently-running process.
                 exeName = CurrentHost.GetCurrentHost();
             }
 #endif
 
-            if (!NativeMethodsShared.IsWindows)
+            if (!NativeMethods.IsWindows)
             {
                 ProcessStartInfo processStartInfo = new ProcessStartInfo();
                 processStartInfo.FileName = exeName;
@@ -185,12 +185,12 @@ namespace Microsoft.Build.BackEnd
 
                 if (processInfo.hProcess != IntPtr.Zero && processInfo.hProcess != NativeMethods.InvalidHandle)
                 {
-                    NativeMethodsShared.CloseHandle(processInfo.hProcess);
+                    NativeMethods.CloseHandle(processInfo.hProcess);
                 }
 
                 if (processInfo.hThread != IntPtr.Zero && processInfo.hThread != NativeMethods.InvalidHandle)
                 {
-                    NativeMethodsShared.CloseHandle(processInfo.hThread);
+                    NativeMethods.CloseHandle(processInfo.hThread);
                 }
 
                 CommunicationsUtilities.Trace("Successfully launched {1} node with PID {0}", childProcessId, exeName);

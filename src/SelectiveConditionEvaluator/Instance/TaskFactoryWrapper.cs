@@ -6,6 +6,7 @@ using Microsoft.Build.BuildEngine.Shared;
 using Microsoft.Build.Collections;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Shared;
+using LoadedType = Microsoft.Build.BuildEngine.Shared.LoadedType;
 
 namespace SelectiveConditionEvaluator.Instance
 {

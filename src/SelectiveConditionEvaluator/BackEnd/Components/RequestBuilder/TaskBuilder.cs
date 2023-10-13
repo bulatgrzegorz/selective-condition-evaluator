@@ -21,7 +21,6 @@ using Microsoft.Build.Exceptions;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Shared;
-using Microsoft.Build.Shared.FileSystem;
 using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.BackEnd.Components;
 using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
@@ -31,11 +30,11 @@ using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Evaluation.Conditionals;
 using SelectiveConditionEvaluator.Instance;
 using SelectiveConditionEvaluator.Resources;
-using ElementLocation = Microsoft.Build.Construction.ElementLocation;
-using ProjectItemInstanceFactory = Microsoft.Build.Execution.ProjectItemInstance.TaskItem.ProjectItemInstanceFactory;
-using ReservedPropertyNames = Microsoft.Build.Internal.ReservedPropertyNames;
-using TargetLoggingContext = Microsoft.Build.BackEnd.Logging.TargetLoggingContext;
-using TaskLoggingContext = Microsoft.Build.BackEnd.Logging.TaskLoggingContext;
+using ElementLocation = SelectiveConditionEvaluator.ElementLocation.ElementLocation;
+using ProjectItemInstanceFactory = SelectiveConditionEvaluator.Instance.ProjectItemInstance.TaskItem.ProjectItemInstanceFactory;
+using ReservedPropertyNames = SelectiveConditionEvaluator.Resources.ReservedPropertyNames;
+using TargetLoggingContext = SelectiveConditionEvaluator.BackEnd.Components.Logging.TargetLoggingContext;
+using TaskLoggingContext = SelectiveConditionEvaluator.BackEnd.Components.Logging.TaskLoggingContext;
 
 #nullable disable
 

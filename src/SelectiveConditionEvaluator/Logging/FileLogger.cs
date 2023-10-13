@@ -10,13 +10,14 @@ using System.Text;
 using System.IO;
 
 using Microsoft.Build.Framework;
-using Microsoft.Build.BuildEngine.Shared;
+using Microsoft.Build.Shared;
+using ResourceUtilities = Microsoft.Build.BuildEngine.Shared.ResourceUtilities;
 
 namespace Microsoft.Build.BuildEngine
 {
     /// <summary>
     /// A specialization of the ConsoleLogger that logs to a file instead of the console.
-    /// The output in terms of what is written and how it looks is identical. For example you can 
+    /// The output in terms of what is written and how it looks is identical. For example you can
     /// log verbosely to a file using the FileLogger while simultaneously logging only high priority events
     /// to the console using a ConsoleLogger.
     /// </summary>

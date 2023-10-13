@@ -10,7 +10,8 @@ using System.Collections;
 using System.Diagnostics;
 
 using Microsoft.Build.Framework;
-using Microsoft.Build.BuildEngine.Shared;
+using Microsoft.Build.Shared;
+using ResourceUtilities = Microsoft.Build.BuildEngine.Shared.ResourceUtilities;
 
 namespace Microsoft.Build.BuildEngine
 {
@@ -72,7 +73,7 @@ namespace Microsoft.Build.BuildEngine
 
         /// <summary>
         /// Reset the states of per-build member variables
-        /// VSW#516376 
+        /// VSW#516376
         /// </summary>
         internal override void ResetConsoleLoggerState()
         {
@@ -182,7 +183,7 @@ namespace Microsoft.Build.BuildEngine
         }
 
         /// <summary>
-        /// At the end of the build, repeats the errors and warnings that occurred 
+        /// At the end of the build, repeats the errors and warnings that occurred
         /// during the build, and displays the error count and warning count.
         /// </summary>
         private void ShowErrorWarningSummary()
@@ -300,7 +301,7 @@ namespace Microsoft.Build.BuildEngine
                 counter.InScope = false;
             }
 
-            // if verbosity is detailed or diagnostic, 
+            // if verbosity is detailed or diagnostic,
             // or there was an error or warning
             if (contextStack.Peek().hasErrorsOrWarnings
                 || (IsVerbosityAtLeast(LoggerVerbosity.Detailed)))
@@ -379,7 +380,7 @@ namespace Microsoft.Build.BuildEngine
 
             bool targetHasErrorsOrWarnings = contextStack.Peek().hasErrorsOrWarnings;
 
-            // if verbosity is diagnostic, 
+            // if verbosity is diagnostic,
             // or there was an error or warning and verbosity is normal or detailed
             if ((targetHasErrorsOrWarnings && (IsVerbosityAtLeast(LoggerVerbosity.Normal)))
                   || Verbosity == LoggerVerbosity.Diagnostic)
@@ -882,8 +883,8 @@ namespace Microsoft.Build.BuildEngine
 
             /// <summary>
             /// For TargetStarted events, this stores the filename where the Target is defined
-            /// (e.g., Microsoft.Common.targets).  This is different than the project that is 
-            /// being built.  
+            /// (e.g., Microsoft.Common.targets).  This is different than the project that is
+            /// being built.
             /// For ProjectStarted events, this is null.
             /// </summary>
             internal string file;
