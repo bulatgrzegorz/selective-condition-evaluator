@@ -9,7 +9,7 @@
         <PackageId>SelectiveConditionEvaluator</PackageId>
         <Authors>Grzegorz Bułat</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <Description>SelectiveConditionEvaluator is a library build on top of msBuild. It allows to evaluate conditions (from csproj attribute for example) in selective way, taking into considiration only given properties.</Description>
+        <Description>SelectiveConditionEvaluator is a library build on top of msBuild. It allows to evaluate conditions (from csproj attribute for example) in selective way, taking into consideration only given properties.</Description>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
