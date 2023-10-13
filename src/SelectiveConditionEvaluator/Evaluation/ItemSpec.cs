@@ -4,6 +4,8 @@
 #nullable disable
 
 using Microsoft.Build.BackEnd.Logging;
+using Microsoft.Build.Globbing;
+using Microsoft.Build.Internal;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 

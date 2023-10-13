@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Data;
+using System.Net.Mime;
+using System.Text;
 using System.Xml;
 using System.Text.RegularExpressions;
 using Microsoft.Build.Construction;
@@ -223,7 +226,7 @@ namespace Microsoft.Build.Shared
         /// Validates the properties of this object. This method should be called
         /// after initialization is complete.
         /// </summary>
-        internal void Validate(this Category type)
+        internal void Validate(this CanonicalError.Parts.Category type)
         {
             string namePropertyId = GetPropertyId("Name", type);
             VerifyThrowPropertyNotSetOrEmptyString(type.Name, namePropertyId);
@@ -357,12 +360,12 @@ namespace Microsoft.Build.Shared
                 property.Validate();
             }
 
-            foreach (Category category in type.Categories)
+            foreach (CanonicalError.Parts.Category category in type.Categories)
             {
                 category.Validate();
             }
 
-            // If the DataSource property is not defined on this Rule, check that a DataSource is 
+            // If the DataSource property is not defined on this Rule, check that a DataSource is
             // specified locally on every property.
             if (null == type.DataSource)
             {

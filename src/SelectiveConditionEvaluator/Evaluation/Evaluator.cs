@@ -6,15 +6,20 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using Microsoft.Build.BackEnd;
+using Microsoft.Build.BackEnd.Components.RequestBuilder;
+using Microsoft.Build.BackEnd.SdkResolution;
+using Microsoft.Build.Evaluation;
+using Microsoft.Build.Eventing;
 using Microsoft.Build.Execution;
+using Microsoft.Build.FileSystem;
+using Microsoft.Build.Framework;
+using Microsoft.Build.Framework.Profiler;
+using Microsoft.Build.Internal;
 using Microsoft.Build.Shared;
-using Microsoft.VisualBasic;
 using SelectiveConditionEvaluator.BackEnd;
-using SelectiveConditionEvaluator.BackEnd.BuildManager;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 using SelectiveConditionEvaluator.BackEnd.Components.ProjectCache;
 using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
-using SelectiveConditionEvaluator.BackEnd.Components.SdkResolution;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Construction;
 using SelectiveConditionEvaluator.Construction.Solution;
@@ -22,13 +27,15 @@ using SelectiveConditionEvaluator.Evaluation.Conditionals;
 using SelectiveConditionEvaluator.Evaluation.Context;
 using SelectiveConditionEvaluator.Evaluation.Profiler;
 using SelectiveConditionEvaluator.Instance;
+using SelectiveConditionEvaluator.Resources;
 using static SelectiveConditionEvaluator.Instance.ProjectPropertyInstance;
+using Constants = Microsoft.VisualBasic.Constants;
 using EngineFileUtilities = Microsoft.Build.Internal.EngineFileUtilities;
 using ILoggingService = SelectiveConditionEvaluator.BackEnd.Components.Logging.ILoggingService;
 using InvalidProjectFileException = Microsoft.Build.Exceptions.InvalidProjectFileException;
 using ObjectModel = System.Collections.ObjectModel;
 using SdkReferencePropertyExpansionMode = SelectiveConditionEvaluator.EscapeHatches.SdkReferencePropertyExpansionMode;
-using SdkResult = SelectiveConditionEvaluator.BackEnd.Components.SdkResolution.SdkResult;
+using SdkResult = Microsoft.Build.BackEnd.SdkResolution.SdkResult;
 
 #nullable disable
 
@@ -1126,7 +1133,7 @@ namespace SelectiveConditionEvaluator.Evaluation
             SetBuiltInProperty(ReservedPropertyNames.startupDirectory, startupDirectory);
             SetBuiltInProperty(ReservedPropertyNames.buildNodeCount, _maxNodeCount.ToString(CultureInfo.CurrentCulture));
             SetBuiltInProperty(ReservedPropertyNames.programFiles32, FrameworkLocationHelper.programFiles32);
-            SetBuiltInProperty(ReservedPropertyNames.assemblyVersion, Constants.AssemblyVersion);
+            SetBuiltInProperty(ReservedPropertyNames.assemblyVersion, Resources.Constants.AssemblyVersion);
             SetBuiltInProperty(ReservedPropertyNames.version, MSBuildAssemblyFileVersion.Instance.MajorMinorBuild);
             SetBuiltInProperty(ReservedPropertyNames.fileVersion, CachedFileVersion);
             SetBuiltInProperty(ReservedPropertyNames.semanticVersion, ProjectCollection.DisplayVersion);
@@ -1136,10 +1143,10 @@ namespace SelectiveConditionEvaluator.Evaluation
             SetBuiltInProperty(ReservedPropertyNames.msbuilddisablefeaturesfromversion, ChangeWaves.DisabledWave.ToString());
 
             // Fake OS env variables when not on Windows
-            if (!NativeMethodsShared.IsWindows)
+            if (!NativeMethods.IsWindows)
             {
-                SetBuiltInProperty(ReservedPropertyNames.osName, NativeMethodsShared.OSName);
-                SetBuiltInProperty(ReservedPropertyNames.frameworkToolsRoot, NativeMethodsShared.FrameworkBasePath);
+                SetBuiltInProperty(ReservedPropertyNames.osName, NativeMethods.OSName);
+                SetBuiltInProperty(ReservedPropertyNames.frameworkToolsRoot, NativeMethods.FrameworkBasePath);
             }
 
 #if RUNTIME_TYPE_NETCORE
@@ -1147,7 +1154,7 @@ namespace SelectiveConditionEvaluator.Evaluation
                 Traits.Instance.ForceEvaluateAsFullFramework ? "Full" : "Core");
 #elif MONO
             SetBuiltInProperty(ReservedPropertyNames.msbuildRuntimeType,
-                                                        NativeMethodsShared.IsMono ? "Mono" : "Full");
+                                                        NativeMethods.IsMono ? "Mono" : "Full");
 #else
             SetBuiltInProperty(ReservedPropertyNames.msbuildRuntimeType, "Full");
 #endif
@@ -1210,9 +1217,9 @@ namespace SelectiveConditionEvaluator.Evaluation
             {
                 // In previous versions of MSBuild, there is almost always a subtoolset that adds a VisualStudioVersion property.  Since there
                 // is most likely not a subtoolset now, we need to add VisualStudioVersion if its not already a property.
-                if (!_data.Properties.Contains(Constants.VisualStudioVersionPropertyName))
+                if (!_data.Properties.Contains(Resources.Constants.VisualStudioVersionPropertyName))
                 {
-                    _data.SetProperty(Constants.VisualStudioVersionPropertyName, MSBuildConstants.CurrentVisualStudioVersion, false /* NOT global property */, false /* may NOT be a reserved name */);
+                    _data.SetProperty(Resources.Constants.VisualStudioVersionPropertyName, MSBuildConstants.CurrentVisualStudioVersion, false /* NOT global property */, false /* may NOT be a reserved name */);
                 }
             }
             else
@@ -1220,9 +1227,9 @@ namespace SelectiveConditionEvaluator.Evaluation
                 // Make the subtoolset version itself available as a property -- but only if it's not already set.
                 // Because some people may be depending on this value even if there isn't a matching sub-toolset,
                 // set the property even if there is no matching sub-toolset.
-                if (!_data.Properties.Contains(Constants.SubToolsetVersionPropertyName))
+                if (!_data.Properties.Contains(Resources.Constants.SubToolsetVersionPropertyName))
                 {
-                    _data.SetProperty(Constants.SubToolsetVersionPropertyName, _data.SubToolsetVersion, false /* NOT global property */, false /* may NOT be a reserved name */);
+                    _data.SetProperty(Resources.Constants.SubToolsetVersionPropertyName, _data.SubToolsetVersion, false /* NOT global property */, false /* may NOT be a reserved name */);
                 }
 
                 if (_data.Toolset.SubToolsets.TryGetValue(_data.SubToolsetVersion, out SubToolset subToolset))
@@ -2607,10 +2614,10 @@ namespace SelectiveConditionEvaluator.Evaluation
         {
             if (_lastModifiedProject != null)
             {
-                P oldValue = _data.GetProperty(Constants.MSBuildAllProjectsPropertyName);
+                P oldValue = _data.GetProperty(Resources.Constants.MSBuildAllProjectsPropertyName);
                 string streamImports = string.Join(";", _streamImports.ToArray());
                 _data.SetProperty(
-                    Constants.MSBuildAllProjectsPropertyName,
+                    Resources.Constants.MSBuildAllProjectsPropertyName,
                     oldValue == null
                         ? $"{_lastModifiedProject.FullPath}{streamImports}"
                         : $"{_lastModifiedProject.FullPath}{streamImports};{oldValue.EvaluatedValue}",

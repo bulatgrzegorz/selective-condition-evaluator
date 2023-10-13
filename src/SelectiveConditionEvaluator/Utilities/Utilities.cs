@@ -484,7 +484,7 @@ namespace Microsoft.Build.Internal
             // "MSBuildExtensionsPath32". This points to whatever the value of "Program Files (x86)" environment variable is;
             // but on a 32 bit box this isn't set, and we should use "Program Files" instead.
             string programFiles32 = FrameworkLocationHelper.programFiles32;
-            string extensionsPath32 = NativeMethodsShared.IsWindows
+            string extensionsPath32 = NativeMethods.IsWindows
                                           ? Path.Combine(programFiles32, ReservedPropertyNames.extensionsPathSuffix)
                                           : programFiles32;
 #endif
@@ -500,7 +500,7 @@ namespace Microsoft.Build.Internal
             {
                 // if ProgramFiles and ProgramFiles(x86) are the same, then this is a 32-bit box,
                 // so we only want to set MSBuildExtensionsPath64 if they're not
-                string extensionsPath64 = NativeMethodsShared.IsWindows
+                string extensionsPath64 = NativeMethods.IsWindows
                                               ? Path.Combine(
                                                   FrameworkLocationHelper.programFiles64,
                                                   ReservedPropertyNames.extensionsPathSuffix)

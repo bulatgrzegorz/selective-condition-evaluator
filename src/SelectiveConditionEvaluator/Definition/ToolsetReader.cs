@@ -156,7 +156,7 @@ namespace Microsoft.Build.Evaluation
             if ((locations & ToolsetDefinitionLocations.Registry) == ToolsetDefinitionLocations.Registry)
             {
 #if FEATURE_WIN32_REGISTRY
-                if (NativeMethodsShared.IsWindows || registryReader != null)
+                if (NativeMethods.IsWindows || registryReader != null)
                 {
                     // If we haven't been provided a registry reader (i.e. unit tests), create one
                     registryReader ??= new ToolsetRegistryReader(environmentProperties, globalProperties);

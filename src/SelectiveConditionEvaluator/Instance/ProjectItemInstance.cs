@@ -9,7 +9,10 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.Build.BackEnd;
 using Microsoft.Build.Collections;
+using Microsoft.Build.Evaluation;
+using Microsoft.Build.Framework;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd;
 using SelectiveConditionEvaluator.Collections;
@@ -270,7 +273,7 @@ namespace SelectiveConditionEvaluator.Instance
         /// </comment>
         public ICollection<string> MetadataNames
         {
-            get { return new ReadOnlyCollection<string>(_taskItem.MetadataNames.Cast<string>()); }
+            get { return new Microsoft.Build.Collections.ReadOnlyCollection<string>(_taskItem.MetadataNames.Cast<string>()); }
         }
 
         /// <summary>

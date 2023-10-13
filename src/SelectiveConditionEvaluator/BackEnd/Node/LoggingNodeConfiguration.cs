@@ -3,6 +3,8 @@
 
 #nullable disable
 
+using Microsoft.Build.BackEnd;
+
 namespace SelectiveConditionEvaluator.BackEnd.Node
 {
     internal sealed class LoggingNodeConfiguration : ITranslatable

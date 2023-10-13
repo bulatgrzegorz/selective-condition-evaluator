@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Threading;
+using Microsoft.Build.BuildEngine.Shared;
 
 #nullable disable
 

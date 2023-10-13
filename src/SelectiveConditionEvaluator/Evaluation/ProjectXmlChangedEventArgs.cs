@@ -4,7 +4,9 @@
 #nullable disable
 
 using System.Globalization;
+using Microsoft.Build.Evaluation;
 using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.Construction;
 
 namespace SelectiveConditionEvaluator.Evaluation
 {

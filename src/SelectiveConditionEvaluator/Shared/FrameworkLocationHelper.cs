@@ -11,7 +11,6 @@ using System.Runtime.Versioning;
 using Microsoft.Win32;
 #endif
 
-using Microsoft.Build.Shared.FileSystem;
 using SelectiveConditionEvaluator;
 
 #nullable disable
@@ -88,16 +87,16 @@ namespace Microsoft.Build.Shared
         private const string referenceAssembliesRegistryValueName = "All Assemblies In";
 #endif // FEATURE_WIN32_REGISTRY
         internal const string dotNetFrameworkSdkInstallKeyValueV11 = "SDKInstallRootv1.1";
-        internal static string dotNetFrameworkVersionFolderPrefixV11 = NativeMethodsShared.IsWindows ? "v1.1" : "1.1"; // v1.1 is for Everett.
-        private const string dotNetFrameworkVersionV11 = "v1.1.4322"; // full Everett version to pass to NativeMethodsShared.GetRequestedRuntimeInfo().
+        internal static string dotNetFrameworkVersionFolderPrefixV11 = NativeMethods.IsWindows ? "v1.1" : "1.1"; // v1.1 is for Everett.
+        private const string dotNetFrameworkVersionV11 = "v1.1.4322"; // full Everett version to pass to NativeMethods.GetRequestedRuntimeInfo().
         private const string dotNetFrameworkRegistryKeyV11 = dotNetFrameworkSetupRegistryPath + "\\" + dotNetFrameworkVersionV11;
 
         internal const string dotNetFrameworkSdkInstallKeyValueV20 = "SDKInstallRootv2.0";
-        internal static string dotNetFrameworkVersionFolderPrefixV20 = NativeMethodsShared.IsWindows ? "v2.0" : "2.0"; // v2.0 is for Whidbey.
-        private const string dotNetFrameworkVersionV20 = "v2.0.50727"; // full Whidbey version to pass to NativeMethodsShared.GetRequestedRuntimeInfo().
+        internal static string dotNetFrameworkVersionFolderPrefixV20 = NativeMethods.IsWindows ? "v2.0" : "2.0"; // v2.0 is for Whidbey.
+        private const string dotNetFrameworkVersionV20 = "v2.0.50727"; // full Whidbey version to pass to NativeMethods.GetRequestedRuntimeInfo().
         private const string dotNetFrameworkRegistryKeyV20 = dotNetFrameworkSetupRegistryPath + "\\" + dotNetFrameworkVersionV20;
 
-        internal static string dotNetFrameworkVersionFolderPrefixV30 = NativeMethodsShared.IsWindows ? "v3.0" : "3.0"; // v3.0 is for WinFx.
+        internal static string dotNetFrameworkVersionFolderPrefixV30 = NativeMethods.IsWindows ? "v3.0" : "3.0"; // v3.0 is for WinFx.
         private static string s_dotNetFrameworkRegistryKeyV30 = dotNetFrameworkSetupRegistryPath + "\\" + dotNetFrameworkVersionFolderPrefixV30 + "\\Setup";
 
 #if FEATURE_WIN32_REGISTRY
@@ -111,14 +110,14 @@ namespace Microsoft.Build.Shared
         private const string dotNetFrameworkSdkRegistryPathForV35ToolsOnManagedToolsSDK80A = @"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v8.0A\WinSDK-NetFx35Tools-x86";
         private const string fullDotNetFrameworkSdkRegistryPathForV35ToolsOnManagedToolsSDK80A = "HKEY_LOCAL_MACHINE\\" + dotNetFrameworkSdkRegistryPathForV35ToolsOnManagedToolsSDK80A;
 
-        internal static string dotNetFrameworkVersionFolderPrefixV35 = NativeMethodsShared.IsWindows ? "v3.5" : "3.5"; // v3.5 is for Orcas.
+        internal static string dotNetFrameworkVersionFolderPrefixV35 = NativeMethods.IsWindows ? "v3.5" : "3.5"; // v3.5 is for Orcas.
         private static string s_dotNetFrameworkRegistryKeyV35 = dotNetFrameworkSetupRegistryPath + "\\" + dotNetFrameworkVersionFolderPrefixV35;
 
         internal const string fullDotNetFrameworkSdkRegistryKeyV35OnVS10 = fullDotNetFrameworkSdkRegistryPathForV35ToolsOnWinSDK70A;
         internal const string fullDotNetFrameworkSdkRegistryKeyV35OnVS11 = fullDotNetFrameworkSdkRegistryPathForV35ToolsOnManagedToolsSDK80A;
 
-        internal static string dotNetFrameworkVersionFolderPrefixV40 = NativeMethodsShared.IsWindows ? "v4.0" : "4.0";
-        internal static string dotNetFrameworkVersionFolderPrefixV45 = NativeMethodsShared.IsWindows ? "v4.5" : "4.5";
+        internal static string dotNetFrameworkVersionFolderPrefixV40 = NativeMethods.IsWindows ? "v4.0" : "4.0";
+        internal static string dotNetFrameworkVersionFolderPrefixV45 = NativeMethods.IsWindows ? "v4.5" : "4.5";
 
 #if FEATURE_WIN32_REGISTRY
         /// <summary>
@@ -407,8 +406,8 @@ namespace Microsoft.Build.Shared
         {
             get
             {
-                return NativeMethodsShared.IsUnixLike
-                           ? Path.Combine(NativeMethodsShared.FrameworkBasePath, dotNetFrameworkVersionFolderPrefixV11)
+                return NativeMethods.IsUnixLike
+                           ? Path.Combine(NativeMethods.FrameworkBasePath, dotNetFrameworkVersionFolderPrefixV11)
                            : GetPathToDotNetFrameworkV11(DotNetFrameworkArchitecture.Current);
             }
         }
@@ -417,8 +416,8 @@ namespace Microsoft.Build.Shared
         {
             get
             {
-                return NativeMethodsShared.IsUnixLike
-                           ? Path.Combine(NativeMethodsShared.FrameworkBasePath, dotNetFrameworkVersionFolderPrefixV20)
+                return NativeMethods.IsUnixLike
+                           ? Path.Combine(NativeMethods.FrameworkBasePath, dotNetFrameworkVersionFolderPrefixV20)
                            : GetPathToDotNetFrameworkV20(DotNetFrameworkArchitecture.Current);
             }
         }
@@ -427,8 +426,8 @@ namespace Microsoft.Build.Shared
         {
             get
             {
-                return NativeMethodsShared.IsUnixLike
-                           ? Path.Combine(NativeMethodsShared.FrameworkBasePath, dotNetFrameworkVersionFolderPrefixV30)
+                return NativeMethods.IsUnixLike
+                           ? Path.Combine(NativeMethods.FrameworkBasePath, dotNetFrameworkVersionFolderPrefixV30)
                            : GetPathToDotNetFrameworkV30(DotNetFrameworkArchitecture.Current);
             }
         }
@@ -437,8 +436,8 @@ namespace Microsoft.Build.Shared
         {
             get
             {
-                return NativeMethodsShared.IsUnixLike
-                           ? Path.Combine(NativeMethodsShared.FrameworkBasePath, dotNetFrameworkVersionFolderPrefixV35)
+                return NativeMethods.IsUnixLike
+                           ? Path.Combine(NativeMethods.FrameworkBasePath, dotNetFrameworkVersionFolderPrefixV35)
                            : GetPathToDotNetFrameworkV35(DotNetFrameworkArchitecture.Current);
             }
         }
@@ -447,8 +446,8 @@ namespace Microsoft.Build.Shared
         {
             get
             {
-                return NativeMethodsShared.IsUnixLike
-                           ? Path.Combine(NativeMethodsShared.FrameworkBasePath, dotNetFrameworkVersionFolderPrefixV40)
+                return NativeMethods.IsUnixLike
+                           ? Path.Combine(NativeMethods.FrameworkBasePath, dotNetFrameworkVersionFolderPrefixV40)
                            : GetPathToDotNetFrameworkV40(DotNetFrameworkArchitecture.Current);
             }
         }
@@ -457,8 +456,8 @@ namespace Microsoft.Build.Shared
         {
             get
             {
-                return NativeMethodsShared.IsUnixLike
-                           ? Path.Combine(NativeMethodsShared.FrameworkBasePath, dotNetFrameworkVersionFolderPrefixV45)
+                return NativeMethods.IsUnixLike
+                           ? Path.Combine(NativeMethods.FrameworkBasePath, dotNetFrameworkVersionFolderPrefixV45)
                            : GetPathToDotNetFrameworkV45(DotNetFrameworkArchitecture.Current);
             }
         }
@@ -467,8 +466,8 @@ namespace Microsoft.Build.Shared
         {
             get
             {
-                return NativeMethodsShared.IsUnixLike
-                           ? Path.Combine(NativeMethodsShared.FrameworkBasePath, dotNetFrameworkVersionFolderPrefixV11)
+                return NativeMethods.IsUnixLike
+                           ? Path.Combine(NativeMethods.FrameworkBasePath, dotNetFrameworkVersionFolderPrefixV11)
                            : GetPathToDotNetFrameworkSdkTools(dotNetFrameworkVersion11, visualStudioVersionLatest);
             }
         }
@@ -477,8 +476,8 @@ namespace Microsoft.Build.Shared
         {
             get
             {
-                return NativeMethodsShared.IsUnixLike
-                           ? Path.Combine(NativeMethodsShared.FrameworkBasePath, dotNetFrameworkVersionFolderPrefixV20)
+                return NativeMethods.IsUnixLike
+                           ? Path.Combine(NativeMethods.FrameworkBasePath, dotNetFrameworkVersionFolderPrefixV20)
                            : GetPathToDotNetFrameworkSdkTools(dotNetFrameworkVersion20, visualStudioVersionLatest);
             }
         }
@@ -501,9 +500,9 @@ namespace Microsoft.Build.Shared
                 if (s_fallbackDotNetFrameworkSdkInstallPath == null)
                 {
                     // For non-Windows just get the current Framework path
-                    if (!NativeMethodsShared.IsWindows)
+                    if (!NativeMethods.IsWindows)
                     {
-                        s_fallbackDotNetFrameworkSdkInstallPath = NativeMethodsShared.FrameworkCurrentPath;
+                        s_fallbackDotNetFrameworkSdkInstallPath = NativeMethods.FrameworkCurrentPath;
                     }
 #if FEATURE_WIN32_REGISTRY
                     else
@@ -551,7 +550,7 @@ namespace Microsoft.Build.Shared
                 {
                     if (FallbackDotNetFrameworkSdkInstallPath != null)
                     {
-                        if (NativeMethodsShared.IsWindows)
+                        if (NativeMethods.IsWindows)
                         {
                             var endsWithASlash =
                                 FallbackDotNetFrameworkSdkInstallPath.EndsWith(
@@ -598,7 +597,7 @@ namespace Microsoft.Build.Shared
                 {
                     if (FallbackDotNetFrameworkSdkInstallPath != null)
                     {
-                        if (NativeMethodsShared.IsWindows)
+                        if (NativeMethods.IsWindows)
                         {
                             bool endsWithASlash = FallbackDotNetFrameworkSdkInstallPath.EndsWith(
                                 "\\",
@@ -739,7 +738,7 @@ namespace Microsoft.Build.Shared
             // If complus is set then we will return that directory as the framework directory, there is no need to check the registry value for the framework and it may not even be installed.
             if (String.IsNullOrEmpty(complusInstallRoot) && String.IsNullOrEmpty(complusVersion))
             {
-                if (NativeMethodsShared.IsWindows)
+                if (NativeMethods.IsWindows)
                 {
                     // If the registry entry is 1 then the framework is installed. Go ahead and find the directory. If it is not 1 then the framework is not installed, return null.
                     return String.Equals("1", FindRegistryValueUnderKey(registryEntryToCheckInstall, registryValueToCheckInstall), StringComparison.OrdinalIgnoreCase);
@@ -772,7 +771,7 @@ namespace Microsoft.Build.Shared
             GetDirectories getDirectories,
             DotNetFrameworkArchitecture architecture)
         {
-            if (!NativeMethodsShared.IsWindows)
+            if (!NativeMethods.IsWindows)
             {
                 if (!string.IsNullOrEmpty(prefix)
                     && prefix.Substring(0, 1).Equals("v", StringComparison.OrdinalIgnoreCase))
@@ -780,7 +779,7 @@ namespace Microsoft.Build.Shared
                     prefix = prefix.Substring(1);
                 }
 
-                var frameworkPath = Path.Combine(NativeMethodsShared.FrameworkBasePath, prefix ?? string.Empty);
+                var frameworkPath = Path.Combine(NativeMethods.FrameworkBasePath, prefix ?? string.Empty);
                 return directoryExists(frameworkPath) ? frameworkPath : null;
             }
 
@@ -875,9 +874,9 @@ namespace Microsoft.Build.Shared
         internal static string GenerateProgramFiles32()
         {
             // With Mono, all we look for in Files32 should be found in the below location
-            if (!NativeMethodsShared.IsWindows && NativeMethodsShared.IsMono)
+            if (!NativeMethods.IsWindows && NativeMethods.IsMono)
             {
-                return Path.Combine(NativeMethodsShared.FrameworkBasePath, "xbuild");
+                return Path.Combine(NativeMethods.FrameworkBasePath, "xbuild");
             }
 
             // On a 64 bit machine we always want to use the program files x86.  If we are running as a 64 bit process then this variable will be set correctly
@@ -899,9 +898,9 @@ namespace Microsoft.Build.Shared
         internal static string GenerateProgramFiles64()
         {
             // With Mono, all we look for in Files32 should be found in the below location
-            if (!NativeMethodsShared.IsWindows && NativeMethodsShared.IsMono)
+            if (!NativeMethods.IsWindows && NativeMethods.IsMono)
             {
-                return Path.Combine(NativeMethodsShared.FrameworkBasePath, "xbuild");
+                return Path.Combine(NativeMethods.FrameworkBasePath, "xbuild");
             }
 
             string programFilesX64;
@@ -938,9 +937,9 @@ namespace Microsoft.Build.Shared
                 }
             }
 
-            combinedPath = NativeMethodsShared.IsWindows
+            combinedPath = NativeMethods.IsWindows
                                ? Path.Combine(programFiles32, "Reference Assemblies\\Microsoft\\Framework")
-                               : Path.Combine(NativeMethodsShared.FrameworkBasePath, "xbuild-frameworks");
+                               : Path.Combine(NativeMethods.FrameworkBasePath, "xbuild-frameworks");
 
             return Path.GetFullPath(combinedPath);
         }
@@ -1152,7 +1151,7 @@ namespace Microsoft.Build.Shared
                 version,
                 dotNetFrameworkRegistryKey: dotNetFrameworkSetupRegistryPath + "\\v4\\Full",
                 dotNetFrameworkSetupRegistryInstalledName: "Install",
-                dotNetFrameworkVersionFolderPrefix: NativeMethodsShared.IsWindows ? "v4.0" : "v4.5",
+                dotNetFrameworkVersionFolderPrefix: NativeMethods.IsWindows ? "v4.0" : "v4.5",
                 dotNetFrameworkSdkRegistryToolsKey: "WinSDK-NetFx40Tools-x86",
                 dotNetFrameworkSdkRegistryInstallationFolderName: "InstallationFolder",
                 hasMSBuild: true,
@@ -1383,7 +1382,7 @@ namespace Microsoft.Build.Shared
 #if FEATURE_WIN32_REGISTRY
                 // Otherwise, check to see if we're even installed.  If not, return null -- no point in setting the static
                 // variables to null when that's what they are already.
-                if (NativeMethodsShared.IsWindows && !CheckForFrameworkInstallation(
+                if (NativeMethods.IsWindows && !CheckForFrameworkInstallation(
                     this._dotNetFrameworkRegistryKey,
                     this._dotNetFrameworkSetupRegistryInstalledName))
                 {
@@ -1405,7 +1404,7 @@ namespace Microsoft.Build.Shared
                 // Context: https://github.com/dotnet/msbuild/pull/7689
                 if (this._hasMsBuild &&
                     generatedPathToDotNetFramework != null &&
-                    (!FileSystems.Default.FileExists(Path.Combine(generatedPathToDotNetFramework, NativeMethodsShared.IsWindows ? "MSBuild.exe" : "mcs.exe")) &&
+                    (!FileSystems.Default.FileExists(Path.Combine(generatedPathToDotNetFramework, NativeMethods.IsWindows ? "MSBuild.exe" : "mcs.exe")) &&
                      !FileSystems.Default.FileExists(Path.Combine(generatedPathToDotNetFramework, "Microsoft.Build.dll"))))
                 {
                     return null;
@@ -1433,9 +1432,9 @@ namespace Microsoft.Build.Shared
 
                 string generatedPathToDotNetFrameworkSdkTools = null;
 
-                if (NativeMethodsShared.IsUnixLike)
+                if (NativeMethods.IsUnixLike)
                 {
-                    string frameworkPath = NativeMethodsShared.FrameworkBasePath;
+                    string frameworkPath = NativeMethods.FrameworkBasePath;
                     if (!string.IsNullOrEmpty(frameworkPath))
                     {
                         frameworkPath = Path.Combine(frameworkPath, this.Version.ToString());
@@ -1524,7 +1523,7 @@ namespace Microsoft.Build.Shared
             public virtual string GetPathToDotNetFrameworkSdk(VisualStudioSpec visualStudioSpec)
             {
                 string pathToBinRoot = this.GetPathToDotNetFrameworkSdkTools(visualStudioSpec);
-                if (NativeMethodsShared.IsWindows)
+                if (NativeMethods.IsWindows)
                 {
                     pathToBinRoot = RemoveDirectories(pathToBinRoot, 2);
                 }

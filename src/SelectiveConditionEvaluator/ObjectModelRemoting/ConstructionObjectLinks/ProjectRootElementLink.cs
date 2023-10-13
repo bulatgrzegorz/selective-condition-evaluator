@@ -5,6 +5,7 @@
 
 using System.Text;
 using System.Xml;
+using SelectiveConditionEvaluator.Construction;
 
 namespace SelectiveConditionEvaluator.ObjectModelRemoting.ConstructionObjectLinks
 {
@@ -47,7 +48,7 @@ namespace SelectiveConditionEvaluator.ObjectModelRemoting.ConstructionObjectLink
         /// <summary>
         /// Access to remote <see cref="ProjectRootElement.ProjectFileLocation"/>.
         /// </summary>
-        public abstract ElementLocation ProjectFileLocation { get; }
+        public abstract ElementLocation.ElementLocation ProjectFileLocation { get; }
 
         /// <summary>
         /// Access to remote <see cref="ProjectRootElement.Encoding"/>.

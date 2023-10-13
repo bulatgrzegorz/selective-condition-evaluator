@@ -52,22 +52,22 @@ namespace SelectiveConditionEvaluator
 
         public override bool DirectoryExists(string path)
         {
-            return NativeMethodsShared.DirectoryExistsWindows(path);
+            return NativeMethods.DirectoryExistsWindows(path);
         }
 
         public override bool FileExists(string path)
         {
-            return NativeMethodsShared.FileExistsWindows(path);
+            return NativeMethods.FileExistsWindows(path);
         }
 
         public override bool FileOrDirectoryExists(string path)
         {
-            return NativeMethodsShared.FileOrDirectoryExistsWindows(path);
+            return NativeMethods.FileOrDirectoryExistsWindows(path);
         }
 
         public override DateTime GetLastWriteTimeUtc(string path)
         {
-            var fileLastWriteTime = NativeMethodsShared.GetLastWriteFileUtcTime(path);
+            var fileLastWriteTime = NativeMethods.GetLastWriteFileUtcTime(path);
 
             if (fileLastWriteTime != DateTime.MinValue)
             {
@@ -75,7 +75,7 @@ namespace SelectiveConditionEvaluator
             }
             else
             {
-                NativeMethodsShared.GetLastWriteDirectoryUtcTime(path, out var directoryLastWriteTime);
+                NativeMethods.GetLastWriteDirectoryUtcTime(path, out var directoryLastWriteTime);
                 return directoryLastWriteTime;
             }
         }

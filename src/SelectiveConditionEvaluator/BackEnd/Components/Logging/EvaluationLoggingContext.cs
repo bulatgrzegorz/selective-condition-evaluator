@@ -4,6 +4,7 @@
 #nullable disable
 
 using System.Collections;
+using Microsoft.Build.Framework.Profiler;
 using Microsoft.Build.Shared;
 
 namespace SelectiveConditionEvaluator.BackEnd.Components.Logging

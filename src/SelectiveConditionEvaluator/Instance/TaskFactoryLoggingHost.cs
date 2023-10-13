@@ -2,7 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
+using System.Reflection;
 using Microsoft.Build.BackEnd.Logging;
+using Microsoft.Build.Framework;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 using ElementLocation = SelectiveConditionEvaluator.ElementLocation.ElementLocation;
@@ -155,8 +157,8 @@ namespace SelectiveConditionEvaluator.Instance
             ErrorUtilities.VerifyThrowArgumentNull(e, nameof(e));
             VerifyActiveProxy();
 
-            // If we are in building across process we need the events to be serializable. This method will 
-            // check to see if we are building with multiple process and if the event is serializable. It will 
+            // If we are in building across process we need the events to be serializable. This method will
+            // check to see if we are building with multiple process and if the event is serializable. It will
             // also log a warning if the event is not serializable and drop the logging message.
             if (IsRunningMultipleNodes && !IsEventSerializable(e))
             {
@@ -176,8 +178,8 @@ namespace SelectiveConditionEvaluator.Instance
             ErrorUtilities.VerifyThrowArgumentNull(e, nameof(e));
             VerifyActiveProxy();
 
-            // If we are in building across process we need the events to be serializable. This method will 
-            // check to see if we are building with multiple process and if the event is serializable. It will 
+            // If we are in building across process we need the events to be serializable. This method will
+            // check to see if we are building with multiple process and if the event is serializable. It will
             // also log a warning if the event is not serializable and drop the logging message.
             if (IsRunningMultipleNodes && !IsEventSerializable(e))
             {
@@ -197,8 +199,8 @@ namespace SelectiveConditionEvaluator.Instance
             ErrorUtilities.VerifyThrowArgumentNull(e, nameof(e));
             VerifyActiveProxy();
 
-            // If we are in building across process we need the events to be serializable. This method will 
-            // check to see if we are building with multiple process and if the event is serializable. It will 
+            // If we are in building across process we need the events to be serializable. This method will
+            // check to see if we are building with multiple process and if the event is serializable. It will
             // also log a warning if the event is not serializable and drop the logging message.
             if (IsRunningMultipleNodes && !IsEventSerializable(e))
             {
@@ -218,8 +220,8 @@ namespace SelectiveConditionEvaluator.Instance
             ErrorUtilities.VerifyThrowArgumentNull(e, nameof(e));
             VerifyActiveProxy();
 
-            // If we are in building across process we need the events to be serializable. This method will 
-            // check to see if we are building with multiple process and if the event is serializable. It will 
+            // If we are in building across process we need the events to be serializable. This method will
+            // check to see if we are building with multiple process and if the event is serializable. It will
             // also log a warning if the event is not serializable and drop the logging message.
             if (IsRunningMultipleNodes && !IsEventSerializable(e))
             {
@@ -260,7 +262,7 @@ namespace SelectiveConditionEvaluator.Instance
             ILease lease = (ILease)base.InitializeLifetimeService();
 
             // Set how long a lease should be initially. Once a lease expires
-            // the remote object will be disconnected and it will be marked as being availiable 
+            // the remote object will be disconnected and it will be marked as being availiable
             // for garbage collection
             int initialLeaseTime = 1;
 
@@ -282,7 +284,7 @@ namespace SelectiveConditionEvaluator.Instance
             // increase the lease time allowing the object to stay in memory
             _sponsor = new ClientSponsor();
 
-            // When a new lease is requested lets make it last 1 minutes longer. 
+            // When a new lease is requested lets make it last 1 minutes longer.
             int leaseExtensionTime = 1;
 
             string leaseExtensionTimeFromEnvironment = Environment.GetEnvironmentVariable("MSBUILDENGINEPROXYLEASEEXTENSIONTIME");

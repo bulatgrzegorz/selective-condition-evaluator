@@ -5,6 +5,7 @@
 
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using Microsoft.Build.Shared;
 
 namespace SelectiveConditionEvaluator
 {

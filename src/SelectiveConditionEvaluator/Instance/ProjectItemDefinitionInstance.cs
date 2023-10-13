@@ -5,7 +5,9 @@
 
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.Build.BackEnd;
 using Microsoft.Build.Collections;
+using Microsoft.Build.Evaluation;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd;
 using SelectiveConditionEvaluator.Collections;

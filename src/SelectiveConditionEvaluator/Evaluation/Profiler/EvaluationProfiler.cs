@@ -5,7 +5,9 @@
 
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using Microsoft.Build.Framework.Profiler;
 using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.Construction;
 
 namespace SelectiveConditionEvaluator.Evaluation.Profiler
 {

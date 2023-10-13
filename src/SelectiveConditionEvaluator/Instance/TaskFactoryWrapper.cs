@@ -2,7 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Reflection;
+using Microsoft.Build.BuildEngine.Shared;
 using Microsoft.Build.Collections;
+using Microsoft.Build.Framework;
 using Microsoft.Build.Shared;
 
 namespace SelectiveConditionEvaluator.Instance
@@ -65,7 +67,7 @@ namespace SelectiveConditionEvaluator.Instance
         private string _taskName;
 
         /// <summary>
-        /// The set of special parameters that, along with the name, contribute to the identity of 
+        /// The set of special parameters that, along with the name, contribute to the identity of
         /// this factory.
         /// </summary>
         private IDictionary<string, string> _factoryIdentityParameters;
@@ -150,8 +152,8 @@ namespace SelectiveConditionEvaluator.Instance
         }
 
         /// <summary>
-        /// The set of task identity parameters that were set on 
-        /// this particular factory's UsingTask statement. 
+        /// The set of task identity parameters that were set on
+        /// this particular factory's UsingTask statement.
         /// </summary>
         public IDictionary<string, string> FactoryIdentityParameters
         {
