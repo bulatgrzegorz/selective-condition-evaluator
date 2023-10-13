@@ -1,11 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using SelectiveConditionEvaluator.Collections;
-using SelectiveConditionEvaluator.Evaluation;
-using SelectiveConditionEvaluator.Evaluation.Conditionals;
-using SelectiveConditionEvaluator.Instance;
-using SelectiveConditionEvaluator.Shared.FileSystem;
+using SelectiveConditionEvaluator.msbuild;
+using SelectiveConditionEvaluator.msbuild.Collections;
+using SelectiveConditionEvaluator.msbuild.Evaluation;
+using SelectiveConditionEvaluator.msbuild.Evaluation.Conditionals;
+using SelectiveConditionEvaluator.msbuild.Instance;
+using SelectiveConditionEvaluator.msbuild.Shared.FileSystem;
 
 namespace SelectiveConditionEvaluator;
 
