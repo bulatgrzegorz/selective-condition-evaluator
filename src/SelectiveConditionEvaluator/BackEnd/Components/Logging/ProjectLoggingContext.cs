@@ -2,8 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections;
+using Microsoft.Build.BackEnd;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.BackEnd.Shared;
+using SelectiveConditionEvaluator.Collections;
+using SelectiveConditionEvaluator.Instance;
 using TaskItem = Microsoft.Build.Execution.ProjectItemInstance.TaskItem;
 
 #nullable disable
@@ -104,7 +108,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
                 }
                 else
                 {
-                    properties = projectProperties.Filter(p => p is not EnvironmentDerivedProjectPropertyInstance || EnvironmentUtilities.IsWellKnownEnvironmentDerivedProperty(p.Name), p => new DictionaryEntry(p.Name, p.EvaluatedValue));
+                    properties = projectProperties.Filter(p => p is not ProjectPropertyInstance.EnvironmentDerivedProjectPropertyInstance || EnvironmentUtilities.IsWellKnownEnvironmentDerivedProperty(p.Name), p => new DictionaryEntry(p.Name, p.EvaluatedValue));
                 }
 
                 items = projectItems?.GetCopyOnReadEnumerable(item => new DictionaryEntry(item.ItemType, new TaskItem(item))) ?? Enumerable.Empty<DictionaryEntry>();

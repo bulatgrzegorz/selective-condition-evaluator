@@ -15,15 +15,16 @@ using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Instance;
-using ElementLocation = Microsoft.Build.Construction.ElementLocation;
-using ProjectItemInstanceFactory = Microsoft.Build.Execution.ProjectItemInstance.TaskItem.ProjectItemInstanceFactory;
+using ElementLocation = SelectiveConditionEvaluator.ElementLocation.ElementLocation;
+using NativeMethods = SelectiveConditionEvaluator.NativeMethods;
+using ProjectItemInstanceFactory = SelectiveConditionEvaluator.Instance.ProjectItemInstance.TaskItem.ProjectItemInstanceFactory;
 
 #nullable disable
 
 namespace Microsoft.Build.BackEnd
 {
-    using ILoggingService = Microsoft.Build.BackEnd.Logging.ILoggingService;
-    using ItemVectorPartition = System.Collections.Generic.Dictionary<string, System.Collections.Generic.IList<Microsoft.Build.Execution.ProjectItemInstance>>;
+    using ILoggingService = SelectiveConditionEvaluator.BackEnd.Components.Logging.ILoggingService;
+    using ItemVectorPartition = System.Collections.Generic.Dictionary<string, System.Collections.Generic.IList<ProjectItemInstance>>;
     // ItemVectorPartitionCollection is designed to contains a set of project items which have possibly undergone transforms.
     // The outer dictionary it usually keyed by item type, so if items originally came from
     // an expression like @(Foo), the outer dictionary would have a key of "Foo" in it.
@@ -31,7 +32,7 @@ namespace Microsoft.Build.BackEnd
     // For instance, if items were generated from an expression @(Foo->'%(Filename).obj'), then
     // the inner dictionary would have a key of "@(Foo->'%(Filename).obj')", in which would be
     // contained a list of the items which were created/transformed using that pattern.
-    using ItemVectorPartitionCollection = System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, System.Collections.Generic.IList<Microsoft.Build.Execution.ProjectItemInstance>>>;
+    using ItemVectorPartitionCollection = System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, System.Collections.Generic.IList<ProjectItemInstance>>>;
 
     /// <summary>
     /// Enumeration of the results of target dependency analysis.
@@ -984,7 +985,7 @@ namespace Microsoft.Build.BackEnd
             try
             {
                 string oldestOutputFullPath = Path.Combine(projectDirectory, oldestOutput);
-                oldestOutputFileTime = NativeMethodsShared.GetLastWriteFileUtcTime(oldestOutputFullPath);
+                oldestOutputFileTime = NativeMethods.GetLastWriteFileUtcTime(oldestOutputFullPath);
             }
             catch (Exception e) when (ExceptionHandling.IsIoRelatedException(e))
             {
@@ -1009,7 +1010,7 @@ namespace Microsoft.Build.BackEnd
                 try
                 {
                     string candidateOutputFullPath = Path.Combine(projectDirectory, candidateOutput);
-                    candidateOutputFileTime = NativeMethodsShared.GetLastWriteFileUtcTime(candidateOutputFullPath);
+                    candidateOutputFileTime = NativeMethods.GetLastWriteFileUtcTime(candidateOutputFullPath);
                 }
                 catch (Exception e) when (ExceptionHandling.IsIoRelatedException(e))
                 {
@@ -1044,7 +1045,7 @@ namespace Microsoft.Build.BackEnd
                 try
                 {
                     string unescapedInputFullPath = Path.Combine(projectDirectory, unescapedInput);
-                    inputFileTime = NativeMethodsShared.GetLastWriteFileUtcTime(unescapedInputFullPath);
+                    inputFileTime = NativeMethods.GetLastWriteFileUtcTime(unescapedInputFullPath);
                 }
                 catch (Exception e) when (ExceptionHandling.IsIoRelatedException(e))
                 {
@@ -1197,10 +1198,10 @@ namespace Microsoft.Build.BackEnd
                 "Need to specify paths to compare.");
 
             path1 = Path.Combine(_project.Directory, path1);
-            var path1WriteTime = NativeMethodsShared.GetLastWriteFileUtcTime(path1);
+            var path1WriteTime = NativeMethods.GetLastWriteFileUtcTime(path1);
 
             path2 = Path.Combine(_project.Directory, path2);
-            var path2WriteTime = NativeMethodsShared.GetLastWriteFileUtcTime(path2);
+            var path2WriteTime = NativeMethods.GetLastWriteFileUtcTime(path2);
 
             path1DoesNotExist = (path1WriteTime == DateTime.MinValue);
             path2DoesNotExist = (path2WriteTime == DateTime.MinValue);

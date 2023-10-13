@@ -19,9 +19,9 @@ using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Instance;
 using BuildAbortedException = Microsoft.Build.Exceptions.BuildAbortedException;
-using ElementLocation = Microsoft.Build.Construction.ElementLocation;
-using ProjectLoggingContext = Microsoft.Build.BackEnd.Logging.ProjectLoggingContext;
-using TaskItem = Microsoft.Build.Execution.ProjectItemInstance.TaskItem;
+using ElementLocation = SelectiveConditionEvaluator.ElementLocation.ElementLocation;
+using ProjectLoggingContext = SelectiveConditionEvaluator.BackEnd.Components.Logging.ProjectLoggingContext;
+using TaskItem = SelectiveConditionEvaluator.Instance.ProjectItemInstance.TaskItem;
 
 #nullable disable
 

@@ -9,7 +9,7 @@ using Microsoft.Build.Execution;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Instance;
-using ElementLocation = Microsoft.Build.Construction.ElementLocation;
+using ElementLocation = SelectiveConditionEvaluator.ElementLocation.ElementLocation;
 
 #nullable disable
 

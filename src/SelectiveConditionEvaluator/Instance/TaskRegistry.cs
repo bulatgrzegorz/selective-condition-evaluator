@@ -20,6 +20,7 @@ using SelectiveConditionEvaluator.Resources;
 using SelectiveConditionEvaluator.StringTools;
 using ILoggingService = SelectiveConditionEvaluator.BackEnd.Components.Logging.ILoggingService;
 using InvalidProjectFileException = Microsoft.Build.Exceptions.InvalidProjectFileException;
+using LoadedType = Microsoft.Build.BuildEngine.Shared.LoadedType;
 using TargetLoggingContext = SelectiveConditionEvaluator.BackEnd.Components.Logging.TargetLoggingContext;
 using TaskEngineAssemblyResolver = Microsoft.Build.BackEnd.Logging.TaskEngineAssemblyResolver;
 

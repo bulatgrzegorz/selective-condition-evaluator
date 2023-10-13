@@ -7,6 +7,7 @@
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.BuildEngine.Shared;
+using Microsoft.Build.Shared;
 
 namespace Microsoft.Build.BuildEngine
 {

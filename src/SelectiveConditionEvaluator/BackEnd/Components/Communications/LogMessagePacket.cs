@@ -5,7 +5,8 @@ using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Shared;
-using TaskItem = Microsoft.Build.Execution.ProjectItemInstance.TaskItem;
+using SelectiveConditionEvaluator.Instance;
+using TaskItem = SelectiveConditionEvaluator.Instance.ProjectItemInstance.TaskItem;
 
 #nullable disable
 

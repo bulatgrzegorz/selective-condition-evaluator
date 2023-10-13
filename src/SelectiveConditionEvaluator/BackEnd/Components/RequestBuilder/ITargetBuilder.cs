@@ -4,7 +4,7 @@
 using Microsoft.Build.BackEnd;
 using SelectiveConditionEvaluator.BackEnd.Components.BuildRequestEngine;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
-using BuildResult = SelectiveConditionEvaluator.BackEnd.Shared.BuildResult;
+using BuildResult = Microsoft.Build.Execution.BuildResult;
 
 #nullable disable
 
