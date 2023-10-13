@@ -15,7 +15,7 @@
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
       <NoWarn>1701;1702;CS8981;CS8765;CS8767;CS8604;CS8625;CS8618;CS8603;CS8602;CS8601;CS8600;</NoWarn>
     </PropertyGroup>
-
+    
   <ItemGroup>
     <PackageReference Include="System.Collections.Immutable" Version="7.0.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
