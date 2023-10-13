@@ -4,6 +4,7 @@
 #nullable disable
 
 using System.Xml;
+using Microsoft.Build.Internal;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.Evaluation;
 
@@ -16,7 +17,7 @@ namespace SelectiveConditionEvaluator.ElementLocation
     /// <remarks>
     /// XmlDocument has many members, and this can't substitute for all of them. Location finding probably won't work if
     /// certain XmlDocument members are used. So for extra robustness, this could wrap an XmlDocument instead,
-    /// and expose the small number of members that the MSBuild code actually uses. 
+    /// and expose the small number of members that the MSBuild code actually uses.
     /// </remarks>
     internal class XmlDocumentWithLocation : XmlDocument
     {

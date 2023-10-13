@@ -4,6 +4,7 @@
 #nullable disable
 
 using System.Collections.Concurrent;
+using Microsoft.Build.BackEnd.SdkResolution;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Components.SdkResolution;
 
@@ -105,7 +106,7 @@ namespace SelectiveConditionEvaluator.Evaluation.Context
 
         internal EvaluationContext ContextForNewProject()
         {
-            // Projects using isolated contexts need to get a new context instance 
+            // Projects using isolated contexts need to get a new context instance
             switch (Policy)
             {
                 case SharingPolicy.Shared:

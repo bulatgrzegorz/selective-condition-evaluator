@@ -16,13 +16,6 @@ using Microsoft.Build.Graph;
 using Microsoft.Build.Internal;
 using Microsoft.Build.Shared;
 using Microsoft.Build.Shared.FileSystem;
-using SelectiveConditionEvaluator;
-using SelectiveConditionEvaluator.BackEnd;
-using SelectiveConditionEvaluator.BackEnd.BuildManager;
-using SelectiveConditionEvaluator.BackEnd.Components.ProjectCache;
-using SelectiveConditionEvaluator.Collections;
-using SelectiveConditionEvaluator.Evaluation;
-using SelectiveConditionEvaluator.Instance;
 using ForwardingLoggerRecord = Microsoft.Build.Logging.ForwardingLoggerRecord;
 
 #nullable disable
@@ -69,7 +62,7 @@ namespace Microsoft.Build.Execution
         /// <summary>
         /// The startup directory.
         /// </summary>
-        private static string s_startupDirectory = NativeMethods.GetCurrentDirectory();
+        private static string s_startupDirectory = NativeMethodsShared.GetCurrentDirectory();
 
         /// <summary>
         /// Indicates whether we should warn when a property is uninitialized when it is used.

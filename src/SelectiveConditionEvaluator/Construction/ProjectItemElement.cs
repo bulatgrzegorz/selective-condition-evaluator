@@ -287,47 +287,47 @@ namespace SelectiveConditionEvaluator.Construction
         /// <summary>
         /// Location of the include attribute
         /// </summary>
-        public ElementLocation IncludeLocation => GetAttributeLocation(XMakeAttributes.include);
+        public ElementLocation.ElementLocation IncludeLocation => GetAttributeLocation(XMakeAttributes.include);
 
         /// <summary>
         /// Location of the exclude attribute
         /// </summary>
-        public ElementLocation ExcludeLocation => GetAttributeLocation(XMakeAttributes.exclude);
+        public ElementLocation.ElementLocation ExcludeLocation => GetAttributeLocation(XMakeAttributes.exclude);
 
         /// <summary>
         /// Location of the remove attribute
         /// </summary>
-        public ElementLocation RemoveLocation => GetAttributeLocation(XMakeAttributes.remove);
+        public ElementLocation.ElementLocation RemoveLocation => GetAttributeLocation(XMakeAttributes.remove);
 
         /// <summary>
         /// Location of the update attribute
         /// </summary>
-        public ElementLocation UpdateLocation => GetAttributeLocation(XMakeAttributes.update);
+        public ElementLocation.ElementLocation UpdateLocation => GetAttributeLocation(XMakeAttributes.update);
 
         /// <summary>
         /// Location of the MatchOnMetadata attribute
         /// </summary>
-        public ElementLocation MatchOnMetadataLocation => GetAttributeLocation(XMakeAttributes.matchOnMetadata);
+        public ElementLocation.ElementLocation MatchOnMetadataLocation => GetAttributeLocation(XMakeAttributes.matchOnMetadata);
 
         /// <summary>
         /// Location of the MatchOnMetadataOptions attribute
         /// </summary>
-        public ElementLocation MatchOnMetadataOptionsLocation => GetAttributeLocation(XMakeAttributes.matchOnMetadataOptions);
+        public ElementLocation.ElementLocation MatchOnMetadataOptionsLocation => GetAttributeLocation(XMakeAttributes.matchOnMetadataOptions);
 
         /// <summary>
         /// Location of the keepMetadata attribute
         /// </summary>
-        public ElementLocation KeepMetadataLocation => GetAttributeLocation(XMakeAttributes.keepMetadata);
+        public ElementLocation.ElementLocation KeepMetadataLocation => GetAttributeLocation(XMakeAttributes.keepMetadata);
 
         /// <summary>
         /// Location of the removeMetadata attribute
         /// </summary>
-        public ElementLocation RemoveMetadataLocation => GetAttributeLocation(XMakeAttributes.removeMetadata);
+        public ElementLocation.ElementLocation RemoveMetadataLocation => GetAttributeLocation(XMakeAttributes.removeMetadata);
 
         /// <summary>
         /// Location of the keepDuplicates attribute
         /// </summary>
-        public ElementLocation KeepDuplicatesLocation => GetAttributeLocation(XMakeAttributes.keepDuplicates);
+        public ElementLocation.ElementLocation KeepDuplicatesLocation => GetAttributeLocation(XMakeAttributes.keepDuplicates);
 
         /// <summary>
         /// Whether the include value has wildcards,

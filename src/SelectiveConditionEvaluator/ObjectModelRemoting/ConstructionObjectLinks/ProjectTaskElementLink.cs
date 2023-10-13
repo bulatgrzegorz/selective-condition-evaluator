@@ -19,7 +19,7 @@ namespace SelectiveConditionEvaluator.ObjectModelRemoting.ConstructionObjectLink
         /// <summary>
         /// Access to remote <see cref="ProjectTaskElement.ParameterLocations"/>.
         /// </summary>
-        public abstract IEnumerable<KeyValuePair<string, ElementLocation>> ParameterLocations { get; }
+        public abstract IEnumerable<KeyValuePair<string, ElementLocation.ElementLocation>> ParameterLocations { get; }
 
         /// <summary>
         /// Facilitate remoting the <see cref="ProjectTaskElement.GetParameter"/>.

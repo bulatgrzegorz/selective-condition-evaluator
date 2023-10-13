@@ -4,6 +4,7 @@
 #nullable disable
 
 using System.Diagnostics;
+using Microsoft.Build.Collections;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.ElementLocation;
 using SelectiveConditionEvaluator.ObjectModelRemoting.ConstructionObjectLinks;

@@ -66,7 +66,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// Location of the "ExecuteTargets" attribute on this element, if any.
         /// If there is no such attribute, returns null;
         /// </summary>
-        public ElementLocation ExecuteTargetsLocation => GetAttributeLocation(XMakeAttributes.executeTargets);
+        public ElementLocation.ElementLocation ExecuteTargetsLocation => GetAttributeLocation(XMakeAttributes.executeTargets);
 
         /// <summary>
         /// Creates an unparented ProjectOnErrorElement, wrapping an unparented XmlElement.

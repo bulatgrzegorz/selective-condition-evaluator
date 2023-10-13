@@ -118,17 +118,17 @@ namespace SelectiveConditionEvaluator.Construction
         /// <summary>
         /// Location of the task parameter attribute
         /// </summary>
-        public ElementLocation TaskParameterLocation => GetAttributeLocation(XMakeAttributes.taskParameter);
+        public ElementLocation.ElementLocation TaskParameterLocation => GetAttributeLocation(XMakeAttributes.taskParameter);
 
         /// <summary>
         /// Location of the property name attribute, if any
         /// </summary>
-        public ElementLocation PropertyNameLocation => GetAttributeLocation(XMakeAttributes.propertyName);
+        public ElementLocation.ElementLocation PropertyNameLocation => GetAttributeLocation(XMakeAttributes.propertyName);
 
         /// <summary>
         /// Location of the item type attribute, if any
         /// </summary>
-        public ElementLocation ItemTypeLocation => GetAttributeLocation(XMakeAttributes.itemName);
+        public ElementLocation.ElementLocation ItemTypeLocation => GetAttributeLocation(XMakeAttributes.itemName);
 
         /// <summary>
         /// Creates an unparented ProjectOutputElement, wrapping an unparented XmlElement.

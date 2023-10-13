@@ -102,7 +102,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// Creates an unparented ProjectMetadataElement, wrapping an unparented XmlElement.
         /// Caller should then ensure the element is added to a parent.
         /// </summary>
-        internal static ProjectMetadataElement CreateDisconnected(string name, ProjectRootElement containingProject, ElementLocation location = null)
+        internal static ProjectMetadataElement CreateDisconnected(string name, ProjectRootElement containingProject, ElementLocation.ElementLocation location = null)
         {
             XmlUtilities.VerifyThrowArgumentValidElementName(name);
             ErrorUtilities.VerifyThrowArgument(!FileUtilities.ItemSpecModifiers.IsItemSpecModifier(name), "ItemSpecModifierCannotBeCustomMetadata", name);

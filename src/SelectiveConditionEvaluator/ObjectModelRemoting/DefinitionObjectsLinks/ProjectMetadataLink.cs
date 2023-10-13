@@ -3,6 +3,9 @@
 
 #nullable disable
 
+using Microsoft.Build.Evaluation;
+using SelectiveConditionEvaluator.Construction;
+
 namespace SelectiveConditionEvaluator.ObjectModelRemoting.DefinitionObjectsLinks
 {
     /// <summary>

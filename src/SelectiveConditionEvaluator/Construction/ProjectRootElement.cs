@@ -1,13 +1,17 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Microsoft.Build.Collections;
+using Microsoft.Build.Evaluation;
+using Microsoft.Build.Eventing;
+using Microsoft.Build.Framework;
+using Microsoft.Build.Internal;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.ElementLocation;
 using SelectiveConditionEvaluator.Evaluation;
@@ -96,7 +100,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// <summary>
         /// The project file's location. It can be null if the project is not directly loaded from a file.
         /// </summary>
-        private ElementLocation _projectFileLocation;
+        private ElementLocation.ElementLocation _projectFileLocation;
 
         /// <summary>
         /// The project file's full path, escaped.
@@ -159,7 +163,7 @@ namespace SelectiveConditionEvaluator.Construction
 
             IsExplicitlyLoaded = isExplicitlyLoaded;
             ProjectRootElementCache = projectRootElementCache;
-            _directory = NativeMethodsShared.GetCurrentDirectory();
+            _directory = NativeMethods.GetCurrentDirectory();
             IncrementVersion();
 
             XmlDocumentWithLocation document = LoadDocument(xmlReader, preserveFormatting);
@@ -176,7 +180,7 @@ namespace SelectiveConditionEvaluator.Construction
             ErrorUtilities.VerifyThrowArgumentNull(projectRootElementCache, nameof(projectRootElementCache));
 
             ProjectRootElementCache = projectRootElementCache;
-            _directory = NativeMethodsShared.GetCurrentDirectory();
+            _directory = NativeMethods.GetCurrentDirectory();
             IncrementVersion();
 
             var document = new XmlDocumentWithLocation();
@@ -233,7 +237,7 @@ namespace SelectiveConditionEvaluator.Construction
             ErrorUtilities.VerifyThrowArgumentNull(projectRootElementCache, nameof(projectRootElementCache));
 
             ProjectRootElementCache = projectRootElementCache;
-            _directory = NativeMethodsShared.GetCurrentDirectory();
+            _directory = NativeMethods.GetCurrentDirectory();
             IncrementVersion();
 
             ProjectParser.Parse(document, this);
@@ -288,7 +292,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// <summary>
         /// Get a read-only collection of the child item definitions, if any, in all item definition groups anywhere in the project file.
         /// </summary>
-        public ICollection<ProjectItemDefinitionElement> ItemDefinitions => new ReadOnlyCollection<ProjectItemDefinitionElement>(GetAllChildrenOfType<ProjectItemDefinitionElement>());
+        public ICollection<ProjectItemDefinitionElement> ItemDefinitions => new System.Collections.ObjectModel.ReadOnlyCollection<ProjectItemDefinitionElement>(GetAllChildrenOfType<ProjectItemDefinitionElement>());
 
         /// <summary>
         /// Get a read-only collection over the child item groups, if any.
@@ -300,7 +304,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// Get a read-only collection of the child items, if any, in all item groups anywhere in the project file.
         /// Not restricted to root item groups: traverses through Choose elements.
         /// </summary>
-        public ICollection<ProjectItemElement> Items => new ReadOnlyCollection<ProjectItemElement>(GetAllChildrenOfType<ProjectItemElement>());
+        public ICollection<ProjectItemElement> Items => new System.Collections.ObjectModel.ReadOnlyCollection<ProjectItemElement>(GetAllChildrenOfType<ProjectItemElement>());
 
         /// <summary>
         /// Get a read-only collection of the child import groups, if any.
@@ -310,7 +314,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// <summary>
         /// Get a read-only collection of the child imports
         /// </summary>
-        public ICollection<ProjectImportElement> Imports => new ReadOnlyCollection<ProjectImportElement>(GetAllChildrenOfType<ProjectImportElement>());
+        public ICollection<ProjectImportElement> Imports => new System.Collections.ObjectModel.ReadOnlyCollection<ProjectImportElement>(GetAllChildrenOfType<ProjectImportElement>());
 
         /// <summary>
         /// Get a read-only collection of the child property groups, if any.
@@ -322,7 +326,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// Geta read-only collection of the child properties, if any, in all property groups anywhere in the project file.
         /// Not restricted to root property groups: traverses through Choose elements.
         /// </summary>
-        public ICollection<ProjectPropertyElement> Properties => new ReadOnlyCollection<ProjectPropertyElement>(GetAllChildrenOfType<ProjectPropertyElement>());
+        public ICollection<ProjectPropertyElement> Properties => new System.Collections.ObjectModel.ReadOnlyCollection<ProjectPropertyElement>(GetAllChildrenOfType<ProjectPropertyElement>());
 
         /// <summary>
         /// Get a read-only collection of the child targets
@@ -406,7 +410,7 @@ namespace SelectiveConditionEvaluator.Construction
                     return;
                 }
 
-                _projectFileLocation = ElementLocation.Create(newFullPath);
+                _projectFileLocation = ElementLocation.ElementLocation.Create(newFullPath);
                 _escapedFullPath = null;
                 _directory = Path.GetDirectoryName(newFullPath);
 
@@ -616,7 +620,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// <summary>
         /// This does not allow conditions, so it should not be called.
         /// </summary>
-        public override ElementLocation ConditionLocation
+        public override ElementLocation.ElementLocation ConditionLocation
         {
             get
             {
@@ -630,32 +634,32 @@ namespace SelectiveConditionEvaluator.Construction
         /// If the file has not been given a name, returns an empty location.
         /// This is a case where it is legitimate to "not have a location".
         /// </summary>
-        public ElementLocation ProjectFileLocation => Link != null ? RootLink.ProjectFileLocation : _projectFileLocation ?? ElementLocation.EmptyLocation;
+        public ElementLocation.ElementLocation ProjectFileLocation => Link != null ? RootLink.ProjectFileLocation : _projectFileLocation ?? ElementLocation.ElementLocation.EmptyLocation;
 
         /// <summary>
         /// Location of the toolsversion attribute, if any
         /// </summary>
-        public ElementLocation ToolsVersionLocation => GetAttributeLocation(XMakeAttributes.toolsVersion);
+        public ElementLocation.ElementLocation ToolsVersionLocation => GetAttributeLocation(XMakeAttributes.toolsVersion);
 
         /// <summary>
         /// Location of the defaulttargets attribute, if any
         /// </summary>
-        public ElementLocation DefaultTargetsLocation => GetAttributeLocation(XMakeAttributes.defaultTargets);
+        public ElementLocation.ElementLocation DefaultTargetsLocation => GetAttributeLocation(XMakeAttributes.defaultTargets);
 
         /// <summary>
         /// Location of the initialtargets attribute, if any
         /// </summary>
-        public ElementLocation InitialTargetsLocation => GetAttributeLocation(XMakeAttributes.initialTargets);
+        public ElementLocation.ElementLocation InitialTargetsLocation => GetAttributeLocation(XMakeAttributes.initialTargets);
 
         /// <summary>
         /// Location of the Sdk attribute, if any
         /// </summary>
-        public ElementLocation SdkLocation => GetAttributeLocation(XMakeAttributes.sdk);
+        public ElementLocation.ElementLocation SdkLocation => GetAttributeLocation(XMakeAttributes.sdk);
 
         /// <summary>
         /// Location of the TreatAsLocalProperty attribute, if any
         /// </summary>
-        public ElementLocation TreatAsLocalPropertyLocation => GetAttributeLocation(XMakeAttributes.treatAsLocalProperty);
+        public ElementLocation.ElementLocation TreatAsLocalPropertyLocation => GetAttributeLocation(XMakeAttributes.treatAsLocalProperty);
 
         /// <summary>
         /// Has the project root element been explicitly loaded for a build or has it been implicitly loaded
@@ -1326,7 +1330,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// Creates a metadata node.
         /// Caller must add it to the location of choice in the project.
         /// </summary>
-        public ProjectMetadataElement CreateMetadataElement(string name, string unevaluatedValue, ElementLocation location)
+        public ProjectMetadataElement CreateMetadataElement(string name, string unevaluatedValue, ElementLocation.ElementLocation location)
         {
             if (Link != null)
             {
@@ -1791,14 +1795,14 @@ namespace SelectiveConditionEvaluator.Construction
         /// </summary>
         internal ProjectMetadataElement CreateMetadataElement(XmlAttributeWithLocation attribute)
         {
-            return CreateMetadataElement(attribute.Name, attribute.Value, attribute.Location);
+            return CreateMetadataElement(attribute.Name, attribute.Value, attribute.ElementLocation.ElementLocationLocation);
         }
 
         /// <summary>
         /// Creates a XmlElement with the specified name in the document
         /// containing this project.
         /// </summary>
-        internal XmlElementWithLocation CreateElement(string name, ElementLocation location = null)
+        internal XmlElementWithLocation CreateElement(string name, ElementLocation.ElementLocation location = null)
         {
             ErrorUtilities.VerifyThrow(Link == null, "External project");
             return (XmlElementWithLocation)XmlDocument.CreateElement(name, XmlNamespace, location);

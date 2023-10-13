@@ -19,7 +19,7 @@ using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Instance;
 using SelectiveConditionEvaluator.Resources;
 using Toolset = Microsoft.Build.Evaluation.Toolset;
-using XmlElementWithLocation = Microsoft.Build.Construction.XmlElementWithLocation;
+using XmlElementWithLocation = SelectiveConditionEvaluator.ElementLocation.XmlElementWithLocation;
 
 #nullable disable
 

@@ -27,6 +27,7 @@ using SelectiveConditionEvaluator.ElementLocation;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Instance;
 using SelectiveConditionEvaluator.ObjectModelRemoting;
+using SelectiveConditionEvaluator.Resources;
 using ForwardingLoggerRecord = Microsoft.Build.Logging.ForwardingLoggerRecord;
 using ILoggingService = Microsoft.Build.BackEnd.Logging.ILoggingService;
 using InternalLoggerException = Microsoft.Build.Exceptions.InternalLoggerException;
