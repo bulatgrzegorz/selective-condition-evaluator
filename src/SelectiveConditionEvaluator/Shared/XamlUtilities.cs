@@ -5,7 +5,6 @@ using System.Text;
 using System.Xml;
 using System.Text.RegularExpressions;
 using Microsoft.Build.Construction;
-using Microsoft.Build.Framework.XamlTypes;
 
 #nullable disable
 

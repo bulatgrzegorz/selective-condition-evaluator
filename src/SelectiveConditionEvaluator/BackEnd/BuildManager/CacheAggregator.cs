@@ -7,6 +7,9 @@ using Microsoft.Build.BackEnd;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Internal;
 using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator;
+using SelectiveConditionEvaluator.BackEnd.Components.Caching;
+using SelectiveConditionEvaluator.BackEnd.Shared;
 
 #nullable disable
 

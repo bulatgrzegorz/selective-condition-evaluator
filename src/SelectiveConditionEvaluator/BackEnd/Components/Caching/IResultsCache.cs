@@ -1,8 +1,9 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using Microsoft.Build.BackEnd;
 using SelectiveConditionEvaluator.BackEnd.Shared;
-using BuildResult = SelectiveConditionEvaluator.BackEnd.Shared.BuildResult;
+using BuildResult = Microsoft.Build.Execution.BuildResult;
 
 #nullable disable
 
@@ -11,7 +12,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Caching
     /// <summary>
     /// This interface represents an object which holds build results.
     /// </summary>
-    internal interface IResultsCache : IBuildComponent, ITranslatable, IEnumerable<Shared.BuildResult>
+    internal interface IResultsCache : IBuildComponent, ITranslatable, IEnumerable<BuildResult>
     {
         /// <summary>
         /// Adds a result to the cache

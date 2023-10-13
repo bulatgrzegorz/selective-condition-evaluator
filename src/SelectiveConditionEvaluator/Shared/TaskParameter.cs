@@ -8,10 +8,12 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Build.Framework;
 #if FEATURE_APPDOMAIN
 using System.Security;
 #endif
 using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.BackEnd;
 
 #nullable disable

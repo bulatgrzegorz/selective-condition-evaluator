@@ -4,6 +4,7 @@
 using System;
 using System.Globalization;
 using System.Resources;
+using Microsoft.Build.Framework;
 using Microsoft.Build.Shared;
 
 #if !BUILD_ENGINE

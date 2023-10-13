@@ -6,8 +6,6 @@
 using Microsoft.Build.BackEnd;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator.BackEnd.BuildManager;
-using SelectiveConditionEvaluator.BackEnd.Shared;
 
 namespace SelectiveConditionEvaluator.BackEnd.Components.BuildRequestEngine
 {

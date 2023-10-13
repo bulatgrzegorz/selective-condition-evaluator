@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.Build.Framework;
 using SelectiveConditionEvaluator;
 #if BUILD_ENGINE
 using Microsoft.Build.BackEnd;
@@ -13,7 +14,7 @@ using Microsoft.Build.Utilities;
 namespace Microsoft.Build.Shared
 {
     /// <summary>
-    /// This class contains only static methods, which are used in both the 
+    /// This class contains only static methods, which are used in both the
     /// tasks and graph projects in order for two projects to negotiate which platform a projectreference
     /// should be built as.
     /// </summary>
@@ -83,7 +84,7 @@ namespace Microsoft.Build.Shared
             }
             else
             {
-                // Keep NearestPlatform empty, log a warning. Common.CurrentVersion.targets will undefine 
+                // Keep NearestPlatform empty, log a warning. Common.CurrentVersion.targets will undefine
                 // Platform/PlatformTarget when this is the case.
                 log?.LogWarningWithCodeFromResources("GetCompatiblePlatform.NoCompatiblePlatformFound", projectPath);
             }

@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using Microsoft.Build.Collections;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.Collections;
+using SelectiveConditionEvaluator.Evaluation;
+using SelectiveConditionEvaluator.Instance;
 
 #nullable disable
 

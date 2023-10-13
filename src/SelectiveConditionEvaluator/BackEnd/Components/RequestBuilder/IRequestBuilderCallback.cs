@@ -4,6 +4,8 @@
 using System.Threading.Tasks;
 using Microsoft.Build.Collections;
 using Microsoft.Build.Execution;
+using SelectiveConditionEvaluator.Collections;
+using SelectiveConditionEvaluator.Instance;
 
 #nullable disable
 

@@ -25,6 +25,10 @@ using Microsoft.Build.Shared;
 using Task = System.Threading.Tasks.Task;
 using Microsoft.Build.Framework;
 using Microsoft.Build.BackEnd.Logging;
+using SelectiveConditionEvaluator;
+using SelectiveConditionEvaluator.BackEnd.Components;
+using SelectiveConditionEvaluator.BackEnd.Components.Communications;
+using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 
 #nullable disable
 

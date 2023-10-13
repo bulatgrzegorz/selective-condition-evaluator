@@ -1,9 +1,10 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using BuildResult = SelectiveConditionEvaluator.BackEnd.Shared.BuildResult;
 
 #nullable disable
+
+using Microsoft.Build.Execution;
 
 namespace SelectiveConditionEvaluator.BackEnd.Components.Caching
 {
