@@ -17,9 +17,7 @@ using Microsoft.Build.BackEnd.Components.Caching;
 using Microsoft.Build.Collections;
 using Microsoft.Build.Eventing;
 using Microsoft.Build.Execution;
-using Microsoft.Build.FileAccesses;
 using Microsoft.Build.Framework;
-using Microsoft.Build.Framework.FileAccess;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.BackEnd.Components;
@@ -28,9 +26,9 @@ using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.FileAccess;
 using SelectiveConditionEvaluator.Instance;
-using ElementLocation = Microsoft.Build.Construction.ElementLocation;
-using TaskItem = Microsoft.Build.Execution.ProjectItemInstance.TaskItem;
-using TaskLoggingContext = Microsoft.Build.BackEnd.Logging.TaskLoggingContext;
+using ElementLocation = SelectiveConditionEvaluator.ElementLocation.ElementLocation;
+using TaskItem = SelectiveConditionEvaluator.Instance.ProjectItemInstance.TaskItem;
+using TaskLoggingContext = SelectiveConditionEvaluator.BackEnd.Components.Logging.TaskLoggingContext;
 
 #nullable disable
 

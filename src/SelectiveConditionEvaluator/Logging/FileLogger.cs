@@ -10,6 +10,7 @@ using System.Text;
 using System.IO;
 
 using Microsoft.Build.Framework;
+using Microsoft.Build.Logging;
 using Microsoft.Build.Shared;
 using ResourceUtilities = Microsoft.Build.BuildEngine.Shared.ResourceUtilities;
 

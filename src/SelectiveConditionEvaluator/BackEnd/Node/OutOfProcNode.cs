@@ -14,7 +14,6 @@ using Microsoft.Build.BackEnd.Components.Caching;
 using Microsoft.Build.BackEnd.Logging;
 using Microsoft.Build.BackEnd.SdkResolution;
 using Microsoft.Build.Evaluation;
-using Microsoft.Build.FileAccesses;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Internal;
 using Microsoft.Build.Shared;
@@ -27,6 +26,7 @@ using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 using SelectiveConditionEvaluator.BackEnd.Node;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Evaluation;
+using NativeMethods = Microsoft.Build.Framework.NativeMethods;
 using SdkResult = Microsoft.Build.BackEnd.SdkResolution.SdkResult;
 
 #nullable disable
@@ -479,7 +479,7 @@ namespace Microsoft.Build.Execution
 
             // On Windows, a process holds a handle to the current directory,
             // so reset it away from a user-requested folder that may get deleted.
-            NativeMethodsShared.SetCurrentDirectory(BuildEnvironmentHelper.Instance.CurrentMSBuildToolsDirectory);
+            NativeMethods.SetCurrentDirectory(BuildEnvironmentHelper.Instance.CurrentMSBuildToolsDirectory);
 
             // Restore the original environment.
             // If the node was never configured, this will be null.
@@ -714,12 +714,12 @@ namespace Microsoft.Build.Execution
             // Change to the startup directory
             try
             {
-                NativeMethodsShared.SetCurrentDirectory(BuildParameters.StartupDirectory);
+                NativeMethods.SetCurrentDirectory(BuildParameters.StartupDirectory);
             }
             catch (DirectoryNotFoundException)
             {
                 // Somehow the startup directory vanished. This can happen if build was started from a USB Key and it was removed.
-                NativeMethodsShared.SetCurrentDirectory(BuildEnvironmentHelper.Instance.CurrentMSBuildToolsDirectory);
+                NativeMethods.SetCurrentDirectory(BuildEnvironmentHelper.Instance.CurrentMSBuildToolsDirectory);
             }
 
             // Replicate the environment.  First, unset any environment variables set by the previous configuration.
@@ -865,7 +865,7 @@ namespace Microsoft.Build.Execution
                     bool lowPriority = priorityClass == ProcessPriorityClass.BelowNormal;
                     if (_nodeEndpoint.LowPriority != lowPriority)
                     {
-                        if (!lowPriority || NativeMethodsShared.IsWindows)
+                        if (!lowPriority || NativeMethods.IsWindows)
                         {
                             Process.GetCurrentProcess().PriorityClass = lowPriority ? ProcessPriorityClass.Normal : ProcessPriorityClass.BelowNormal;
                         }

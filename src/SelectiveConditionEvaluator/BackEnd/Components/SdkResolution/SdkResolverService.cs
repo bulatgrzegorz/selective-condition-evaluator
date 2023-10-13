@@ -15,6 +15,7 @@ using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 using SelectiveConditionEvaluator.ElementLocation;
+using NativeMethods = SelectiveConditionEvaluator.NativeMethods;
 
 #nullable disable
 

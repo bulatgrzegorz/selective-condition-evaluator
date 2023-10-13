@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Build.Framework;
+using SelectiveConditionEvaluator.ElementLocation;
 using SdkReference = Microsoft.Build.Framework.SdkReference;
 using SdkResultBase = Microsoft.Build.Framework.SdkResult;
 
@@ -73,7 +74,7 @@ namespace Microsoft.Build.BackEnd.SdkResolution
             Warnings = warnings;
         }
 
-        public Construction.ElementLocation ElementLocation { get; set; }
+        public ElementLocation ElementLocation { get; set; }
 
         public IEnumerable<string> Errors { get; }
 

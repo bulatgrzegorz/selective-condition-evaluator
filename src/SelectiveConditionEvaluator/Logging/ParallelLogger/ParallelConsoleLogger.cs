@@ -11,8 +11,9 @@ using System.Collections;
 using System.Diagnostics;
 using System.Globalization;
 using System.Collections.Generic;
-
+using Microsoft.Build.BackEnd.Logging;
 using Microsoft.Build.Framework;
+using Microsoft.Build.Logging;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator;
 using ResourceUtilities = Microsoft.Build.BuildEngine.Shared.ResourceUtilities;

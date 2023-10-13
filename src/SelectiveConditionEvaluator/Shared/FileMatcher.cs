@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Build.Framework;
 using SelectiveConditionEvaluator;
+using NativeMethods = SelectiveConditionEvaluator.NativeMethods;
 
 #nullable disable
 

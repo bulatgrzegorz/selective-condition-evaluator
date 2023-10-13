@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 using Microsoft.Build.BackEnd;
 using Microsoft.Build.BackEnd.Logging;
 using Microsoft.Build.Execution;
-using Microsoft.Build.Framework.Telemetry;
 using Microsoft.Build.Internal;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Components.Communications;
 using SelectiveConditionEvaluator.BackEnd.Node;
+using NativeMethods = Microsoft.Build.Framework.NativeMethods;
 
 namespace Microsoft.Build.Experimental
 {
@@ -247,7 +247,7 @@ namespace Microsoft.Build.Experimental
 
             // On Windows, a process holds a handle to the current directory,
             // so reset it away from a user-requested folder that may get deleted.
-            NativeMethodsShared.SetCurrentDirectory(BuildEnvironmentHelper.Instance.CurrentMSBuildToolsDirectory);
+            NativeMethods.SetCurrentDirectory(BuildEnvironmentHelper.Instance.CurrentMSBuildToolsDirectory);
 
             exception = _shutdownException;
 
@@ -383,7 +383,7 @@ namespace Microsoft.Build.Experimental
             // Also try our best to increase chance custom Loggers which use Console static members will work as expected.
             try
             {
-                if (NativeMethodsShared.IsWindows && command.ConsoleConfiguration.BufferWidth > 0)
+                if (NativeMethods.IsWindows && command.ConsoleConfiguration.BufferWidth > 0)
                 {
                     Console.BufferWidth = command.ConsoleConfiguration.BufferWidth;
                 }
@@ -418,7 +418,7 @@ namespace Microsoft.Build.Experimental
 
             // On Windows, a process holds a handle to the current directory,
             // so reset it away from a user-requested folder that may get deleted.
-            NativeMethodsShared.SetCurrentDirectory(BuildEnvironmentHelper.Instance.CurrentMSBuildToolsDirectory);
+            NativeMethods.SetCurrentDirectory(BuildEnvironmentHelper.Instance.CurrentMSBuildToolsDirectory);
 
             _nodeEndpoint.ClientWillDisconnect();
             var response = new ServerNodeBuildResult(buildResult.exitCode, buildResult.exitType);

@@ -1,17 +1,19 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-// THE ASSEMBLY BUILT FROM THIS SOURCE FILE HAS BEEN DEPRECATED FOR YEARS. IT IS BUILT ONLY TO PROVIDE
-// BACKWARD COMPATIBILITY FOR API USERS WHO HAVE NOT YET MOVED TO UPDATED APIS. PLEASE DO NOT SEND PULL
-// REQUESTS THAT CHANGE THIS FILE WITHOUT FIRST CHECKING WITH THE MAINTAINERS THAT THE FIX IS REQUIRED.
-
 using System;
-
+using Microsoft.Build.BackEnd.Logging;
+using Microsoft.Build.BuildEngine;
 using Microsoft.Build.Framework;
-using Microsoft.Build.BuildEngine.Shared;
+using Microsoft.Build.Framework.Telemetry;
 using Microsoft.Build.Shared;
+using BaseConsoleLogger = Microsoft.Build.BackEnd.Logging.BaseConsoleLogger;
+using ParallelConsoleLogger = Microsoft.Build.BuildEngine.ParallelConsoleLogger;
+using SerialConsoleLogger = Microsoft.Build.BuildEngine.SerialConsoleLogger;
 
-namespace Microsoft.Build.BuildEngine
+#nullable disable
+
+namespace Microsoft.Build.Logging
 {
     #region Delegates
 
@@ -44,15 +46,15 @@ namespace Microsoft.Build.BuildEngine
     /// <remarks>This class is not thread safe.</remarks>
     public class ConsoleLogger : INodeLogger
     {
-        private BaseConsoleLogger consoleLogger;
-        private int numberOfProcessors = 1;
-        private LoggerVerbosity verbosity;
-        private WriteHandler write;
-        private ColorSetter colorSet;
-        private ColorResetter colorReset;
-        private string parameters;
-        private bool skipProjectStartedText = false;
-        private bool? showSummary;
+        private BaseConsoleLogger _consoleLogger;
+        private int _numberOfProcessors = 1;
+        private LoggerVerbosity _verbosity;
+        private WriteHandler _write;
+        private ColorSetter _colorSet;
+        private ColorResetter _colorReset;
+        private string _parameters;
+        private bool _skipProjectStartedText = false;
+        private bool? _showSummary;
 
         #region Constructors
 
@@ -70,15 +72,8 @@ namespace Microsoft.Build.BuildEngine
         /// the default console.
         /// </summary>
         /// <param name="verbosity">Verbosity level.</param>
-        public ConsoleLogger(LoggerVerbosity verbosity)
-            :
-            this
-            (
-                verbosity,
-                new WriteHandler(Console.Out.Write),
-                new ColorSetter(SetColor),
-                new ColorResetter(Console.ResetColor)
-            )
+        public ConsoleLogger(LoggerVerbosity verbosity) :
+            this(verbosity, Console.Out.Write, BaseConsoleLogger.SetColor, BaseConsoleLogger.ResetColor)
         {
             // do nothing
         }
@@ -90,19 +85,16 @@ namespace Microsoft.Build.BuildEngine
         /// <param name="write"></param>
         /// <param name="colorSet"></param>
         /// <param name="colorReset"></param>
-        public ConsoleLogger
-        (
+        public ConsoleLogger(
             LoggerVerbosity verbosity,
             WriteHandler write,
             ColorSetter colorSet,
-            ColorResetter colorReset
-        )
+            ColorResetter colorReset)
         {
-            ErrorUtilities.VerifyThrowArgumentNull(write, nameof(write));
-            this.verbosity = verbosity;
-            this.write = write;
-            this.colorSet = colorSet;
-            this.colorReset = colorReset;
+            _verbosity = verbosity;
+            _write = write;
+            _colorSet = colorSet;
+            _colorReset = colorReset;
         }
 
         /// <summary>
@@ -111,50 +103,97 @@ namespace Microsoft.Build.BuildEngine
         /// </summary>
         private void InitializeBaseConsoleLogger()
         {
-            if (consoleLogger == null)
+            if (_consoleLogger != null)
             {
-                bool useMPLogger = false;
-                if (!string.IsNullOrEmpty(parameters))
+                return;
+            }
+
+            bool useMPLogger = false;
+            bool disableConsoleColor = false;
+            bool forceConsoleColor = false;
+            bool preferConsoleColor = false;
+            if (!string.IsNullOrEmpty(_parameters))
+            {
+                string[] parameterComponents = _parameters.Split(BaseConsoleLogger.parameterDelimiters);
+                foreach (string param in parameterComponents)
                 {
-                    string[] parameterComponents = parameters.Split(BaseConsoleLogger.parameterDelimiters);
-                    for (int param = 0; param < parameterComponents.Length; param++)
+                    if (param.Length <= 0)
                     {
-                        if (parameterComponents[param].Length > 0)
-                        {
-                            if (String.Equals(parameterComponents[param], "ENABLEMPLOGGING", StringComparison.OrdinalIgnoreCase))
-                            {
-                                useMPLogger = true;
-                            }
-                            if (String.Equals(parameterComponents[param], "DISABLEMPLOGGING", StringComparison.OrdinalIgnoreCase))
-                            {
-                                useMPLogger = false;
-                            }
-                        }
+                        continue;
+                    }
+
+                    if (string.Equals(param, "ENABLEMPLOGGING", StringComparison.OrdinalIgnoreCase))
+                    {
+                        useMPLogger = true;
+                    }
+                    if (string.Equals(param, "DISABLEMPLOGGING", StringComparison.OrdinalIgnoreCase))
+                    {
+                        useMPLogger = false;
+                    }
+                    if (string.Equals(param, "DISABLECONSOLECOLOR", StringComparison.OrdinalIgnoreCase))
+                    {
+                        disableConsoleColor = true;
+                    }
+                    if (string.Equals(param, "FORCECONSOLECOLOR", StringComparison.OrdinalIgnoreCase))
+                    {
+                        forceConsoleColor = true;
+                    }
+                    if (string.Equals(param, "PREFERCONSOLECOLOR", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Use ansi color codes if current target console do support it
+                        preferConsoleColor = ConsoleConfiguration.AcceptAnsiColorCodes;
                     }
                 }
+            }
 
-                if (numberOfProcessors == 1 && !useMPLogger)
+            if (forceConsoleColor || (!disableConsoleColor && preferConsoleColor))
+            {
+                _colorSet = BaseConsoleLogger.SetColorAnsi;
+                _colorReset = BaseConsoleLogger.ResetColorAnsi;
+            }
+            else if (disableConsoleColor)
+            {
+                _colorSet = BaseConsoleLogger.DontSetColor;
+                _colorReset = BaseConsoleLogger.DontResetColor;
+            }
+
+            if (_numberOfProcessors == 1 && !useMPLogger)
+            {
+                _consoleLogger = new SerialConsoleLogger(_verbosity, _write, _colorSet, _colorReset);
+                if (this is FileLogger)
                 {
-                    consoleLogger = new SerialConsoleLogger(verbosity, write, colorSet, colorReset);
+                    KnownTelemetry.LoggingConfigurationTelemetry.FileLoggerType = "serial";
                 }
                 else
                 {
-                    consoleLogger = new ParallelConsoleLogger(verbosity, write, colorSet, colorReset);
+                    KnownTelemetry.LoggingConfigurationTelemetry.ConsoleLoggerType = "serial";
                 }
-
-                if (!string.IsNullOrEmpty(parameters))
-                {
-                    consoleLogger.Parameters = parameters;
-                    parameters = null;
-                }
-
-                if (showSummary != null)
-                {
-                    consoleLogger.ShowSummary = (bool)showSummary;
-                }
-
-                consoleLogger.SkipProjectStartedText = skipProjectStartedText;
             }
+            else
+            {
+                _consoleLogger = new ParallelConsoleLogger(_verbosity, _write, _colorSet, _colorReset);
+                if (this is FileLogger)
+                {
+                    KnownTelemetry.LoggingConfigurationTelemetry.FileLoggerType = "parallel";
+                }
+                else
+                {
+                    KnownTelemetry.LoggingConfigurationTelemetry.ConsoleLoggerType = "parallel";
+                }
+            }
+
+            if (_showSummary != null)
+            {
+                _consoleLogger.ShowSummary = _showSummary;
+            }
+
+            if (!string.IsNullOrEmpty(_parameters))
+            {
+                _consoleLogger.Parameters = _parameters;
+                _parameters = null;
+            }
+
+            _consoleLogger.SkipProjectStartedText = _skipProjectStartedText;
         }
 
         #endregion
@@ -169,43 +208,42 @@ namespace Microsoft.Build.BuildEngine
         {
             get
             {
-                return consoleLogger == null ? verbosity : consoleLogger.Verbosity;
+                return _consoleLogger?.Verbosity ?? _verbosity;
             }
 
             set
             {
-                if (consoleLogger == null)
+                if (_consoleLogger == null)
                 {
-                    verbosity = value;
+                    _verbosity = value;
                 }
                 else
                 {
-                    consoleLogger.Verbosity = value;
+                    _consoleLogger.Verbosity = value;
                 }
             }
         }
 
         /// <summary>
-        /// The console logger takes a single parameter to suppress the output of the errors
-        /// and warnings summary at the end of a build.
+        /// A semi-colon delimited list of "key[=value]" parameter pairs.
         /// </summary>
         /// <value>null</value>
         public string Parameters
         {
             get
             {
-                return consoleLogger == null ? parameters : consoleLogger.Parameters;
+                return _consoleLogger == null ? _parameters : _consoleLogger.Parameters;
             }
 
             set
             {
-                if (consoleLogger == null)
+                if (_consoleLogger == null)
                 {
-                    parameters = value;
+                    _parameters = value;
                 }
                 else
                 {
-                    consoleLogger.Parameters = value;
+                    _consoleLogger.Parameters = value;
                 }
             }
         }
@@ -219,18 +257,18 @@ namespace Microsoft.Build.BuildEngine
         {
             get
             {
-                return consoleLogger == null ? skipProjectStartedText : consoleLogger.SkipProjectStartedText;
+                return _consoleLogger?.SkipProjectStartedText ?? _skipProjectStartedText;
             }
 
             set
             {
-                if (consoleLogger == null)
+                if (_consoleLogger == null)
                 {
-                    skipProjectStartedText = value;
+                    _skipProjectStartedText = value;
                 }
                 else
                 {
-                    consoleLogger.SkipProjectStartedText = value;
+                    _consoleLogger.SkipProjectStartedText = value;
                 }
             }
         }
@@ -242,18 +280,22 @@ namespace Microsoft.Build.BuildEngine
         {
             get
             {
-                return (consoleLogger == null ? showSummary : consoleLogger.ShowSummary) ?? false;
+                if (_consoleLogger == null)
+                {
+                    return _showSummary == true;
+                }
+                return _consoleLogger.ShowSummary == true;
             }
 
             set
             {
-                if (consoleLogger == null)
+                if (_consoleLogger == null)
                 {
-                    showSummary = value;
+                    _showSummary = value;
                 }
                 else
                 {
-                    consoleLogger.ShowSummary = value;
+                    _consoleLogger.ShowSummary = value;
                 }
             }
         }
@@ -266,18 +308,18 @@ namespace Microsoft.Build.BuildEngine
         {
             get
             {
-                return consoleLogger == null ? write : consoleLogger.write;
+                return _consoleLogger == null ? _write : _consoleLogger.WriteHandler;
             }
 
             set
             {
-                if (consoleLogger == null)
+                if (_consoleLogger == null)
                 {
-                    write = value;
+                    _write = value;
                 }
                 else
                 {
-                    consoleLogger.write = value;
+                    _consoleLogger.WriteHandler = value;
                 }
             }
         }
@@ -293,8 +335,8 @@ namespace Microsoft.Build.BuildEngine
         /// </summary>
         public void ApplyParameter(string parameterName, string parameterValue)
         {
-            ErrorUtilities.VerifyThrowInvalidOperation(consoleLogger != null, "MustCallInitializeBeforeApplyParameter");
-            consoleLogger.ApplyParameter(parameterName, parameterValue);
+            ErrorUtilities.VerifyThrowInvalidOperation(_consoleLogger != null, "MustCallInitializeBeforeApplyParameter");
+            _consoleLogger.ApplyParameter(parameterName, parameterValue);
         }
 
         /// <summary>
@@ -304,14 +346,23 @@ namespace Microsoft.Build.BuildEngine
         public virtual void Initialize(IEventSource eventSource)
         {
             InitializeBaseConsoleLogger();
-            consoleLogger.Initialize(eventSource);
+            _consoleLogger.Initialize(eventSource);
         }
 
+        /// <summary>
+        /// Initializes the logger.
+        /// </summary>
         public virtual void Initialize(IEventSource eventSource, int nodeCount)
         {
-            this.numberOfProcessors = nodeCount;
+            _numberOfProcessors = nodeCount;
             InitializeBaseConsoleLogger();
-            consoleLogger.Initialize(eventSource, nodeCount);
+            _consoleLogger.Initialize(eventSource, nodeCount);
+
+            if (this is not FileLogger)
+            {
+                KnownTelemetry.LoggingConfigurationTelemetry.ConsoleLogger = true;
+                KnownTelemetry.LoggingConfigurationTelemetry.ConsoleLoggerVerbosity = Verbosity.ToString();
+            }
         }
 
         /// <summary>
@@ -320,7 +371,7 @@ namespace Microsoft.Build.BuildEngine
         /// </summary>
         public virtual void Shutdown()
         {
-            consoleLogger?.Shutdown();
+            _consoleLogger?.Shutdown();
         }
 
         /// <summary>
@@ -332,7 +383,7 @@ namespace Microsoft.Build.BuildEngine
         {
             InitializeBaseConsoleLogger(); // for compat: see DDB#136924
 
-            consoleLogger.BuildStartedHandler(sender, e);
+            _consoleLogger.BuildStartedHandler(sender, e);
         }
 
         /// <summary>
@@ -344,7 +395,7 @@ namespace Microsoft.Build.BuildEngine
         {
             InitializeBaseConsoleLogger(); // for compat: see DDB#136924
 
-            consoleLogger.BuildFinishedHandler(sender, e);
+            _consoleLogger.BuildFinishedHandler(sender, e);
         }
 
         /// <summary>
@@ -356,7 +407,7 @@ namespace Microsoft.Build.BuildEngine
         {
             InitializeBaseConsoleLogger(); // for compat: see DDB#136924
 
-            consoleLogger.ProjectStartedHandler(sender, e);
+            _consoleLogger.ProjectStartedHandler(sender, e);
         }
 
         /// <summary>
@@ -368,7 +419,7 @@ namespace Microsoft.Build.BuildEngine
         {
             InitializeBaseConsoleLogger(); // for compat: see DDB#136924
 
-            consoleLogger.ProjectFinishedHandler(sender, e);
+            _consoleLogger.ProjectFinishedHandler(sender, e);
         }
 
         /// <summary>
@@ -380,7 +431,7 @@ namespace Microsoft.Build.BuildEngine
         {
             InitializeBaseConsoleLogger(); // for compat: see DDB#136924
 
-            consoleLogger.TargetStartedHandler(sender, e);
+            _consoleLogger.TargetStartedHandler(sender, e);
         }
 
         /// <summary>
@@ -392,7 +443,7 @@ namespace Microsoft.Build.BuildEngine
         {
             InitializeBaseConsoleLogger(); // for compat: see DDB#136924
 
-            consoleLogger.TargetFinishedHandler(sender, e);
+            _consoleLogger.TargetFinishedHandler(sender, e);
         }
 
         /// <summary>
@@ -404,7 +455,7 @@ namespace Microsoft.Build.BuildEngine
         {
             InitializeBaseConsoleLogger(); // for compat: see DDB#136924
 
-            consoleLogger.TaskStartedHandler(sender, e);
+            _consoleLogger.TaskStartedHandler(sender, e);
         }
 
         /// <summary>
@@ -416,7 +467,7 @@ namespace Microsoft.Build.BuildEngine
         {
             InitializeBaseConsoleLogger(); // for compat: see DDB#136924
 
-            consoleLogger.TaskFinishedHandler(sender, e);
+            _consoleLogger.TaskFinishedHandler(sender, e);
         }
 
         /// <summary>
@@ -426,7 +477,7 @@ namespace Microsoft.Build.BuildEngine
         {
             InitializeBaseConsoleLogger(); // for compat: see DDB#136924
 
-            consoleLogger.ErrorHandler(sender, e);
+            _consoleLogger.ErrorHandler(sender, e);
         }
 
         /// <summary>
@@ -436,7 +487,7 @@ namespace Microsoft.Build.BuildEngine
         {
             InitializeBaseConsoleLogger(); // for compat: see DDB#136924
 
-            consoleLogger.WarningHandler(sender, e);
+            _consoleLogger.WarningHandler(sender, e);
         }
 
         /// <summary>
@@ -446,7 +497,7 @@ namespace Microsoft.Build.BuildEngine
         {
             InitializeBaseConsoleLogger(); // for compat: see DDB#136924
 
-            consoleLogger.MessageHandler(sender, e);
+            _consoleLogger.MessageHandler(sender, e);
         }
 
         /// <summary>
@@ -456,44 +507,32 @@ namespace Microsoft.Build.BuildEngine
         {
             InitializeBaseConsoleLogger(); // for compat: see DDB#136924
 
-            consoleLogger.CustomEventHandler(sender, e);
+            _consoleLogger.CustomEventHandler(sender, e);
         }
 
         /// <summary>
-        /// Sets foreground color to color specified
+        /// Returns the minimum importance of messages logged by this logger.
         /// </summary>
-        /// <param name="c">foreground color</param>
-        internal static void SetColor(ConsoleColor c)
+        /// <returns>
+        /// The minimum message importance corresponding to this logger's verbosity or (MessageImportance.High - 1)
+        /// if this logger does not log messages of any importance.
+        /// </returns>
+        internal MessageImportance GetMinimumMessageImportance()
         {
-            Console.ForegroundColor =
-                        TransformColor(c, Console.BackgroundColor);
-        }
-
-        /// <summary>
-        /// Changes the foreground color to black if the foreground is the
-        /// same as the background. Changes the foreground to white if the
-        /// background is black.
-        /// </summary>
-        /// <param name="foreground">foreground color for black</param>
-        /// <param name="background">current background</param>
-        private static ConsoleColor TransformColor(ConsoleColor foreground,
-                                                   ConsoleColor background)
-        {
-            ConsoleColor result = foreground; //typically do nothing ...
-
-            if (foreground == background)
+            if (Verbosity >= BaseConsoleLogger.ImportanceToMinimumVerbosity(MessageImportance.Low, out _))
             {
-                if (background != ConsoleColor.Black)
-                {
-                    result = ConsoleColor.Black;
-                }
-                else
-                {
-                    result = ConsoleColor.Gray;
-                }
+                return MessageImportance.Low;
             }
-
-            return result;
+            else if (Verbosity >= BaseConsoleLogger.ImportanceToMinimumVerbosity(MessageImportance.Normal, out _))
+            {
+                return MessageImportance.Normal;
+            }
+            else if (Verbosity >= BaseConsoleLogger.ImportanceToMinimumVerbosity(MessageImportance.High, out _))
+            {
+                return MessageImportance.High;
+            }
+            // The logger does not log messages of any importance.
+            return MessageImportance.High - 1;
         }
 
         #endregion

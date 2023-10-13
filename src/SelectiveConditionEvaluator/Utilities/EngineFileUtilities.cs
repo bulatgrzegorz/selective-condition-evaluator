@@ -13,6 +13,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
+using ProjectErrorUtilities = Microsoft.Build.Shared.ProjectErrorUtilities;
 
 #nullable disable
 
