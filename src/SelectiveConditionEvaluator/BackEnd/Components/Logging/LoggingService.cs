@@ -12,7 +12,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Components.Caching;
 using InternalLoggerException = Microsoft.Build.Exceptions.InternalLoggerException;
-using LoggerDescription = Microsoft.Build.BuildEngine.LoggerDescription;
+using LoggerDescription = Microsoft.Build.Logging.LoggerDescription;
 
 #nullable disable
 

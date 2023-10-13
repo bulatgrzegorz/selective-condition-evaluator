@@ -8,7 +8,7 @@ using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Instance;
-using TaskItem = Microsoft.Build.Execution.ProjectItemInstance.TaskItem;
+using TaskItem = SelectiveConditionEvaluator.Instance.ProjectItemInstance.TaskItem;
 
 #nullable disable
 
