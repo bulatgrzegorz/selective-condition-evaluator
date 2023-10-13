@@ -2,7 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
+using Microsoft.Build.Internal;
 using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.ElementLocation;
+using SelectiveConditionEvaluator.ObjectModelRemoting.ConstructionObjectLinks;
 
 #nullable disable
 
@@ -41,7 +44,7 @@ namespace SelectiveConditionEvaluator.Construction
         }
 
         /// <summary>
-        /// Condition should never be set, but the getter returns null instead of throwing 
+        /// Condition should never be set, but the getter returns null instead of throwing
         /// because a nonexistent condition is implicitly true
         /// </summary>
         public override string Condition
@@ -58,7 +61,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// <summary>
         /// This does not allow conditions, so it should not be called.
         /// </summary>
-        public override ElementLocation ConditionLocation
+        public override ElementLocation.ElementLocation ConditionLocation
         {
             get
             {
@@ -124,7 +127,7 @@ namespace SelectiveConditionEvaluator.Construction
             ProjectUsingTaskElement parentUsingTask = parent as ProjectUsingTaskElement;
             ErrorUtilities.VerifyThrowInvalidOperation(parentUsingTask != null, "OM_CannotAcceptParent");
 
-            // Now since there is not goign to be a TaskElement on the using task we need to validate and make sure there is a TaskFactory attribute on the parent element and 
+            // Now since there is not goign to be a TaskElement on the using task we need to validate and make sure there is a TaskFactory attribute on the parent element and
             // that it is not empty
             if (parentUsingTask.TaskFactory.Length == 0)
             {

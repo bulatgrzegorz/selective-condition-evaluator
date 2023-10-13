@@ -6,8 +6,6 @@
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Components.Caching;
 using SelectiveConditionEvaluator.BackEnd.Components.Communications;
-using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
-using SelectiveConditionEvaluator.BackEnd.Components.SdkResolution;
 
 namespace SelectiveConditionEvaluator.BackEnd.Components
 {

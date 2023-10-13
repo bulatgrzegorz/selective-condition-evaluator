@@ -3,6 +3,8 @@
 
 using System.Diagnostics;
 using System.Xml;
+using Microsoft.Build.Framework;
+using Microsoft.Build.Internal;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.ElementLocation;
 using SelectiveConditionEvaluator.ObjectModelRemoting;
@@ -274,13 +276,13 @@ namespace SelectiveConditionEvaluator.Construction
         /// Location of the "Condition" attribute on this element, if any.
         /// If there is no such attribute, returns null.
         /// </summary>
-        public virtual ElementLocation ConditionLocation => GetAttributeLocation(XMakeAttributes.condition);
+        public virtual ElementLocation.ElementLocation ConditionLocation => GetAttributeLocation(XMakeAttributes.condition);
 
         /// <summary>
         /// Location of the "Label" attribute on this element, if any.
         /// If there is no such attribute, returns null;
         /// </summary>
-        public ElementLocation LabelLocation => GetAttributeLocation(XMakeAttributes.label);
+        public ElementLocation.ElementLocation LabelLocation => GetAttributeLocation(XMakeAttributes.label);
 
         /// <summary>
         /// Location of the corresponding Xml element.

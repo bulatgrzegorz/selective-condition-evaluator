@@ -6,6 +6,7 @@
 using System.Collections;
 using System.Diagnostics;
 using System.Xml;
+using Microsoft.Build.Internal;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.ElementLocation;
 using SelectiveConditionEvaluator.ObjectModelRemoting.ConstructionObjectLinks;

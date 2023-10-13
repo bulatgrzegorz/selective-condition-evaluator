@@ -3,6 +3,7 @@
 
 #nullable disable
 
+using Microsoft.Build.BackEnd;
 using SelectiveConditionEvaluator.BackEnd;
 
 namespace SelectiveConditionEvaluator.Collections

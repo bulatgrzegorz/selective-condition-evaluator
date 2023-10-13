@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.Xml;
 using Microsoft.Build.Collections;
 using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.ElementLocation;
+using SelectiveConditionEvaluator.ObjectModelRemoting.ConstructionObjectLinks;
 
 namespace SelectiveConditionEvaluator.Construction
 {
@@ -30,7 +32,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// <summary>
         /// The parameters (excepting condition and continue-on-error)
         /// </summary>
-        private CopyOnWriteDictionary<(string, ElementLocation)> _parameters;
+        private CopyOnWriteDictionary<(string, ElementLocation.ElementLocation)> _parameters;
 
         /// <summary>
         /// Protection for the parameters cache
@@ -145,7 +147,7 @@ namespace SelectiveConditionEvaluator.Construction
 
                     var parametersClone = new Dictionary<string, string>(_parameters.Count, StringComparer.OrdinalIgnoreCase);
 
-                    foreach (KeyValuePair<string, (string, ElementLocation)> entry in _parameters)
+                    foreach (KeyValuePair<string, (string, ElementLocation.ElementLocation)> entry in _parameters)
                     {
                         parametersClone[entry.Key] = entry.Value.Item1;
                     }
@@ -160,7 +162,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// If parameters differ only by case only the last one will be returned. MSBuild uses only this one.
         /// Hosts can still remove the other parameters by using RemoveAllParameters().
         /// </summary>
-        public IEnumerable<KeyValuePair<string, ElementLocation>> ParameterLocations
+        public IEnumerable<KeyValuePair<string, ElementLocation.ElementLocation>> ParameterLocations
         {
             get
             {
@@ -172,11 +174,11 @@ namespace SelectiveConditionEvaluator.Construction
                 lock (_locker)
                 {
                     EnsureParametersInitialized();
-                    var parameterLocations = new List<KeyValuePair<string, ElementLocation>>();
+                    var parameterLocations = new List<KeyValuePair<string, ElementLocation.ElementLocation>>();
 
-                    foreach (KeyValuePair<string, (string, ElementLocation)> entry in _parameters)
+                    foreach (KeyValuePair<string, (string, ElementLocation.ElementLocation)> entry in _parameters)
                     {
-                        parameterLocations.Add(new KeyValuePair<string, ElementLocation>(entry.Key, entry.Value.Item2));
+                        parameterLocations.Add(new KeyValuePair<string, ElementLocation.ElementLocation>(entry.Key, entry.Value.Item2));
                     }
 
                     return parameterLocations;
@@ -188,24 +190,24 @@ namespace SelectiveConditionEvaluator.Construction
         /// Location of the "ContinueOnError" attribute on this element, if any.
         /// If there is no such attribute, returns null;
         /// </summary>
-        public ElementLocation ContinueOnErrorLocation => GetAttributeLocation(XMakeAttributes.continueOnError);
+        public ElementLocation.ElementLocation ContinueOnErrorLocation => GetAttributeLocation(XMakeAttributes.continueOnError);
 
         /// <summary>
         /// Location of the "MSBuildRuntime" attribute on this element, if any.
         /// If there is no such attribute, returns null;
         /// </summary>
-        public ElementLocation MSBuildRuntimeLocation => GetAttributeLocation(XMakeAttributes.msbuildRuntime);
+        public ElementLocation.ElementLocation MSBuildRuntimeLocation => GetAttributeLocation(XMakeAttributes.msbuildRuntime);
 
         /// <summary>
         /// Location of the "MSBuildArchitecture" attribute on this element, if any.
         /// If there is no such attribute, returns null;
         /// </summary>
-        public ElementLocation MSBuildArchitectureLocation => GetAttributeLocation(XMakeAttributes.msbuildArchitecture);
+        public ElementLocation.ElementLocation MSBuildArchitectureLocation => GetAttributeLocation(XMakeAttributes.msbuildArchitecture);
 
         /// <summary>
         /// Retrieves a copy of the parameters as used during evaluation.
         /// </summary>
-        internal CopyOnWriteDictionary<(string, ElementLocation)> ParametersForEvaluation
+        internal CopyOnWriteDictionary<(string, ElementLocation.ElementLocation)> ParametersForEvaluation
         {
             get
             {
@@ -297,7 +299,7 @@ namespace SelectiveConditionEvaluator.Construction
 
                 EnsureParametersInitialized();
 
-                if (_parameters.TryGetValue(name, out (string, ElementLocation) parameter))
+                if (_parameters.TryGetValue(name, out (string, ElementLocation.ElementLocation) parameter))
                 {
                     return parameter.Item1;
                 }
@@ -438,7 +440,7 @@ namespace SelectiveConditionEvaluator.Construction
         {
             if (_parameters == null)
             {
-                _parameters = new CopyOnWriteDictionary<(string, ElementLocation)>(StringComparer.OrdinalIgnoreCase);
+                _parameters = new CopyOnWriteDictionary<(string, ElementLocation.ElementLocation)>(StringComparer.OrdinalIgnoreCase);
 
                 foreach (XmlAttributeWithLocation attribute in XmlElement.Attributes)
                 {
@@ -446,7 +448,7 @@ namespace SelectiveConditionEvaluator.Construction
                     {
                         // By pulling off and caching the Location early here, it becomes frozen for the life of this object.
                         // That means that if the name of the file is changed after first load (possibly from null) it will
-                        // remain the old value here. Correctly, this should cache the attribute not the location. Fixing 
+                        // remain the old value here. Correctly, this should cache the attribute not the location. Fixing
                         // that will need profiling, though, as this cache was added for performance.
                         _parameters[attribute.Name] = (attribute.Value, attribute.Location);
                     }

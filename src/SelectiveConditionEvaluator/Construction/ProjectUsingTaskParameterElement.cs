@@ -5,6 +5,8 @@
 
 using System.Diagnostics;
 using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.ElementLocation;
+using SelectiveConditionEvaluator.ObjectModelRemoting.ConstructionObjectLinks;
 
 namespace SelectiveConditionEvaluator.Construction
 {
@@ -41,7 +43,7 @@ namespace SelectiveConditionEvaluator.Construction
         }
 
         /// <summary>
-        /// Condition should never be set, but the getter returns null instead of throwing 
+        /// Condition should never be set, but the getter returns null instead of throwing
         /// because a nonexistent condition is implicitly true
         /// </summary>
         public override string Condition
@@ -133,7 +135,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// <summary>
         /// This does not allow conditions, so it should not be called.
         /// </summary>
-        public override ElementLocation ConditionLocation
+        public override ElementLocation.ElementLocation ConditionLocation
         {
             get
             {
@@ -147,21 +149,21 @@ namespace SelectiveConditionEvaluator.Construction
         /// If there is no such attribute, returns the location of the element,
         /// in lieu of the default value it uses for the attribute.
         /// </summary>
-        public ElementLocation ParameterTypeLocation => GetAttributeLocation(XMakeAttributes.parameterType) ?? Location;
+        public ElementLocation.ElementLocation ParameterTypeLocation => GetAttributeLocation(XMakeAttributes.parameterType) ?? Location;
 
         /// <summary>
         /// Location of the Output attribute.
         /// If there is no such attribute, returns the location of the element,
         /// in lieu of the default value it uses for the attribute.
         /// </summary>
-        public ElementLocation OutputLocation => GetAttributeLocation(XMakeAttributes.output) ?? Location;
+        public ElementLocation.ElementLocation OutputLocation => GetAttributeLocation(XMakeAttributes.output) ?? Location;
 
         /// <summary>
         /// Location of the Required attribute.
         /// If there is no such attribute, returns the location of the element,
         /// in lieu of the default value it uses for the attribute.
         /// </summary>
-        public ElementLocation RequiredLocation => GetAttributeLocation(XMakeAttributes.required) ?? Location;
+        public ElementLocation.ElementLocation RequiredLocation => GetAttributeLocation(XMakeAttributes.required) ?? Location;
 
         /// <summary>
         /// Creates an unparented UsingTaskParameterElement, wrapping an unparented XmlElement.

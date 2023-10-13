@@ -2,7 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
+using Microsoft.Build.Internal;
 using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.ElementLocation;
+using SelectiveConditionEvaluator.ObjectModelRemoting.ConstructionObjectLinks;
 
 #nullable disable
 
@@ -43,7 +46,7 @@ namespace SelectiveConditionEvaluator.Construction
         }
 
         /// <summary>
-        /// Condition should never be set, but the getter returns null instead of throwing 
+        /// Condition should never be set, but the getter returns null instead of throwing
         /// because a nonexistent condition is implicitly true
         /// </summary>
         public override string Condition
@@ -53,7 +56,7 @@ namespace SelectiveConditionEvaluator.Construction
         }
 
         /// <summary>
-        /// Gets or sets the unevaluated value of the contents of the task xml 
+        /// Gets or sets the unevaluated value of the contents of the task xml
         /// Returns empty string if it is not present.
         /// </summary>
         public string TaskBody
@@ -101,7 +104,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// <summary>
         /// This does not allow conditions, so it should not be called.
         /// </summary>
-        public override ElementLocation ConditionLocation
+        public override ElementLocation.ElementLocation ConditionLocation
         {
             get
             {
@@ -115,7 +118,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// If there is no such attribute, returns the location of the element,
         /// in lieu of the default value it uses for the attribute.
         /// </summary>
-        public ElementLocation EvaluateLocation => GetAttributeLocation(XMakeAttributes.evaluate) ?? Location;
+        public ElementLocation.ElementLocation EvaluateLocation => GetAttributeLocation(XMakeAttributes.evaluate) ?? Location;
 
         /// <summary>
         /// Creates an unparented ProjectUsingTaskBodyElement, wrapping an unparented XmlElement.
@@ -156,7 +159,7 @@ namespace SelectiveConditionEvaluator.Construction
             var parentUsingTask = parent as ProjectUsingTaskElement;
             ErrorUtilities.VerifyThrowInvalidOperation(parentUsingTask != null, "OM_CannotAcceptParent");
 
-            // Since there is not going to be a TaskElement on the using task we need to validate and make sure there is a TaskFactory attribute on the parent element and 
+            // Since there is not going to be a TaskElement on the using task we need to validate and make sure there is a TaskFactory attribute on the parent element and
             // that it is not empty
             if (parentUsingTask.TaskFactory.Length == 0)
             {

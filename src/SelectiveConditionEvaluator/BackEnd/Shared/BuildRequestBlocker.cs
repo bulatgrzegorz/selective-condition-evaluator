@@ -5,6 +5,7 @@
 
 using System.Diagnostics;
 using Microsoft.Build.BackEnd;
+using Microsoft.Build.Execution;
 
 namespace SelectiveConditionEvaluator.BackEnd.Shared
 {

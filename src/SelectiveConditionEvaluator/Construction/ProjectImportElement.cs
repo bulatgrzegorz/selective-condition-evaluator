@@ -4,6 +4,7 @@
 #nullable disable
 
 using System.Diagnostics;
+using Microsoft.Build.Framework;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.ElementLocation;
 using SelectiveConditionEvaluator.ObjectModelRemoting.ConstructionObjectLinks;
@@ -64,7 +65,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// <summary>
         /// Location of the project attribute
         /// </summary>
-        public ElementLocation ProjectLocation => GetAttributeLocation(XMakeAttributes.project);
+        public ElementLocation.ElementLocation ProjectLocation => GetAttributeLocation(XMakeAttributes.project);
 
         /// <summary>
         /// Gets or sets the SDK that contains the import.
@@ -115,7 +116,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// <summary>
         /// Location of the Sdk attribute
         /// </summary>
-        public ElementLocation SdkLocation => GetAttributeLocation(XMakeAttributes.sdk);
+        public ElementLocation.ElementLocation SdkLocation => GetAttributeLocation(XMakeAttributes.sdk);
 
         /// <summary>
         /// Gets the <see cref="ImplicitImportLocation"/> of the import.  This indicates if the import was implicitly
@@ -132,7 +133,7 @@ namespace SelectiveConditionEvaluator.Construction
 
 
         /// <summary>
-        /// <see cref="Framework.SdkReference"/> if applicable to this import element.
+        /// <see cref="Microsoft.Build.Framework.SdkReference"/> if applicable to this import element.
         /// </summary>
         internal SdkReference SdkReference { get; set; }
 

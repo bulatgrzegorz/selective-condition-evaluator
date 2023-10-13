@@ -84,7 +84,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// <summary>
         /// This does not allow conditions, so it should not be called.
         /// </summary>
-        public override ElementLocation ConditionLocation
+        public override ElementLocation.ElementLocation ConditionLocation
         {
             get
             {

@@ -3,6 +3,8 @@
 
 #nullable disable
 
+using Microsoft.Build.Evaluation;
+
 namespace SelectiveConditionEvaluator.ObjectModelRemoting
 {
     /// <summary>

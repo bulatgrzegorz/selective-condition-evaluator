@@ -5,6 +5,8 @@
 
 using System.Diagnostics;
 using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.ElementLocation;
+using SelectiveConditionEvaluator.ObjectModelRemoting.ConstructionObjectLinks;
 
 namespace SelectiveConditionEvaluator.Construction
 {
@@ -166,37 +168,37 @@ namespace SelectiveConditionEvaluator.Construction
         /// <summary>
         /// Location of the task name attribute
         /// </summary>
-        public ElementLocation TaskNameLocation => GetAttributeLocation(XMakeAttributes.taskName);
+        public ElementLocation.ElementLocation TaskNameLocation => GetAttributeLocation(XMakeAttributes.taskName);
 
         /// <summary>
         /// Location of the assembly file attribute, if any
         /// </summary>
-        public ElementLocation AssemblyFileLocation => GetAttributeLocation(XMakeAttributes.assemblyFile);
+        public ElementLocation.ElementLocation AssemblyFileLocation => GetAttributeLocation(XMakeAttributes.assemblyFile);
 
         /// <summary>
         /// Location of the assembly name attribute, if any
         /// </summary>
-        public ElementLocation AssemblyNameLocation => GetAttributeLocation(XMakeAttributes.assemblyName);
+        public ElementLocation.ElementLocation AssemblyNameLocation => GetAttributeLocation(XMakeAttributes.assemblyName);
 
         /// <summary>
         /// Location of the Runtime attribute, if any
         /// </summary>
-        public ElementLocation RuntimeLocation => GetAttributeLocation(XMakeAttributes.runtime);
+        public ElementLocation.ElementLocation RuntimeLocation => GetAttributeLocation(XMakeAttributes.runtime);
 
         /// <summary>
         /// Location of the Architecture attribute, if any
         /// </summary>
-        public ElementLocation ArchitectureLocation => GetAttributeLocation(XMakeAttributes.architecture);
+        public ElementLocation.ElementLocation ArchitectureLocation => GetAttributeLocation(XMakeAttributes.architecture);
 
         /// <summary>
         /// Location of the TaskFactory attribute, if any
         /// </summary>
-        public ElementLocation TaskFactoryLocation => GetAttributeLocation(XMakeAttributes.taskFactory);
+        public ElementLocation.ElementLocation TaskFactoryLocation => GetAttributeLocation(XMakeAttributes.taskFactory);
 
         /// <summary>
         /// Location of the Override attribute, if any
         /// </summary>
-        public ElementLocation OverrideLocation => GetAttributeLocation(XMakeAttributes.overrideUsingTask);
+        public ElementLocation.ElementLocation OverrideLocation => GetAttributeLocation(XMakeAttributes.overrideUsingTask);
 
         /// <summary>
         /// Convenience method that picks a location based on a heuristic:

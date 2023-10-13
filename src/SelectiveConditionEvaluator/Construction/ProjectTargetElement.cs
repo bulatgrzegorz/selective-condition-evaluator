@@ -2,8 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
+using Microsoft.Build.Execution;
+using Microsoft.Build.Internal;
 using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator.BackEnd.BuildManager;
 using SelectiveConditionEvaluator.ElementLocation;
 using SelectiveConditionEvaluator.Instance;
 using SelectiveConditionEvaluator.ObjectModelRemoting.ConstructionObjectLinks;
@@ -288,26 +289,26 @@ namespace SelectiveConditionEvaluator.Construction
         /// <summary>
         /// Location of the Name attribute
         /// </summary>
-        public ElementLocation NameLocation => GetAttributeLocation(XMakeAttributes.name);
+        public ElementLocation.ElementLocation NameLocation => GetAttributeLocation(XMakeAttributes.name);
 
         /// <summary>
         /// Location of the Inputs attribute
         /// </summary>
-        public ElementLocation InputsLocation => GetAttributeLocation(XMakeAttributes.inputs);
+        public ElementLocation.ElementLocation InputsLocation => GetAttributeLocation(XMakeAttributes.inputs);
 
         /// <summary>
         /// Location of the Outputs attribute
         /// </summary>
-        public ElementLocation OutputsLocation => GetAttributeLocation(XMakeAttributes.outputs);
+        public ElementLocation.ElementLocation OutputsLocation => GetAttributeLocation(XMakeAttributes.outputs);
 
         /// <summary>
         /// Location of the TrimDuplicateOutputs attribute
         /// </summary>
-        public ElementLocation KeepDuplicateOutputsLocation
+        public ElementLocation.ElementLocation KeepDuplicateOutputsLocation
         {
             get
             {
-                ElementLocation location = GetAttributeLocation(XMakeAttributes.keepDuplicateOutputs);
+                ElementLocation.ElementLocation location = GetAttributeLocation(XMakeAttributes.keepDuplicateOutputs);
                 if ((location == null) && !BuildParameters.KeepDuplicateOutputs)
                 {
                     // In 4.0, by default we do NOT keep duplicate outputs unless they user has either set the attribute
@@ -322,22 +323,22 @@ namespace SelectiveConditionEvaluator.Construction
         /// <summary>
         /// Location of the DependsOnTargets attribute
         /// </summary>
-        public ElementLocation DependsOnTargetsLocation => GetAttributeLocation(XMakeAttributes.dependsOnTargets);
+        public ElementLocation.ElementLocation DependsOnTargetsLocation => GetAttributeLocation(XMakeAttributes.dependsOnTargets);
 
         /// <summary>
         /// Location of the BeforeTargets attribute
         /// </summary>
-        public ElementLocation BeforeTargetsLocation => GetAttributeLocation(XMakeAttributes.beforeTargets);
+        public ElementLocation.ElementLocation BeforeTargetsLocation => GetAttributeLocation(XMakeAttributes.beforeTargets);
 
         /// <summary>
         /// Location of the Returns attribute
         /// </summary>
-        public ElementLocation ReturnsLocation => GetAttributeLocation(XMakeAttributes.returns);
+        public ElementLocation.ElementLocation ReturnsLocation => GetAttributeLocation(XMakeAttributes.returns);
 
         /// <summary>
         /// Location of the AfterTargets attribute
         /// </summary>
-        public ElementLocation AfterTargetsLocation => GetAttributeLocation(XMakeAttributes.afterTargets);
+        public ElementLocation.ElementLocation AfterTargetsLocation => GetAttributeLocation(XMakeAttributes.afterTargets);
 
         /// <summary>
         /// A cache of the last instance which was created from this target.
