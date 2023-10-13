@@ -13,10 +13,10 @@ using Microsoft.Build.Internal;
 using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Components;
 using SelectiveConditionEvaluator.BackEnd.Components.BuildRequestEngine;
+using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 using SelectiveConditionEvaluator.BackEnd.Node;
 using SelectiveConditionEvaluator.BackEnd.Shared;
-using ILoggingService = Microsoft.Build.BackEnd.Logging.ILoggingService;
-using NodeLoggingContext = Microsoft.Build.BackEnd.Logging.NodeLoggingContext;
+using NativeMethods = Microsoft.Build.Framework.NativeMethods;
 
 #nullable disable
 
@@ -144,7 +144,7 @@ namespace Microsoft.Build.BackEnd
                 var waitHandles = new WaitHandle[] { _shutdownEvent, _packetReceivedEvent };
 
                 // Get the current directory before doing work. We need this so we can restore the directory when the node shuts down.
-                _savedCurrentDirectory = NativeMethodsShared.GetCurrentDirectory();
+                _savedCurrentDirectory = NativeMethods.GetCurrentDirectory();
                 while (true)
                 {
                     int index = WaitHandle.WaitAny(waitHandles);
@@ -337,7 +337,7 @@ namespace Microsoft.Build.BackEnd
             if (_componentHost.BuildParameters.SaveOperatingEnvironment)
             {
                 // Restore the original current directory.
-                NativeMethodsShared.SetCurrentDirectory(_savedCurrentDirectory);
+                NativeMethods.SetCurrentDirectory(_savedCurrentDirectory);
 
                 // Restore the original environment.
                 foreach (KeyValuePair<string, string> entry in CommunicationsUtilities.GetEnvironmentVariables())
@@ -480,7 +480,7 @@ namespace Microsoft.Build.BackEnd
             _savedEnvironment = CommunicationsUtilities.GetEnvironmentVariables();
 
             // Save the current directory.
-            _savedCurrentDirectory = NativeMethodsShared.GetCurrentDirectory();
+            _savedCurrentDirectory = NativeMethods.GetCurrentDirectory();
 
             // Set the node id.
             _componentHost.BuildParameters.NodeId = configuration.NodeId;

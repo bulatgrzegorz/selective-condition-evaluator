@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.Build.BackEnd;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Internal;
@@ -12,7 +13,6 @@ using Microsoft.Build.Shared;
 using Microsoft.Build.Utilities;
 using Microsoft.Win32;
 // Needed for DoesTaskHostExistForParameters
-using NodeProviderOutOfProcTaskHost = SelectiveConditionEvaluator.BackEnd.Components.Communications.NodeProviderOutOfProcTaskHost;
 
 #nullable disable
 

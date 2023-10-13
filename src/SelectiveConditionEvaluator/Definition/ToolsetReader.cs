@@ -20,7 +20,7 @@ using SelectiveConditionEvaluator.Resources;
 using ErrorUtils = Microsoft.Build.Shared.ErrorUtilities;
 using InvalidProjectFileException = Microsoft.Build.Exceptions.InvalidProjectFileException;
 using InvalidToolsetDefinitionException = Microsoft.Build.Exceptions.InvalidToolsetDefinitionException;
-using ReservedPropertyNames = Microsoft.Build.Internal.ReservedPropertyNames;
+using NativeMethods = SelectiveConditionEvaluator.NativeMethods;
 
 #nullable disable
 

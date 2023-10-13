@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using Microsoft.Build.Evaluation;
-using Microsoft.Build.Evaluation.Context;
 using Microsoft.Build.FileSystem;
 using SelectiveConditionEvaluator.Evaluation.Context;
 

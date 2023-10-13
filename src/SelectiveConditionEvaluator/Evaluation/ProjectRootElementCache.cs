@@ -12,7 +12,6 @@ using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Construction;
 using ErrorUtilities = Microsoft.Build.Shared.ErrorUtilities;
-using OutOfProcNode = SelectiveConditionEvaluator.BackEnd.Node.OutOfProcNode;
 
 #nullable disable
 
