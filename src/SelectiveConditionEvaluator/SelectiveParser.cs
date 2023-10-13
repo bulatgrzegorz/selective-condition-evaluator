@@ -1,10 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using Microsoft.Build.Collections;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Shared.FileSystem;
+using SelectiveConditionEvaluator.Collections;
+using SelectiveConditionEvaluator.Evaluation;
+using SelectiveConditionEvaluator.Evaluation.Conditionals;
+using SelectiveConditionEvaluator.Instance;
+using SelectiveConditionEvaluator.Shared.FileSystem;
 
 namespace SelectiveConditionEvaluator;
 
