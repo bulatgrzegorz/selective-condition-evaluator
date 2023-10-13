@@ -16,7 +16,7 @@ namespace SelectiveConditionEvaluator.msbuild.Definition
     /// </remarks>
     [Flags]
     [SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue", Justification = "Public API.  'Default' is roughly equivalent to 'None'. ")]
-    public enum ProjectLoadSettings
+    internal enum ProjectLoadSettings
     {
         /// <summary>
         /// Normal load. This is the default.

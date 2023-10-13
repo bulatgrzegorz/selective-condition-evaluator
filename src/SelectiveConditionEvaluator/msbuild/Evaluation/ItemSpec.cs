@@ -629,7 +629,7 @@ namespace SelectiveConditionEvaluator.msbuild.Evaluation
         }
     }
 
-    public enum MatchOnMetadataOptions
+    internal enum MatchOnMetadataOptions
     {
         CaseSensitive,
         CaseInsensitive,

@@ -5,6 +5,8 @@ using System.Configuration.Assemblies;
 using System.Globalization;
 using System.Reflection;
 using AssemblyHashAlgorithm = System.Configuration.Assemblies.AssemblyHashAlgorithm;
+#pragma warning disable SYSLIB0044
+#pragma warning disable SYSLIB0037
 
 #nullable disable
 

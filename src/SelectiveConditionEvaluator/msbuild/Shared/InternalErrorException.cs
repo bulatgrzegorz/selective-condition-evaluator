@@ -6,6 +6,7 @@
 // REQUESTS THAT CHANGE THIS FILE WITHOUT FIRST CHECKING WITH THE MAINTAINERS THAT THE FIX IS REQUIRED.
 
 using System.Runtime.Serialization;
+#pragma warning disable SYSLIB0051
 
 namespace SelectiveConditionEvaluator.msbuild.Shared
 {
@@ -70,8 +71,7 @@ namespace SelectiveConditionEvaluator.msbuild.Shared
         /// </summary>
         /// <param name="info"></param>
         /// <param name="context"></param>
-        private InternalErrorException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
+        private InternalErrorException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             // Do nothing: no fields
         }

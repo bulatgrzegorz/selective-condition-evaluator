@@ -10,7 +10,7 @@ namespace SelectiveConditionEvaluator.msbuild
     /// <summary>
     /// Defines the lifetime of a registered task object.
     /// </summary>
-    public enum RegisteredTaskObjectLifetime
+    internal enum RegisteredTaskObjectLifetime
     {
         /// <summary>
         /// The registered object will be disposed when the build ends.

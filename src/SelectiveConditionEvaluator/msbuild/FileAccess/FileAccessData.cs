@@ -15,8 +15,8 @@ namespace SelectiveConditionEvaluator.msbuild.FileAccess
     /// <param name="Path">The path being accessed.</param>
     /// <param name="ProcessArgs">The process arguments.</param>
     /// <param name="IsAnAugmentedFileAccess">Whether the file access is augmented.</param>
-    [CLSCompliant(false)]
-    public readonly record struct FileAccessData(
+    
+    internal readonly record struct FileAccessData(
         ReportedFileOperation Operation,
         RequestedAccess RequestedAccess,
         uint ProcessId,

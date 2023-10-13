@@ -9,7 +9,7 @@ namespace SelectiveConditionEvaluator.msbuild.Definition
     /// Flags to control options when creating a new, in memory, project.
     /// </summary>
     [Flags]
-    public enum NewProjectFileOptions
+    internal enum NewProjectFileOptions
     {
         /// <summary>
         /// Do not include any options.

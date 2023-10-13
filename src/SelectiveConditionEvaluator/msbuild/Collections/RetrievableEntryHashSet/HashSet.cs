@@ -9,6 +9,8 @@ using System.Runtime.Serialization;
 using System.Security;
 using SelectiveConditionEvaluator.msbuild.Shared;
 using SelectiveConditionEvaluator.msbuild.Utilities;
+// ReSharper disable InconsistentNaming
+#pragma warning disable CS0649
 
 /*
     ==================================================================================================================

@@ -4681,7 +4681,7 @@ namespace SelectiveConditionEvaluator.msbuild.Definition
     /// Bit flag enum that specifies how a string representing an item matched against an itemspec.
     /// </summary>
     [Flags]
-    public enum Provenance
+    internal enum Provenance
     {
         /// <summary>
         /// Undefined is the bottom element and should not appear in actual results
@@ -4707,7 +4707,7 @@ namespace SelectiveConditionEvaluator.msbuild.Definition
     /// <summary>
     /// Enum that specifies how an item element references an item.
     /// </summary>
-    public enum Operation
+    internal enum Operation
     {
         /// <summary>
         /// The element referenced the item by an Include.

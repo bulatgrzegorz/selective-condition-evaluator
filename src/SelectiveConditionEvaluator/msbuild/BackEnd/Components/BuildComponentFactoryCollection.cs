@@ -38,7 +38,7 @@ namespace SelectiveConditionEvaluator.msbuild.BackEnd.Components
         /// <summary>
         /// The creation pattern to use for this component.
         /// </summary>
-        public enum CreationPattern
+        internal enum CreationPattern
         {
             /// <summary>
             /// The component should be created as a singleton.

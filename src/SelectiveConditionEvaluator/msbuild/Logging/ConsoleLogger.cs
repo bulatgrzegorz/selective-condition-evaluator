@@ -3,6 +3,7 @@
 
 using SelectiveConditionEvaluator.msbuild.Framework.Telemetry;
 using SelectiveConditionEvaluator.msbuild.Shared;
+#pragma warning disable CS0649
 
 #nullable disable
 

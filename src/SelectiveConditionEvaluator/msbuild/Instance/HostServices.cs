@@ -13,7 +13,7 @@ namespace SelectiveConditionEvaluator.msbuild.Instance
     /// <summary>
     /// Controls where projects must be built.
     /// </summary>
-    public enum NodeAffinity
+    internal enum NodeAffinity
     {
         /// <summary>
         /// The project may only be scheduled on the in-proc node.  This happens automatically if there is a host object or if a ProjectInstance

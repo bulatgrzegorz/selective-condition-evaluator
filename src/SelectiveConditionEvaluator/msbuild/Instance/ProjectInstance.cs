@@ -39,7 +39,7 @@ namespace SelectiveConditionEvaluator.msbuild.Instance
     /// </summary>
     [Flags]
     [SuppressMessage("Microsoft.Usage", "CA2217:DoNotMarkEnumsWithFlags", Justification = "ImmutableWithFastItemLookup is a variation on Immutable")]
-    public enum ProjectInstanceSettings
+    internal enum ProjectInstanceSettings
     {
         /// <summary>
         /// no options

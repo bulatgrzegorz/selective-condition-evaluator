@@ -503,13 +503,13 @@ namespace SelectiveConditionEvaluator.msbuild
             return null;
         }
 
-        public enum ProjectInstanceTranslationMode
+        internal enum ProjectInstanceTranslationMode
         {
             Full,
             Partial
         }
 
-        public enum SdkReferencePropertyExpansionMode
+        internal enum SdkReferencePropertyExpansionMode
         {
             NoExpansion,
             DefaultExpand,

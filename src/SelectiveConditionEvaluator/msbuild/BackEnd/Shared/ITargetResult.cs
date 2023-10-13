@@ -11,7 +11,7 @@ namespace SelectiveConditionEvaluator.msbuild.BackEnd.Shared
     /// The result code for a given target.
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1028:EnumStorageShouldBeInt32", Justification = "TargetResultCode is serialized - additional bytes waste bandwidth")]
-    public enum TargetResultCode : byte
+    internal enum TargetResultCode : byte
     {
         /// <summary>
         /// The target was skipped because its condition was not met.

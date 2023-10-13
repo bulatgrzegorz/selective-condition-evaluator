@@ -8,7 +8,7 @@ namespace SelectiveConditionEvaluator.msbuild.Definition
     /// <summary>
     /// Properties or other mutable state associated with a <see cref="ProjectCollection"/>.
     /// </summary>
-    public enum ProjectCollectionChangedState
+    internal enum ProjectCollectionChangedState
     {
         /// <summary>
         /// The <see cref="ProjectCollection.DefaultToolsVersion"/> property changed.

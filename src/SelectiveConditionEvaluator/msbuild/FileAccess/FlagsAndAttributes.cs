@@ -13,8 +13,8 @@ namespace SelectiveConditionEvaluator.msbuild.FileAccess
     /// The file or device attributes and flags.
     /// </summary>
     [Flags]
-    [CLSCompliant(false)]
-    public enum FlagsAndAttributes : uint
+    
+    internal enum FlagsAndAttributes : uint
     {
         /// <summary>
         /// The file is read only. Applications can read the file but cannot write to or delete it.

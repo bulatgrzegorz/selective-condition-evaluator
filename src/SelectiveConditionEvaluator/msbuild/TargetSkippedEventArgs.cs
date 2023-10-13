@@ -10,7 +10,7 @@ namespace SelectiveConditionEvaluator.msbuild
     /// <summary>
     /// A reason why a target was skipped.
     /// </summary>
-    public enum TargetSkipReason
+    internal enum TargetSkipReason
     {
         /// <summary>
         /// The target was not skipped or the skip reason was unknown.

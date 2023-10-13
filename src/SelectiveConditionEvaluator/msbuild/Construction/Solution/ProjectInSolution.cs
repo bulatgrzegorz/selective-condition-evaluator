@@ -21,7 +21,7 @@ namespace SelectiveConditionEvaluator.msbuild.Construction.Solution
     /// <remarks>
     /// An enumeration defining the different types of projects we might find in an SLN.
     /// </remarks>
-    public enum SolutionProjectType
+    internal enum SolutionProjectType
     {
         /// <summary>
         /// Everything else besides the below well-known project types.

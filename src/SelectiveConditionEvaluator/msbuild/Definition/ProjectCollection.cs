@@ -32,7 +32,7 @@ namespace SelectiveConditionEvaluator.msbuild.Definition
     /// Flags for controlling the toolset initialization.
     /// </summary>
     [Flags]
-    public enum ToolsetDefinitionLocations
+    internal enum ToolsetDefinitionLocations
     {
         /// <summary>
         /// Do not read toolset information from any external location.

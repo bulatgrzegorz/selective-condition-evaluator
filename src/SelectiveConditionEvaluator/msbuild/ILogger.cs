@@ -27,7 +27,7 @@ namespace SelectiveConditionEvaluator.msbuild
     // by changes to this enum (not to mention existing MSBuild clients and vsproject code).
     // Please make sure to talk to automation devs before changing it.
     [ComVisible(true)]
-    public enum LoggerVerbosity
+    internal enum LoggerVerbosity
     {
         /// <summary>
         /// The most minimal output

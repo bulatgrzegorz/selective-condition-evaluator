@@ -10,7 +10,7 @@ namespace SelectiveConditionEvaluator.msbuild.BackEnd.Components.ProjectCache
     /// <summary>
     /// Result types that a plugin can return for a given build request.
     /// </summary>
-    public enum CacheResultType
+    internal enum CacheResultType
     {
         /// <summary>
         /// The plugin failed and couldn't return a result. The plugin should log an error detailing the failure. MSBuild will stop the build.

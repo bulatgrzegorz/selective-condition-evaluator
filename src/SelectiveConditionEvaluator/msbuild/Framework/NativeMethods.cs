@@ -159,7 +159,7 @@ internal static class NativeMethods
     /// Flags for CoWaitForMultipleHandles
     /// </summary>
     [Flags]
-    public enum COWAIT_FLAGS : int
+    internal enum COWAIT_FLAGS : int
     {
         /// <summary>
         /// Exit when a handle is signaled.

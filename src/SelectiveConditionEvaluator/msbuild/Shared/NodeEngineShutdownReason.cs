@@ -9,7 +9,7 @@ namespace SelectiveConditionEvaluator.msbuild.Shared
     /// <summary>
     /// Reasons for a node to shutdown.
     /// </summary>
-    public enum NodeEngineShutdownReason
+    internal enum NodeEngineShutdownReason
     {
         /// <summary>
         /// The BuildManager sent a command instructing the node to terminate.

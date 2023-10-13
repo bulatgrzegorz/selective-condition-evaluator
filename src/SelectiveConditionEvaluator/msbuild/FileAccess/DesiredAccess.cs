@@ -16,8 +16,8 @@ namespace SelectiveConditionEvaluator.msbuild.FileAccess
     /// See https://learn.microsoft.com/en-us/windows/win32/fileio/file-access-rights-constants for a full list of values.
     /// </remarks>
     [Flags]
-    [CLSCompliant(false)]
-    public enum DesiredAccess : uint
+    
+    internal enum DesiredAccess : uint
     {
         /// <summary>
         /// For a directory, the right to list the contents of the directory.

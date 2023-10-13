@@ -6,7 +6,7 @@ namespace SelectiveConditionEvaluator.msbuild.BackEnd.BuildManager
     /// <summary>
     /// The isolation mode to use.
     /// </summary>
-    public enum ProjectIsolationMode
+    internal enum ProjectIsolationMode
     {
         /// <summary>
         /// Do not enable isolation.
