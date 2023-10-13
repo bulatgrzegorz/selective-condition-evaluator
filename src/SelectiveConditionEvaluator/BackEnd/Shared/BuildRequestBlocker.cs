@@ -4,8 +4,7 @@
 #nullable disable
 
 using System.Diagnostics;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Execution;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.BackEnd.Shared
 {

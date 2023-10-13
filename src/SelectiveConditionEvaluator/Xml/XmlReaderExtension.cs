@@ -1,15 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.IO;
-using System.Text;
-using System.Xml;
-using Microsoft.Build.Shared;
-
 #nullable disable
 
-namespace Microsoft.Build.Internal
+using System.Text;
+using System.Xml;
+
+namespace SelectiveConditionEvaluator.Xml
 {
     /// <summary>
     ///     Disposable helper class to wrap XmlReader / XmlTextReader functionality.
@@ -39,7 +36,7 @@ namespace Microsoft.Build.Internal
                 // Encoding correctly (detectEncodingFromByteOrderMarks = true). The default is to use UTF8 (with BOM)
                 // which will cause the BOM to be added when we re-save the file in cases where it was not present on
                 // load.
-                _stream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read);
+                _stream = new FileStream(file, FileMode.Open, System.IO.FileAccess.Read, FileShare.Read);
                 _streamReader = new StreamReader(_stream, s_utf8NoBom, detectEncodingFromByteOrderMarks: true);
                 Encoding detectedEncoding;
 
@@ -64,7 +61,7 @@ namespace Microsoft.Build.Internal
             }
             catch
             {
-                // GetXmlReader calls Read() to get Encoding and can throw. If it does, close 
+                // GetXmlReader calls Read() to get Encoding and can throw. If it does, close
                 // the streams as needed.
                 Dispose();
                 throw;

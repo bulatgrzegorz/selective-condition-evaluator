@@ -1,12 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Diagnostics;
-using System.Threading;
-
 #nullable disable
 
-namespace Microsoft.Build.Framework.Profiler
+using System.Diagnostics;
+
+namespace SelectiveConditionEvaluator.Profiler
 {
     /// <summary>
     /// Assigns unique evaluation ids. Thread safe.

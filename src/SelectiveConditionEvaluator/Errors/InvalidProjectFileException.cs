@@ -1,18 +1,17 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Runtime.Serialization;
-using System.Collections.Generic;
-#if FEATURE_SECURITY_PERMISSIONS
-using System.Security.Permissions;
-#endif
-using Microsoft.Build.Framework.BuildException;
-using Microsoft.Build.Shared;
+
 
 #nullable disable
 
-namespace Microsoft.Build.Exceptions
+using System.Runtime.Serialization;
+using SelectiveConditionEvaluator.BuildException;
+using SelectiveConditionEvaluator.Shared;
+#if FEATURE_SECURITY_PERMISSIONS
+using System.Security.Permissions;
+#endif
+namespace SelectiveConditionEvaluator.Errors
 {
     /// <summary>
     /// This exception is thrown whenever there is a problem with the user's XML project file. The problem might be semantic or
@@ -80,7 +79,7 @@ namespace Microsoft.Build.Exceptions
         #region Serialization (update when adding new class members)
 
         /// <summary>
-        /// Protected constructor used for (de)serialization. 
+        /// Protected constructor used for (de)serialization.
         /// If we ever add new members to this class, we'll need to update this.
         /// </summary>
         /// <param name="info"></param>
@@ -370,7 +369,7 @@ namespace Microsoft.Build.Exceptions
         }
 
         /// <summary>
-        /// Whether the exception has already been logged. Allows the exception to be logged at the 
+        /// Whether the exception has already been logged. Allows the exception to be logged at the
         /// most appropriate location, but continue to be propagated.
         /// </summary>
         public bool HasBeenLogged

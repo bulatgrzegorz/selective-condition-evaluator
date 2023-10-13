@@ -3,7 +3,7 @@
 
 #nullable disable
 
-namespace Microsoft.Build.Framework
+namespace SelectiveConditionEvaluator.Sdk
 {
     /// <summary>
     ///     An abstract interface class to providing real-time logging and status while resolving

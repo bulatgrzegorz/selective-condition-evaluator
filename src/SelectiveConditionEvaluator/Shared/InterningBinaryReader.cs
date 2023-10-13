@@ -1,22 +1,16 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Text;
-using System.IO;
-using System.Diagnostics;
-using System.Threading;
-using SelectiveConditionEvaluator.StringTools;
-
 #if !CLR2COMPATIBILITY
-using System.Buffers;
 #endif
-
-using ErrorUtilities = Microsoft.Build.Shared.ErrorUtilities;
+using System.Buffers;
+using System.Diagnostics;
+using System.Text;
+using SelectiveConditionEvaluator.StringTools;
 
 #nullable disable
 
-namespace Microsoft.Build
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// Replacement for BinaryReader which attempts to intern the strings read by ReadString.
@@ -116,10 +110,10 @@ namespace Microsoft.Build
                         int length = (int)memoryStream.Length;
                         n = (rawPosition + readLength) < length ? readLength : length - rawPosition;
 
-                        // Attempt to track down an intermittent failure -- n should not ever be negative, but 
-                        // we're occasionally seeing it when we do the decoder.GetChars below -- by providing 
+                        // Attempt to track down an intermittent failure -- n should not ever be negative, but
+                        // we're occasionally seeing it when we do the decoder.GetChars below -- by providing
                         // a bit more information when we do hit the error, in the place where (by code inspection)
-                        // the actual error seems most likely to be occurring. 
+                        // the actual error seems most likely to be occurring.
                         if (n < 0)
                         {
                             ErrorUtilities.ThrowInternalError("From calculating based on the memorystream, about to read n = {0}. length = {1}, rawPosition = {2}, readLength = {3}, stringLength = {4}, currPos = {5}.", n, length, rawPosition, readLength, stringLength, currPos);
@@ -200,7 +194,7 @@ namespace Microsoft.Build
         /// </summary>
         /// <remarks>
         /// Lifetime of the pooled buffer is managed by InterningBinaryReader (tied to BinaryReader lifetime wrapping the buffer)
-        /// </remarks> 
+        /// </remarks>
         internal static BinaryReaderFactory PoolingBuffer => NullBuffer.Instance;
 
         /// <summary>
@@ -250,7 +244,7 @@ namespace Microsoft.Build
         }
 
         /// <summary>
-        /// Holds thepreallocated buffer. 
+        /// Holds thepreallocated buffer.
         /// </summary>
         private class Buffer : BinaryReaderFactory
         {

@@ -1,31 +1,26 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Threading;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
+using SelectiveConditionEvaluator.BackEnd.Components.Communications;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 using SelectiveConditionEvaluator.BackEnd.Components.ProjectCache;
+using SelectiveConditionEvaluator.BackEnd.Node;
 using SelectiveConditionEvaluator.Collections;
+using SelectiveConditionEvaluator.Definition;
 using SelectiveConditionEvaluator.Evaluation;
+using SelectiveConditionEvaluator.Graph;
 using SelectiveConditionEvaluator.Instance;
-using NativeMethods = Microsoft.Build.Framework.NativeMethods;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Shared.FileSystem;
 
 #nullable disable
 
-namespace Microsoft.Build.Execution
+namespace SelectiveConditionEvaluator.BackEnd.BuildManager
 {
-    using Utilities = Microsoft.Build.Internal.Utilities;
+    using Utilities = Utilities.Utilities;
 
     /// <summary>
     /// This class represents all of the settings which must be specified to start a build.
@@ -65,7 +60,7 @@ namespace Microsoft.Build.Execution
         /// <summary>
         /// The startup directory.
         /// </summary>
-        private static string s_startupDirectory = NativeMethods.GetCurrentDirectory();
+        private static string s_startupDirectory = Framework.NativeMethods.GetCurrentDirectory();
 
         /// <summary>
         /// Indicates whether we should warn when a property is uninitialized when it is used.

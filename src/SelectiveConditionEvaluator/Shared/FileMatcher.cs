@@ -1,23 +1,15 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Buffers;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Microsoft.Build.Framework;
-using SelectiveConditionEvaluator;
-using NativeMethods = SelectiveConditionEvaluator.NativeMethods;
+using SelectiveConditionEvaluator.Shared.FileSystem;
 
 #nullable disable
 
-namespace Microsoft.Build.Shared
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// Functions for matching file names with patterns.
@@ -1051,7 +1043,7 @@ namespace Microsoft.Build.Shared
             // it is case sensitive. If the flag is true and matching is handled with MatchFileRecursionStep, it is case-insensitive.
             // TODO: Can we fix this by using case-insensitive file I/O on Linux?
             string filespec;
-            if (NativeMethods.IsLinux && recursionState.SearchData.DirectoryPattern != null)
+            if (SelectiveConditionEvaluator.NativeMethods.IsLinux && recursionState.SearchData.DirectoryPattern != null)
             {
                 filespec = "*.*";
                 stepResult.NeedsToProcessEachFile = true;
@@ -1192,7 +1184,7 @@ namespace Microsoft.Build.Shared
                 + FileSpecRegexParts.EndOfLine.Length,
                 "Checked-in length of known regex components differs from computed length. Update checked-in constant.");
 #endif
-            using (var matchFileExpression = new ReuseableStringBuilder(FileSpecRegexMinLength + NativeMethods.MAX_PATH))
+            using (var matchFileExpression = new ReuseableStringBuilder(FileSpecRegexMinLength + SelectiveConditionEvaluator.NativeMethods.MAX_PATH))
             {
                 AppendRegularExpressionFromFixedDirectory(matchFileExpression, fixedDirectoryPart);
                 AppendRegularExpressionFromWildcardDirectory(matchFileExpression, wildcardDirectoryPart);
@@ -1257,7 +1249,7 @@ namespace Microsoft.Build.Shared
         {
             regex.Append(FileSpecRegexParts.BeginningOfLine);
 
-            bool isUncPath = NativeMethods.IsWindows && fixedDir.Length > 1
+            bool isUncPath = SelectiveConditionEvaluator.NativeMethods.IsWindows && fixedDir.Length > 1
                              && fixedDir[0] == '\\' && fixedDir[1] == '\\';
             if (isUncPath)
             {
@@ -2260,7 +2252,7 @@ namespace Microsoft.Build.Shared
             int wildcardPartLength = wildcardPart.Length;
 
             // Handles detection of <drive letter>:<slashes>** pattern for Windows.
-            if (NativeMethods.IsWindows &&
+            if (SelectiveConditionEvaluator.NativeMethods.IsWindows &&
                 directoryPartLength >= 3 &&
                 wildcardPartLength >= 2 &&
                 IsDrivePatternWithoutSlash(directoryPart[0], directoryPart[1]))
@@ -2581,7 +2573,7 @@ namespace Microsoft.Build.Shared
                 // Set to use only half processors when we have 4 or more of them, in order to not be too aggresive
                 // By setting MaxTasksPerIteration to the maximum amount of tasks, which means that only one
                 // Parallel.ForEach will run at once, we get a stable number of threads being created.
-                var maxTasks = Math.Max(1, NativeMethods.GetLogicalCoreCount() / 2);
+                var maxTasks = Math.Max(1, SelectiveConditionEvaluator.NativeMethods.GetLogicalCoreCount() / 2);
                 var taskOptions = new TaskOptions(maxTasks)
                 {
                     AvailableTasks = maxTasks,

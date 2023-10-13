@@ -3,11 +3,9 @@
 
 #nullable disable
 
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.BackEnd.Components.BuildRequestEngine;
 using SelectiveConditionEvaluator.BackEnd.Shared;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
 {
@@ -23,9 +21,9 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// <param name="nodeId">The </param>
         /// <param name="inProcNode"><code>true</code> if this is an in-process node, otherwise <code>false</code>.</param>
         internal NodeLoggingContext(ILoggingService loggingService, int nodeId, bool inProcNode)
-            : base(loggingService, new BuildEventContext(nodeId, ((LoggingContext)this).BuildEventContext.InvalidTargetId, ((LoggingContext)this).BuildEventContext.InvalidProjectContextId, ((LoggingContext)this).BuildEventContext.InvalidTaskId), inProcNode)
+            : base(loggingService, new BuildEventContext(nodeId, BuildEventContext.InvalidTargetId, BuildEventContext.InvalidProjectContextId, BuildEventContext.InvalidTaskId), inProcNode)
         {
-            ErrorUtilities.VerifyThrow(nodeId != ((LoggingContext)this).BuildEventContext.InvalidNodeId, "Should not ever be given an invalid NodeId");
+            ErrorUtilities.VerifyThrow(nodeId != BuildEventContext.InvalidNodeId, "Should not ever be given an invalid NodeId");
 
             // The in-proc node will have its BuildStarted, BuildFinished events sent by the BuildManager itself.
             if (!IsInProcNode)
@@ -77,7 +75,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
             // If we can retrieve the evaluationId from the project, do so. Don't if it's not available or
             // if we'd have to retrieve it from the cache in order to access it.
             // Order is important here because the Project getter will throw if IsCached.
-            int evaluationId = (configuration != null && !configuration.IsCached && configuration.Project != null) ? configuration.Project.EvaluationId : ((LoggingContext)this).BuildEventContext.InvalidEvaluationId;
+            int evaluationId = (configuration != null && !configuration.IsCached && configuration.Project != null) ? configuration.Project.EvaluationId : BuildEventContext.InvalidEvaluationId;
 
             return new ProjectLoggingContext(this, request, configuration.ProjectFullPath, configuration.ToolsVersion, evaluationId);
         }

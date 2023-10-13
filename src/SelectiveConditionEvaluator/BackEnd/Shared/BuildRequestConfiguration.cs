@@ -1,31 +1,24 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Linq;
-using Microsoft.Build.BackEnd.SdkResolution;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Globbing;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
+using SelectiveConditionEvaluator.BackEnd.BuildManager;
 using SelectiveConditionEvaluator.BackEnd.Components;
+using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
 using SelectiveConditionEvaluator.BackEnd.Components.Scheduler;
-using SelectiveConditionEvaluator.BackEnd.Shared;
+using SelectiveConditionEvaluator.BackEnd.Components.SdkResolution;
 using SelectiveConditionEvaluator.Collections;
+using SelectiveConditionEvaluator.Definition;
 using SelectiveConditionEvaluator.Evaluation;
+using SelectiveConditionEvaluator.Globbing;
 using SelectiveConditionEvaluator.Instance;
-using NativeMethods = SelectiveConditionEvaluator.NativeMethods;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Shared.FileSystem;
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Shared
 {
     /// <summary>
     /// A build request configuration represents all of the data necessary to know which project to build

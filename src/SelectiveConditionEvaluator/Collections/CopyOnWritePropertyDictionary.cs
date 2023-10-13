@@ -6,8 +6,7 @@
 using System.Collections;
 using System.Collections.Immutable;
 using System.Diagnostics;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.Collections
 {

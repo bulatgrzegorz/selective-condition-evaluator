@@ -1,20 +1,17 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.IO;
-using System.Reflection;
-using System.Diagnostics;
 
-#if FEATURE_ASSEMBLYLOADCONTEXT
-using System.Runtime.Loader;
-#endif
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd.Logging
+using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.Loader;
+using SelectiveConditionEvaluator.Shared.FileSystem;
+#if FEATURE_ASSEMBLYLOADCONTEXT
+#endif
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// This is a helper class to install an AssemblyResolver event handler in whatever AppDomain this class is created in.

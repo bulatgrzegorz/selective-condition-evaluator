@@ -1,12 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Collections.Generic;
-using Microsoft.Build.Globbing.Visitor;
-
 #nullable disable
 
-namespace Microsoft.Build.Globbing.Extensions
+using SelectiveConditionEvaluator.Globbing.Visitor;
+
+namespace SelectiveConditionEvaluator.Globbing.Extensions
 {
     /// <summary>
     /// Extensions for <see cref="IMSBuildGlob"/>

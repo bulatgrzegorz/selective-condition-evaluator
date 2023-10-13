@@ -1,24 +1,20 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
+#nullable disable
+
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Construction;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.Collections;
+using SelectiveConditionEvaluator.Collections.RetrievableEntryHashSet;
 using SelectiveConditionEvaluator.Construction;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Evaluation.Conditionals;
 using SelectiveConditionEvaluator.ObjectModelRemoting.DefinitionObjectsLinks;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Shared.FileSystem;
 
-#nullable disable
-
-namespace Microsoft.Build.Evaluation
+namespace SelectiveConditionEvaluator.Definition
 {
     /// <summary>
     /// An evaluated design-time item
@@ -812,7 +808,7 @@ namespace Microsoft.Build.Evaluation
 
         /// <summary>
         /// Creates new xml objects for itself, disconnecting from the old xml objects.
-        /// Called ONLY by <see cref="Microsoft.Build.Evaluation.Project.SplitItemElementIfNecessary(ProjectItemElement)"/>
+        /// Called ONLY by <see cref="Definition.Project.SplitItemElementIfNecessary"/>
         /// </summary>
         /// <remarks>
         /// Called when breaking up a single ProjectItemElement that evaluates into several ProjectItems.

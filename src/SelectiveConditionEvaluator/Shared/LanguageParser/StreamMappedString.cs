@@ -1,13 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.IO;
-using System.Text;
-
 #nullable disable
 
-namespace Microsoft.Build.Shared.LanguageParser
+using System.Text;
+
+namespace SelectiveConditionEvaluator.Shared.LanguageParser
 {
     /// <summary>
     /// A class with string-like semantics mapped over a Stream.
@@ -25,7 +23,7 @@ namespace Microsoft.Build.Shared.LanguageParser
         private StreamReader _reader;
 
         /// <summary>
-        /// When false, try to guess the encoding of binaryStream. When true, force the 
+        /// When false, try to guess the encoding of binaryStream. When true, force the
         /// encoding to ANSI.
         /// </summary>
         private bool _forceANSI;
@@ -110,7 +108,7 @@ namespace Microsoft.Build.Shared.LanguageParser
                 _reader = new StreamReader( // HIGHCHAR: Falling back to ANSI for VB source files.
                     _binaryStream,
 #if FEATURE_ENCODING_DEFAULT
-                    Encoding.Default,    // Default means ANSI. 
+                    Encoding.Default,    // Default means ANSI.
 #else
                     Encoding.ASCII,
 #endif

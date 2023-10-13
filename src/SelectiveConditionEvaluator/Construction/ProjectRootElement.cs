@@ -7,16 +7,15 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Eventing;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.Definition;
 using SelectiveConditionEvaluator.ElementLocation;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.ObjectModelRemoting.ConstructionObjectLinks;
-using InvalidProjectFileException = Microsoft.Build.Exceptions.InvalidProjectFileException;
+using SelectiveConditionEvaluator.Sdk;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Shared.FileSystem;
+using SelectiveConditionEvaluator.Xml;
+using InvalidProjectFileException = SelectiveConditionEvaluator.Errors.InvalidProjectFileException;
 
 #nullable disable
 

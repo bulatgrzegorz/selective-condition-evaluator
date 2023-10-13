@@ -4,8 +4,8 @@
 #nullable disable
 
 using System.Collections.Immutable;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.Construction;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.Evaluation
 {

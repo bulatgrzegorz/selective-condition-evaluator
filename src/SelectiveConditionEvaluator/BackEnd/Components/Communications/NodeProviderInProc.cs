@@ -6,11 +6,9 @@ using BuildParameters = Microsoft.Build.Execution.BuildParameters;
 #endif
 using System.Diagnostics;
 using System.Globalization;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Node;
-using NodeEngineShutdownReason = Microsoft.Build.Execution.NodeEngineShutdownReason;
+using SelectiveConditionEvaluator.Shared;
+using NodeEngineShutdownReason = SelectiveConditionEvaluator.Shared.NodeEngineShutdownReason;
 
 #nullable disable
 

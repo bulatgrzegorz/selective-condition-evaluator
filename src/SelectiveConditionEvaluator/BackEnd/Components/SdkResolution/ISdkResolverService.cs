@@ -1,13 +1,14 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using Microsoft.Build.Framework;
-using SelectiveConditionEvaluator.BackEnd.Components.Logging;
-using SelectiveConditionEvaluator.ElementLocation;
-
 #nullable disable
 
-namespace Microsoft.Build.BackEnd.SdkResolution
+using SelectiveConditionEvaluator.BackEnd.Components.Logging;
+using SelectiveConditionEvaluator.ElementLocation;
+using SelectiveConditionEvaluator.Sdk;
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator.BackEnd.Components.SdkResolution
 {
     /// <summary>
     /// An interface for services which resolve SDKs.
@@ -42,7 +43,7 @@ namespace Microsoft.Build.BackEnd.SdkResolution
         /// <param name="interactive">Indicates whether or not the resolver is allowed to be interactive.</param>
         /// <param name="isRunningInVisualStudio">Indicates whether or not the resolver is running in Visual Studio.</param>
         /// <param name="failOnUnresolvedSdk">Whether to throw an exception should the SDK fail to be resolved.</param>
-        /// <returns>An <see cref="SdkResult"/> containing information about the resolved SDK. If no resolver was able to resolve it, then <see cref="Framework.SdkResult.Success"/> == false. </returns>
-        SdkResult ResolveSdk(int submissionId, SdkReference sdk, LoggingContext loggingContext, ElementLocation sdkReferenceLocation, string solutionPath, string projectPath, bool interactive, bool isRunningInVisualStudio, bool failOnUnresolvedSdk);
+        /// <returns>An <see cref="SdkResult"/> containing information about the resolved SDK. If no resolver was able to resolve it, then <see cref="Sdk.SdkResult.Success"/> == false. </returns>
+        SdkResult ResolveSdk(int submissionId, SdkReference sdk, LoggingContext loggingContext, ElementLocation.ElementLocation sdkReferenceLocation, string solutionPath, string projectPath, bool interactive, bool isRunningInVisualStudio, bool failOnUnresolvedSdk);
     }
 }

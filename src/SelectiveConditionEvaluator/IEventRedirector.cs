@@ -3,7 +3,7 @@
 
 #nullable disable
 
-namespace Microsoft.Build.Framework
+namespace SelectiveConditionEvaluator
 {
     /// <summary>
     /// This interface is used to forward events to another loggers

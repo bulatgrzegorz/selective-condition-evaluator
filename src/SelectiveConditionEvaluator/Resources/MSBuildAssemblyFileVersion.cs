@@ -1,14 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Reflection;
-using Microsoft.VisualBasic;
-using Constants = SelectiveConditionEvaluator.Resources.Constants;
 
 #nullable disable
 
-namespace Microsoft.Build.Internal
+namespace SelectiveConditionEvaluator.Resources
 {
     /// <summary>
     /// Gets the <see cref="AssemblyFileVersionAttribute"/> of Microsoft.Build.dll.

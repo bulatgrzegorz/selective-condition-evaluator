@@ -3,10 +3,8 @@
 
 using System.Diagnostics;
 using System.Reflection;
-using Microsoft.Build.BackEnd.Logging;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
+using SelectiveConditionEvaluator.Shared;
 using ElementLocation = SelectiveConditionEvaluator.ElementLocation.ElementLocation;
 #if FEATURE_APPDOMAIN
 using System.Runtime.Remoting.Lifetime;
@@ -152,7 +150,7 @@ namespace SelectiveConditionEvaluator.Instance
         /// Logs an error event for the current task
         /// </summary>
         /// <param name="e">The event args</param>
-        public void LogErrorEvent(Microsoft.Build.Framework.BuildErrorEventArgs e)
+        public void LogErrorEvent(BuildErrorEventArgs e)
         {
             ErrorUtilities.VerifyThrowArgumentNull(e, nameof(e));
             VerifyActiveProxy();
@@ -173,7 +171,7 @@ namespace SelectiveConditionEvaluator.Instance
         /// Logs a warning event for the current task
         /// </summary>
         /// <param name="e">The event args</param>
-        public void LogWarningEvent(Microsoft.Build.Framework.BuildWarningEventArgs e)
+        public void LogWarningEvent(BuildWarningEventArgs e)
         {
             ErrorUtilities.VerifyThrowArgumentNull(e, nameof(e));
             VerifyActiveProxy();
@@ -215,7 +213,7 @@ namespace SelectiveConditionEvaluator.Instance
         /// Logs a custom event for the current task
         /// </summary>
         /// <param name="e">The event args</param>
-        public void LogCustomEvent(Microsoft.Build.Framework.CustomBuildEventArgs e)
+        public void LogCustomEvent(CustomBuildEventArgs e)
         {
             ErrorUtilities.VerifyThrowArgumentNull(e, nameof(e));
             VerifyActiveProxy();

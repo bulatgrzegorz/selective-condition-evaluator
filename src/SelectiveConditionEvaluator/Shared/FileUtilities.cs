@@ -1,28 +1,22 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 #if !CLR2COMPATIBILITY
-using System.Collections.Concurrent;
 #else
 using Microsoft.Build.Shared.Concurrent;
 #endif
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
-using Microsoft.Build.Framework;
-using SelectiveConditionEvaluator;
-using NativeMethods = SelectiveConditionEvaluator.NativeMethods;
+using SelectiveConditionEvaluator.Shared.FileSystem;
 
 #nullable disable
 
-namespace Microsoft.Build.Shared
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// This class contains utility methods for file IO.
@@ -72,7 +66,7 @@ namespace Microsoft.Build.Shared
             try
             {
                 string pathWithUpperCase = Path.Combine(Path.GetTempPath(), "CASESENSITIVETEST" + Guid.NewGuid().ToString("N"));
-                using (new FileStream(pathWithUpperCase, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None, 0x1000, FileOptions.DeleteOnClose))
+                using (new FileStream(pathWithUpperCase, FileMode.CreateNew, System.IO.FileAccess.ReadWrite, FileShare.None, 0x1000, FileOptions.DeleteOnClose))
                 {
                     string lowerCased = pathWithUpperCase.ToLowerInvariant();
                     return !File.Exists(lowerCased);
@@ -157,7 +151,7 @@ namespace Microsoft.Build.Shared
                     if (directoryPath.Length > 0)
                     {
                         DateTime lastModifiedTime;
-                        if (NativeMethods.GetLastWriteDirectoryUtcTime(directoryPath, out lastModifiedTime))
+                        if (SelectiveConditionEvaluator.NativeMethods.GetLastWriteDirectoryUtcTime(directoryPath, out lastModifiedTime))
                         {
                             builder.Append(lastModifiedTime.Ticks);
                             builder.Append('|');
@@ -561,9 +555,9 @@ namespace Microsoft.Build.Shared
 
             // Don't bother with arrays or properties or network paths, or those that
             // have no slashes.
-            if (NativeMethods.IsWindows || string.IsNullOrEmpty(value)
-                || value.StartsWith("$(", comparisonType) || value.StartsWith("@(", comparisonType)
-                || value.StartsWith("\\\\", comparisonType))
+            if (SelectiveConditionEvaluator.NativeMethods.IsWindows || string.IsNullOrEmpty(value)
+                                                                    || value.StartsWith("$(", comparisonType) || value.StartsWith("@(", comparisonType)
+                                                                    || value.StartsWith("\\\\", comparisonType))
             {
                 return value;
             }
@@ -582,7 +576,7 @@ namespace Microsoft.Build.Shared
         /// </summary>
         internal static ReadOnlyMemory<char> MaybeAdjustFilePath(ReadOnlyMemory<char> value, string baseDirectory = "")
         {
-            if (NativeMethods.IsWindows || value.IsEmpty)
+            if (SelectiveConditionEvaluator.NativeMethods.IsWindows || value.IsEmpty)
             {
                 return value;
             }
@@ -667,7 +661,7 @@ namespace Microsoft.Build.Shared
 
         internal static bool LooksLikeUnixFilePath(ReadOnlySpan<char> value, string baseDirectory = "")
         {
-            if (NativeMethods.IsWindows)
+            if (SelectiveConditionEvaluator.NativeMethods.IsWindows)
             {
                 return false;
             }
@@ -761,7 +755,7 @@ namespace Microsoft.Build.Shared
             // Data coming back from the filesystem into the engine, so time to escape it back.
             string fullPath = EscapingUtilities.Escape(NormalizePath(Path.Combine(currentDirectory, fileSpec)));
 
-            if (NativeMethods.IsWindows && !EndsWithSlash(fullPath))
+            if (SelectiveConditionEvaluator.NativeMethods.IsWindows && !EndsWithSlash(fullPath))
             {
                 if (FileUtilitiesRegex.IsDrivePattern(fileSpec) ||
                     FileUtilitiesRegex.IsUncPattern(fullPath))
@@ -1202,15 +1196,15 @@ namespace Microsoft.Build.Shared
         private static bool IsPathTooLong(string path)
         {
             // >= not > because MAX_PATH assumes a trailing null
-            return path.Length >= NativeMethods.MaxPath;
+            return path.Length >= SelectiveConditionEvaluator.NativeMethods.MaxPath;
         }
 
         private static bool IsPathTooLongIfRooted(string path)
         {
-            bool hasMaxPath = NativeMethods.HasMaxPath;
-            int maxPath = NativeMethods.MaxPath;
+            bool hasMaxPath = SelectiveConditionEvaluator.NativeMethods.HasMaxPath;
+            int maxPath = SelectiveConditionEvaluator.NativeMethods.MaxPath;
             // >= not > because MAX_PATH assumes a trailing null
-            return hasMaxPath && !IsRootedNoThrow(path) && NativeMethods.GetCurrentDirectory().Length + path.Length + 1 /* slash */ >= maxPath;
+            return hasMaxPath && !IsRootedNoThrow(path) && SelectiveConditionEvaluator.NativeMethods.GetCurrentDirectory().Length + path.Length + 1 /* slash */ >= maxPath;
         }
 
         /// <summary>
@@ -1399,7 +1393,7 @@ namespace Microsoft.Build.Shared
         {
             const int DefaultFileStreamBufferSize = 4096;
             FileMode mode = append ? FileMode.Append : FileMode.Create;
-            Stream fileStream = new FileStream(path, mode, FileAccess.Write, FileShare.Read, DefaultFileStreamBufferSize, FileOptions.SequentialScan);
+            Stream fileStream = new FileStream(path, mode, System.IO.FileAccess.Write, FileShare.Read, DefaultFileStreamBufferSize, FileOptions.SequentialScan);
             if (encoding == null)
             {
                 return new StreamWriter(fileStream);
@@ -1413,7 +1407,7 @@ namespace Microsoft.Build.Shared
         internal static StreamReader OpenRead(string path, Encoding encoding = null, bool detectEncodingFromByteOrderMarks = true)
         {
             const int DefaultFileStreamBufferSize = 4096;
-            Stream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, DefaultFileStreamBufferSize, FileOptions.SequentialScan);
+            Stream fileStream = new FileStream(path, FileMode.Open, System.IO.FileAccess.Read, FileShare.Read, DefaultFileStreamBufferSize, FileOptions.SequentialScan);
             if (encoding == null)
             {
                 return new StreamReader(fileStream);

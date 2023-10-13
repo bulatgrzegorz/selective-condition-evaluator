@@ -1,31 +1,22 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Eventing;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator.BackEnd.Components;
+using SelectiveConditionEvaluator.BackEnd.BuildManager;
+using SelectiveConditionEvaluator.BackEnd.Components.BuildRequestEngine;
 using SelectiveConditionEvaluator.BackEnd.Components.Caching;
-using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Instance;
-using BuildAbortedException = Microsoft.Build.Exceptions.BuildAbortedException;
+using SelectiveConditionEvaluator.Shared;
+using BuildAbortedException = SelectiveConditionEvaluator.BackEnd.Shared.BuildAbortedException;
 using ElementLocation = SelectiveConditionEvaluator.ElementLocation.ElementLocation;
 using ProjectLoggingContext = SelectiveConditionEvaluator.BackEnd.Components.Logging.ProjectLoggingContext;
 using TaskItem = SelectiveConditionEvaluator.Instance.ProjectItemInstance.TaskItem;
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder
 {
     /// <summary>
     /// The Target Builder is responsible for building a single target within a given project.
@@ -154,7 +145,7 @@ namespace Microsoft.Build.BackEnd
                 var targetExists = _projectInstance.Targets.TryGetValue(targetName, out ProjectTargetInstance targetInstance);
                 if (!targetExists && entry.Request.BuildRequestDataFlags.HasFlag(BuildRequestDataFlags.SkipNonexistentTargets))
                 {
-                    _projectLoggingContext.LogComment(Framework.MessageImportance.Low,
+                    _projectLoggingContext.LogComment(MessageImportance.Low,
                         "TargetSkippedWhenSkipNonexistentTargets", targetName);
                 }
                 else
@@ -247,7 +238,7 @@ namespace Microsoft.Build.BackEnd
         /// 2. The changes made by this target are NOT visible to the calling target.
         /// 3. Changes made by the calling target OVERRIDE changes made by this target.
         /// </remarks>
-        async Task<ITargetResult[]> ITargetBuilderCallback.LegacyCallTarget(string[] targets, bool continueOnError, ElementLocation taskLocation)
+        async Task<ITargetResult[]> ITargetBuilderCallback.LegacyCallTarget(string[] targets, bool continueOnError, ElementLocation.ElementLocation taskLocation)
         {
             List<TargetSpecification> targetToPush = new List<TargetSpecification>();
             ITargetResult[] results = new TargetResult[targets.Length];
@@ -326,7 +317,7 @@ namespace Microsoft.Build.BackEnd
         /// <summary>
         /// Forwarding implementation of BuildProjects
         /// </summary>
-        async Task<BuildResult[]> IRequestBuilderCallback.BuildProjects(string[] projectFiles, Microsoft.Build.Collections.PropertyDictionary<ProjectPropertyInstance>[] properties, string[] toolsVersions, string[] targets, bool waitForResults, bool skipNonexistentTargets)
+        async Task<BuildResult[]> IRequestBuilderCallback.BuildProjects(string[] projectFiles, PropertyDictionary<ProjectPropertyInstance>[] properties, string[] toolsVersions, string[] targets, bool waitForResults, bool skipNonexistentTargets)
         {
             return await _requestBuilderCallback.BuildProjects(projectFiles, properties, toolsVersions, targets, waitForResults, skipNonexistentTargets);
         }
@@ -680,7 +671,7 @@ namespace Microsoft.Build.BackEnd
                     }
                 }
 
-                ElementLocation targetLocation = targetSpecification.ReferenceLocation;
+                ElementLocation.ElementLocation targetLocation = targetSpecification.ReferenceLocation;
 
                 // See if this target is already building under a different build request.  If so, we need to wait.
                 int idOfAlreadyBuildingRequest = BuildRequest.InvalidGlobalRequestId;

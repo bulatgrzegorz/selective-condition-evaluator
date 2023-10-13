@@ -5,16 +5,11 @@
 // BACKWARD COMPATIBILITY FOR API USERS WHO HAVE NOT YET MOVED TO UPDATED APIS. PLEASE DO NOT SEND PULL
 // REQUESTS THAT CHANGE THIS FILE WITHOUT FIRST CHECKING WITH THE MAINTAINERS THAT THE FIX IS REQUIRED.
 
-using System;
 using System.Text;
-using System.IO;
+using SelectiveConditionEvaluator.Shared;
+using ResourceUtilities = SelectiveConditionEvaluator.Deprecated.Engine.Shared.ResourceUtilities;
 
-using Microsoft.Build.Framework;
-using Microsoft.Build.Logging;
-using Microsoft.Build.Shared;
-using ResourceUtilities = Microsoft.Build.BuildEngine.Shared.ResourceUtilities;
-
-namespace Microsoft.Build.BuildEngine
+namespace SelectiveConditionEvaluator.Logging
 {
     /// <summary>
     /// A specialization of the ConsoleLogger that logs to a file instead of the console.

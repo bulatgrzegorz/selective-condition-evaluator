@@ -6,9 +6,8 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.Instance
 {

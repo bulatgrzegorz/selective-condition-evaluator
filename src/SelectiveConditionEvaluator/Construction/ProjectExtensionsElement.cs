@@ -5,9 +5,9 @@
 
 using System.Diagnostics;
 using System.Xml;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.ElementLocation;
 using SelectiveConditionEvaluator.ObjectModelRemoting.ConstructionObjectLinks;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.Construction
 {
@@ -111,7 +111,7 @@ namespace SelectiveConditionEvaluator.Construction
                 XmlElement idElement = XmlElement[name];
 
                 // remove the xmlns attribute, because the IDE's not expecting that
-                return idElement == null ? String.Empty : Microsoft.Build.Internal.Utilities.RemoveXmlNamespace(idElement.InnerXml);
+                return idElement == null ? String.Empty : Utilities.Utilities.RemoveXmlNamespace(idElement.InnerXml);
             }
 
             set

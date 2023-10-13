@@ -4,9 +4,9 @@
 #nullable disable
 
 using System.Xml;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.Evaluation;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Xml;
 
 namespace SelectiveConditionEvaluator.ElementLocation
 {

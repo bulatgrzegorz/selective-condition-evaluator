@@ -1,20 +1,14 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Threading;
-using Microsoft.Build.Eventing;
-using SelectiveConditionEvaluator;
-
 #nullable disable
 
-namespace Microsoft.Build.Shared
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.InteropServices;
+
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// This class is used to load types from their assemblies.

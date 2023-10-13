@@ -1,11 +1,10 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Collections.Generic;
 using System.Runtime.Versioning;
 using Microsoft.Win32;
 
-namespace Microsoft.Build.Shared
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// Helper methods that simplify registry access.
@@ -18,7 +17,7 @@ namespace Microsoft.Build.Shared
         /// </summary>
         /// <param name="baseKey">The base registry key.</param>
         /// <param name="subkey">The subkey</param>
-        /// <returns>An enumeration of strings.</returns>        
+        /// <returns>An enumeration of strings.</returns>
         internal static IEnumerable<string>? GetSubKeyNames(RegistryKey baseKey, string subkey)
         {
             IEnumerable<string>? subKeys = null;

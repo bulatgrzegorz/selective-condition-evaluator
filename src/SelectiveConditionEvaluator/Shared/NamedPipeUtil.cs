@@ -2,10 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
-using System.IO;
-using SelectiveConditionEvaluator;
 
-namespace Microsoft.Build.Shared
+namespace SelectiveConditionEvaluator.Shared
 {
     internal static class NamedPipeUtil
     {
@@ -23,7 +21,7 @@ namespace Microsoft.Build.Shared
 
         internal static string GetPlatformSpecificPipeName(string pipeName)
         {
-            if (NativeMethods.IsUnixLike)
+            if (SelectiveConditionEvaluator.NativeMethods.IsUnixLike)
             {
                 // If we're on a Unix machine then named pipes are implemented using Unix Domain Sockets.
                 // Most Unix systems have a maximum path length limit for Unix Domain Sockets, with

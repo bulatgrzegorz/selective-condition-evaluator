@@ -3,9 +3,8 @@
 
 #nullable disable
 
-using Microsoft.Build.BackEnd.Logging;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.Evaluation.Conditionals
 {

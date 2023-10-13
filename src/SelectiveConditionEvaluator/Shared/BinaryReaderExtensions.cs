@@ -2,9 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Runtime.CompilerServices;
-using Microsoft.Build.Framework;
 
-namespace SelectiveConditionEvaluator
+namespace SelectiveConditionEvaluator.Shared
 {
     internal static class BinaryReaderExtensions
     {

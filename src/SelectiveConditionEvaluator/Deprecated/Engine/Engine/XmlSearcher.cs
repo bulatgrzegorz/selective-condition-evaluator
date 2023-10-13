@@ -5,13 +5,11 @@
 // BACKWARD COMPATIBILITY FOR API USERS WHO HAVE NOT YET MOVED TO UPDATED APIS. PLEASE DO NOT SEND PULL
 // REQUESTS THAT CHANGE THIS FILE WITHOUT FIRST CHECKING WITH THE MAINTAINERS THAT THE FIX IS REQUIRED.
 
-using System;
-using System.IO;
 using System.Xml;
-using Microsoft.Build.Shared;
-using XmlUtilities = Microsoft.Build.BuildEngine.Shared.XmlUtilities;
+using SelectiveConditionEvaluator.Shared;
+using XmlUtilities = SelectiveConditionEvaluator.Deprecated.Engine.Shared.XmlUtilities;
 
-namespace Microsoft.Build.BuildEngine
+namespace SelectiveConditionEvaluator.Deprecated.Engine.Engine
 {
     /// <summary>
     /// This class has static methods to determine line numbers and column numbers for given

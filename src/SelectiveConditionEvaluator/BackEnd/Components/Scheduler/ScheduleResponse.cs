@@ -4,7 +4,6 @@
 #nullable disable
 
 using System.Globalization;
-using Microsoft.Build.Execution;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Instance;
 

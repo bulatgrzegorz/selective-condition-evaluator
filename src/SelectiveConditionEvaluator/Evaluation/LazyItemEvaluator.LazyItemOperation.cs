@@ -5,10 +5,9 @@
 
 using System.Collections.Immutable;
 using System.Diagnostics;
-using Microsoft.Build.Eventing;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.Construction;
 using SelectiveConditionEvaluator.Evaluation.Conditionals;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.Evaluation
 {

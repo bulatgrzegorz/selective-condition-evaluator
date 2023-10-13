@@ -1,15 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
 #nullable disable
 
-namespace Microsoft.Build.Graph
+using System.Collections.Concurrent;
+
+namespace SelectiveConditionEvaluator.Graph
 {
     /// <summary>
     /// Provides deduping of expensive work by a key, or modeling of a set of deduped work that

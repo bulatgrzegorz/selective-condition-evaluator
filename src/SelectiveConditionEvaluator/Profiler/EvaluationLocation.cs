@@ -1,18 +1,15 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-
 #nullable disable
 
-namespace Microsoft.Build.Framework.Profiler
+namespace SelectiveConditionEvaluator.Profiler
 {
     /// <summary>
     /// Evaluation main phases used by the profiler
     /// </summary>
     /// <remarks>
-    /// Order matters since the profiler pretty printer orders profiled items from top to bottom using 
+    /// Order matters since the profiler pretty printer orders profiled items from top to bottom using
     /// the pass they belong to
     /// </remarks>
     public enum EvaluationPass : byte

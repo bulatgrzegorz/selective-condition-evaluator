@@ -1,37 +1,26 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.IO;
-using System.Threading;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.BackEnd.Components.Caching;
-using Microsoft.Build.BackEnd.Logging;
-using Microsoft.Build.BackEnd.SdkResolution;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
+using SelectiveConditionEvaluator.BackEnd.BuildManager;
 using SelectiveConditionEvaluator.BackEnd.Components;
 using SelectiveConditionEvaluator.BackEnd.Components.BuildRequestEngine;
 using SelectiveConditionEvaluator.BackEnd.Components.Caching;
 using SelectiveConditionEvaluator.BackEnd.Components.Communications;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
-using SelectiveConditionEvaluator.BackEnd.Node;
+using SelectiveConditionEvaluator.BackEnd.Components.SdkResolution;
 using SelectiveConditionEvaluator.BackEnd.Shared;
+using SelectiveConditionEvaluator.Definition;
 using SelectiveConditionEvaluator.Evaluation;
-using NativeMethods = Microsoft.Build.Framework.NativeMethods;
-using SdkResult = Microsoft.Build.BackEnd.SdkResolution.SdkResult;
+using SelectiveConditionEvaluator.Shared;
+using SdkResult = SelectiveConditionEvaluator.BackEnd.Components.SdkResolution.SdkResult;
 
 #nullable disable
 
-namespace Microsoft.Build.Execution
+namespace SelectiveConditionEvaluator.BackEnd.Node
 {
     /// <summary>
     /// This class represents an implementation of INode for out-of-proc nodes.
@@ -479,7 +468,7 @@ namespace Microsoft.Build.Execution
 
             // On Windows, a process holds a handle to the current directory,
             // so reset it away from a user-requested folder that may get deleted.
-            NativeMethods.SetCurrentDirectory(BuildEnvironmentHelper.Instance.CurrentMSBuildToolsDirectory);
+            Framework.NativeMethods.SetCurrentDirectory(BuildEnvironmentHelper.Instance.CurrentMSBuildToolsDirectory);
 
             // Restore the original environment.
             // If the node was never configured, this will be null.
@@ -714,12 +703,12 @@ namespace Microsoft.Build.Execution
             // Change to the startup directory
             try
             {
-                NativeMethods.SetCurrentDirectory(BuildParameters.StartupDirectory);
+                Framework.NativeMethods.SetCurrentDirectory(BuildParameters.StartupDirectory);
             }
             catch (DirectoryNotFoundException)
             {
                 // Somehow the startup directory vanished. This can happen if build was started from a USB Key and it was removed.
-                NativeMethods.SetCurrentDirectory(BuildEnvironmentHelper.Instance.CurrentMSBuildToolsDirectory);
+                Framework.NativeMethods.SetCurrentDirectory(BuildEnvironmentHelper.Instance.CurrentMSBuildToolsDirectory);
             }
 
             // Replicate the environment.  First, unset any environment variables set by the previous configuration.
@@ -865,7 +854,7 @@ namespace Microsoft.Build.Execution
                     bool lowPriority = priorityClass == ProcessPriorityClass.BelowNormal;
                     if (_nodeEndpoint.LowPriority != lowPriority)
                     {
-                        if (!lowPriority || NativeMethods.IsWindows)
+                        if (!lowPriority || Framework.NativeMethods.IsWindows)
                         {
                             Process.GetCurrentProcess().PriorityClass = lowPriority ? ProcessPriorityClass.Normal : ProcessPriorityClass.BelowNormal;
                         }

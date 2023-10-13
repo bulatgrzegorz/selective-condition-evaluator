@@ -1,26 +1,18 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Threading;
-using Microsoft.Build.BackEnd.Components.Caching;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Components;
 using SelectiveConditionEvaluator.BackEnd.Components.BuildRequestEngine;
+using SelectiveConditionEvaluator.BackEnd.Components.Caching;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
-using SelectiveConditionEvaluator.BackEnd.Node;
 using SelectiveConditionEvaluator.BackEnd.Shared;
-using NativeMethods = Microsoft.Build.Framework.NativeMethods;
+using SelectiveConditionEvaluator.Shared;
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Node
 {
     /// <summary>
     /// This class represents an implementation of INode for in-proc nodes.
@@ -144,7 +136,7 @@ namespace Microsoft.Build.BackEnd
                 var waitHandles = new WaitHandle[] { _shutdownEvent, _packetReceivedEvent };
 
                 // Get the current directory before doing work. We need this so we can restore the directory when the node shuts down.
-                _savedCurrentDirectory = NativeMethods.GetCurrentDirectory();
+                _savedCurrentDirectory = Framework.NativeMethods.GetCurrentDirectory();
                 while (true)
                 {
                     int index = WaitHandle.WaitAny(waitHandles);
@@ -337,7 +329,7 @@ namespace Microsoft.Build.BackEnd
             if (_componentHost.BuildParameters.SaveOperatingEnvironment)
             {
                 // Restore the original current directory.
-                NativeMethods.SetCurrentDirectory(_savedCurrentDirectory);
+                Framework.NativeMethods.SetCurrentDirectory(_savedCurrentDirectory);
 
                 // Restore the original environment.
                 foreach (KeyValuePair<string, string> entry in CommunicationsUtilities.GetEnvironmentVariables())
@@ -480,7 +472,7 @@ namespace Microsoft.Build.BackEnd
             _savedEnvironment = CommunicationsUtilities.GetEnvironmentVariables();
 
             // Save the current directory.
-            _savedCurrentDirectory = NativeMethods.GetCurrentDirectory();
+            _savedCurrentDirectory = Framework.NativeMethods.GetCurrentDirectory();
 
             // Set the node id.
             _componentHost.BuildParameters.NodeId = configuration.NodeId;

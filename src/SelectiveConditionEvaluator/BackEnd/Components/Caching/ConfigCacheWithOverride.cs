@@ -4,9 +4,8 @@
 #nullable disable
 
 using System.Collections;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Shared;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.BackEnd.Components.Caching
 {

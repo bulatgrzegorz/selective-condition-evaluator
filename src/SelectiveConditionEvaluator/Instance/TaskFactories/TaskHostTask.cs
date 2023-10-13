@@ -6,17 +6,12 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Reflection;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.BackEnd.Logging;
-using Microsoft.Build.Exceptions;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd;
 using SelectiveConditionEvaluator.BackEnd.Components;
 using SelectiveConditionEvaluator.BackEnd.Components.Communications;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 using SelectiveConditionEvaluator.BackEnd.Shared;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.Instance.TaskFactories
 {

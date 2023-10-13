@@ -1,20 +1,13 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.Build.BuildEngine.Shared;
-using Microsoft.Build.Framework;
-using SelectiveConditionEvaluator;
-using NativeMethods = SelectiveConditionEvaluator.NativeMethods;
+using SelectiveConditionEvaluator.Shared.FileSystem;
 
 #nullable disable
 
-namespace Microsoft.Build.Shared
+namespace SelectiveConditionEvaluator.Shared
 {
     internal sealed class BuildEnvironmentHelper
     {
@@ -137,7 +130,7 @@ namespace Microsoft.Build.Shared
 
         private static BuildEnvironment TryFromVisualStudioProcess()
         {
-            if (!NativeMethods.IsWindows)
+            if (!SelectiveConditionEvaluator.NativeMethods.IsWindows)
             {
                 return null;
             }
@@ -168,7 +161,7 @@ namespace Microsoft.Build.Shared
             }
 
             // First check if we're in a VS installation
-            if (NativeMethods.IsWindows &&
+            if (SelectiveConditionEvaluator.NativeMethods.IsWindows &&
                 Regex.IsMatch(msBuildExe, $@".*\\MSBuild\\{CurrentToolsVersion}\\Bin\\.*MSBuild(?:TaskHost)?\.exe", RegexOptions.IgnoreCase))
             {
                 return new BuildEnvironment(
@@ -238,7 +231,7 @@ namespace Microsoft.Build.Shared
                 ? $@".*\\MSBuild\\({CurrentToolsVersion}|\d+\.0)\\Bin\\.*"
                 : $@".*\\MSBuild\\{CurrentToolsVersion}\\Bin\\.*";
 
-            if (NativeMethods.IsWindows &&
+            if (SelectiveConditionEvaluator.NativeMethods.IsWindows &&
                 Regex.IsMatch(msbuildExe, msBuildPathPattern, RegexOptions.IgnoreCase))
             {
                 string visualStudioRoot = GetVsRootFromMSBuildAssembly(msbuildExe);
@@ -364,8 +357,8 @@ namespace Microsoft.Build.Shared
                 "MSBuild",
                 CurrentToolsVersion,
                 "Bin",
-                NativeMethods.ProcessorArchitecture == NativeMethods.ProcessorArchitectures.X64 ? "amd64" :
-                NativeMethods.ProcessorArchitecture == NativeMethods.ProcessorArchitectures.ARM64 ? "arm64" : string.Empty,
+                SelectiveConditionEvaluator.NativeMethods.ProcessorArchitecture == SelectiveConditionEvaluator.NativeMethods.ProcessorArchitectures.X64 ? "amd64" :
+                SelectiveConditionEvaluator.NativeMethods.ProcessorArchitecture == SelectiveConditionEvaluator.NativeMethods.ProcessorArchitectures.ARM64 ? "arm64" : string.Empty,
                 "MSBuild.exe");
         }
 
@@ -541,8 +534,8 @@ namespace Microsoft.Build.Shared
             VisualStudioInstallRootDirectory = visualStudioPath;
 
 #if !NO_FRAMEWORK_IVT
-            Framework.BuildEnvironmentState.s_runningTests = runningTests;
-            Framework.BuildEnvironmentState.s_runningInVisualStudio = runningInVisualStudio;
+            BuildEnvironmentState.s_runningTests = runningTests;
+            BuildEnvironmentState.s_runningInVisualStudio = runningInVisualStudio;
 #endif
 
             if (!string.IsNullOrEmpty(currentMSBuildExePath))
@@ -568,12 +561,12 @@ namespace Microsoft.Build.Shared
             if (mode == BuildEnvironmentMode.VisualStudio)
             {
                 // In Visual Studio, the entry-point MSBuild.exe is often from an arch-specific subfolder
-                MSBuildToolsDirectoryRoot = NativeMethods.ProcessorArchitecture switch
+                MSBuildToolsDirectoryRoot = SelectiveConditionEvaluator.NativeMethods.ProcessorArchitecture switch
                 {
-                    NativeMethods.ProcessorArchitectures.X86 => CurrentMSBuildToolsDirectory,
-                    NativeMethods.ProcessorArchitectures.X64 or NativeMethods.ProcessorArchitectures.ARM64
+                    SelectiveConditionEvaluator.NativeMethods.ProcessorArchitectures.X86 => CurrentMSBuildToolsDirectory,
+                    SelectiveConditionEvaluator.NativeMethods.ProcessorArchitectures.X64 or SelectiveConditionEvaluator.NativeMethods.ProcessorArchitectures.ARM64
                         => currentToolsDirectory.Parent?.FullName,
-                    _ => throw new InternalErrorException("Unknown processor architecture " + NativeMethods.ProcessorArchitecture),
+                    _ => throw new InternalErrorException("Unknown processor architecture " + SelectiveConditionEvaluator.NativeMethods.ProcessorArchitecture),
                 };
             }
             else

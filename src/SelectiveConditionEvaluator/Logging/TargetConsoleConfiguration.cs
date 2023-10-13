@@ -2,9 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 #nullable disable
-using System;
-
-namespace Microsoft.Build.BackEnd.Logging;
+namespace SelectiveConditionEvaluator.Logging;
 
 /// <summary>
 /// Console configuration of target Console at which we will render output.

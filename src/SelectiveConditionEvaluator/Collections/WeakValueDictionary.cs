@@ -5,7 +5,7 @@
 
 using System.Collections;
 using System.Diagnostics;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.Collections
 {

@@ -3,7 +3,7 @@
 
 #nullable disable
 
-namespace SelectiveConditionEvaluator
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// Constants that we want to be shareable across all our assemblies.

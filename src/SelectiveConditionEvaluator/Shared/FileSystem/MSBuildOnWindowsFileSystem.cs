@@ -5,7 +5,7 @@
 
 using System.Runtime.Versioning;
 
-namespace SelectiveConditionEvaluator
+namespace SelectiveConditionEvaluator.Shared.FileSystem
 {
     /// <summary>
     /// Implementation of file system operations on windows. Combination of native and managed implementations.

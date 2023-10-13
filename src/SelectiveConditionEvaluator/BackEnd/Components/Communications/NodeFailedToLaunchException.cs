@@ -1,16 +1,15 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Runtime.Serialization;
-using Microsoft.Build.Framework.BuildException;
+using SelectiveConditionEvaluator.BuildException;
 #if FEATURE_SECURITY_PERMISSIONS
 using System.Security.Permissions;
 #endif
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Components.Communications
 {
     /// <summary>
     /// An exception representing the case where a TaskHost node failed to launch.

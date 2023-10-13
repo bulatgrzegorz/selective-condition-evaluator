@@ -2,41 +2,34 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections;
-using Microsoft.Build.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Xml;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.BackEnd.Logging;
-using Microsoft.Build.BackEnd.SdkResolution;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Construction;
-using Microsoft.Build.Definition;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Execution;
-using Microsoft.Build.FileSystem;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd;
+using SelectiveConditionEvaluator.BackEnd.BuildManager;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
+using SelectiveConditionEvaluator.BackEnd.Components.SdkResolution;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Collections.RetrievableEntryHashSet;
 using SelectiveConditionEvaluator.Construction;
 using SelectiveConditionEvaluator.Construction.Solution;
+using SelectiveConditionEvaluator.Definition;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Evaluation.Conditionals;
 using SelectiveConditionEvaluator.Evaluation.Context;
+using SelectiveConditionEvaluator.FileSystem;
 using SelectiveConditionEvaluator.Resources;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Shared.FileSystem;
 using Constants = Microsoft.VisualBasic.Constants;
 using ForwardingLoggerRecord = SelectiveConditionEvaluator.BackEnd.Components.Logging.ForwardingLoggerRecord;
 using ObjectModel = System.Collections.ObjectModel;
 using ProjectItemInstanceFactory = SelectiveConditionEvaluator.Instance.ProjectItemInstance.TaskItem.ProjectItemInstanceFactory;
-using SdkResult = Microsoft.Build.BackEnd.SdkResolution.SdkResult;
+using SdkResult = SelectiveConditionEvaluator.BackEnd.Components.SdkResolution.SdkResult;
 
 
 #nullable disable
@@ -544,7 +537,7 @@ namespace SelectiveConditionEvaluator.Instance
         /// Constructor called by Project's constructor to create a fresh instance.
         /// Properties and items are cloned immediately and only the instance data is stored.
         /// </summary>
-        internal ProjectInstance(Microsoft.Build.Evaluation.Project.Data data, string directory, string fullPath, HostServices hostServices, PropertyDictionary<ProjectPropertyInstance> environmentVariableProperties, ProjectInstanceSettings settings)
+        internal ProjectInstance(Project.Data data, string directory, string fullPath, HostServices hostServices, PropertyDictionary<ProjectPropertyInstance> environmentVariableProperties, ProjectInstanceSettings settings)
         {
             ErrorUtilities.VerifyThrowInternalNull(data, nameof(data));
             ErrorUtilities.VerifyThrowInternalLength(directory, nameof(directory));
@@ -2315,7 +2308,7 @@ namespace SelectiveConditionEvaluator.Instance
                         toolsVersion = visualStudioVersion.ToString(CultureInfo.InvariantCulture) + ".0";
                     }
 
-                    string toolsVersionToUse = Utilities.GenerateToolsVersionToUse(
+                    string toolsVersionToUse = Utilities.Utilities.GenerateToolsVersionToUse(
                         explicitToolsVersion: null,
                         toolsVersionFromProject: FileUtilities.IsSolutionFilterFilename(projectFile) ? "Current" : toolsVersion,
                         getToolset: buildParameters.GetToolset,
@@ -2754,7 +2747,7 @@ namespace SelectiveConditionEvaluator.Instance
                 toolsVersionLocation = xml.ToolsVersionLocation;
             }
 
-            var toolsVersionToUse = Utilities.GenerateToolsVersionToUse(
+            var toolsVersionToUse = Utilities.Utilities.GenerateToolsVersionToUse(
                 explicitToolsVersion,
                 xml.ToolsVersion,
                 buildParameters.GetToolset,
@@ -2767,7 +2760,7 @@ namespace SelectiveConditionEvaluator.Instance
 
             if (this.Toolset == null)
             {
-                string toolsVersionList = Utilities.CreateToolsVersionListString(buildParameters.Toolsets);
+                string toolsVersionList = Utilities.Utilities.CreateToolsVersionListString(buildParameters.Toolsets);
                 ProjectErrorUtilities.ThrowInvalidProject(toolsVersionLocation, "UnrecognizedToolsVersion", toolsVersionToUse, toolsVersionList);
             }
 

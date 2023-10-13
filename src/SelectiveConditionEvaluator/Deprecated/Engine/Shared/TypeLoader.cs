@@ -5,13 +5,10 @@
 // BACKWARD COMPATIBILITY FOR API USERS WHO HAVE NOT YET MOVED TO UPDATED APIS. PLEASE DO NOT SEND PULL
 // REQUESTS THAT CHANGE THIS FILE WITHOUT FIRST CHECKING WITH THE MAINTAINERS THAT THE FIX IS REQUIRED.
 
-using System;
-using System.IO;
 using System.Reflection;
-using System.Collections.Generic;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.Shared;
 
-namespace Microsoft.Build.BuildEngine.Shared
+namespace SelectiveConditionEvaluator.Deprecated.Engine.Shared
 {
     /// <summary>
     /// This class is used to load types from their assemblies.

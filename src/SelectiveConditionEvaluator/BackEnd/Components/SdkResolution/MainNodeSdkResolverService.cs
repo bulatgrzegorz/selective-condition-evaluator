@@ -1,17 +1,15 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator.BackEnd.Components;
-using SelectiveConditionEvaluator.BackEnd.Components.Communications;
-using SelectiveConditionEvaluator.BackEnd.Components.Logging;
-using SelectiveConditionEvaluator.ElementLocation;
-
 #nullable disable
 
-namespace Microsoft.Build.BackEnd.SdkResolution
+using SelectiveConditionEvaluator.BackEnd.Components.Communications;
+using SelectiveConditionEvaluator.BackEnd.Components.Logging;
+using SelectiveConditionEvaluator.Definition;
+using SelectiveConditionEvaluator.Sdk;
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator.BackEnd.Components.SdkResolution
 {
     /// <summary>
     /// An implementation of <see cref="ISdkResolverService"/> that is hosted in the main node for multi-proc builds.  This instance of the service
@@ -95,7 +93,7 @@ namespace Microsoft.Build.BackEnd.SdkResolution
         }
 
         /// <inheritdoc cref="ISdkResolverService.ResolveSdk"/>
-        public override SdkResult ResolveSdk(int submissionId, SdkReference sdk, LoggingContext loggingContext, ElementLocation sdkReferenceLocation, string solutionPath, string projectPath, bool interactive, bool isRunningInVisualStudio, bool failOnUnresolvedSdk)
+        public override SdkResult ResolveSdk(int submissionId, SdkReference sdk, LoggingContext loggingContext, ElementLocation.ElementLocation sdkReferenceLocation, string solutionPath, string projectPath, bool interactive, bool isRunningInVisualStudio, bool failOnUnresolvedSdk)
         {
             ErrorUtilities.VerifyThrowInternalNull(sdk, nameof(sdk));
             ErrorUtilities.VerifyThrowInternalNull(loggingContext, nameof(loggingContext));

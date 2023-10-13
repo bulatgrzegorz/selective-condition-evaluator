@@ -1,20 +1,17 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Configuration;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.Collections;
-using SelectiveConditionEvaluator.ElementLocation;
 using SelectiveConditionEvaluator.Instance;
-using ErrorUtilities = Microsoft.Build.Shared.ErrorUtilities;
-using InvalidToolsetDefinitionException = Microsoft.Build.Exceptions.InvalidToolsetDefinitionException;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Shared.FileSystem;
+using ErrorUtilities = SelectiveConditionEvaluator.Shared.ErrorUtilities;
+using InvalidToolsetDefinitionException = SelectiveConditionEvaluator.Errors.InvalidToolsetDefinitionException;
 
 #nullable disable
 
-namespace Microsoft.Build.Evaluation
+namespace SelectiveConditionEvaluator.Definition
 {
     /// <summary>
     /// Class used to read toolset configurations.
@@ -84,7 +81,7 @@ namespace Microsoft.Build.Evaluation
                 {
                     foreach (ToolsetElement toolset in ConfigurationSection.Toolsets)
                     {
-                        ElementLocation location = ElementLocation.Create(
+                        ElementLocation.ElementLocation location = ElementLocation.ElementLocation.Create(
                             toolset.ElementInformation.Source,
                             toolset.ElementInformation.LineNumber,
                             0);
@@ -138,7 +135,7 @@ namespace Microsoft.Build.Evaluation
                         // ConfigurationException is obsolete, but we catch it rather than
                         // ConfigurationErrorsException (which is what we throw below) because it is more
                         // general and we don't want to miss catching some other derived exception.
-                        InvalidToolsetDefinitionException.Throw(ex, "ConfigFileReadError", ElementLocation.Create(ex.Source, ex.Line, 0).LocationString, ex.BareMessage);
+                        InvalidToolsetDefinitionException.Throw(ex, "ConfigFileReadError", ElementLocation.ElementLocation.Create(ex.Source, ex.Line, 0).LocationString, ex.BareMessage);
                     }
                     finally
                     {
@@ -164,7 +161,7 @@ namespace Microsoft.Build.Evaluation
 
             foreach (ToolsetElement.PropertyElement propertyElement in toolsetElement.PropertyElements)
             {
-                ElementLocation location = ElementLocation.Create(propertyElement.ElementInformation.Source, propertyElement.ElementInformation.LineNumber, 0);
+                ElementLocation.ElementLocation location = ElementLocation.ElementLocation.Create(propertyElement.ElementInformation.Source, propertyElement.ElementInformation.LineNumber, 0);
 
                 if (propertyElement.Name?.Length == 0)
                 {

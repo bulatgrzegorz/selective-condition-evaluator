@@ -3,7 +3,7 @@
 
 #nullable disable
 
-namespace Microsoft.Build.Framework
+namespace SelectiveConditionEvaluator.Sdk
 {
     /// <summary>
     /// An abstract interface for classes that can resolve a Software Development Kit (SDK).
@@ -31,11 +31,11 @@ namespace Microsoft.Build.Framework
         /// An <see cref="SdkResult" /> containing the resolved SDKs or associated error / reason
         /// the SDK could not be resolved.  Return <see langword="null"/> if the resolver is not
         /// applicable for a particular <see cref="SdkReference"/>.
-        /// </returns>   
+        /// </returns>
         /// <remarks>
         ///  Note: You must use <see cref="SdkResultFactory"/> to return a result.
         ///  </remarks>
-        /// 
+        ///
         public abstract SdkResult Resolve(SdkReference sdkReference,
                                           SdkResolverContext resolverContext,
                                           SdkResultFactory factory);

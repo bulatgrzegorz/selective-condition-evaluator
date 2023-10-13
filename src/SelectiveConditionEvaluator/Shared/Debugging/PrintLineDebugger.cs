@@ -3,13 +3,11 @@
 
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
 using CommonWriterType = System.Action<string, string, System.Collections.Generic.IEnumerable<string>>;
 
 #nullable disable
 
-namespace SelectiveConditionEvaluator
+namespace SelectiveConditionEvaluator.Shared.Debugging
 {
     /// <summary>
     ///     A class to help with printline debugging in difficult environments like CI, or when debugging msbuild through other

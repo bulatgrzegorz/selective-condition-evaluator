@@ -1,16 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Diagnostics;
 using System.Text;
-#if DEBUG && !CLR2COMPATIBILITY && !MICROSOFT_BUILD_ENGINE_OM_UNITTESTS
-using Microsoft.Build.Eventing;
-#endif
 
 #nullable disable
 
-namespace Microsoft.Build.Framework
+namespace SelectiveConditionEvaluator
 {
     /// <summary>
     /// A cached reusable instance of StringBuilder.

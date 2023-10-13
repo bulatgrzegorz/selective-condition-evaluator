@@ -1,16 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Shared;
-
 #nullable disable
 
-namespace Microsoft.Build.Execution
+using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator.BackEnd.BuildManager
 {
     /// <summary>
     /// This class represents the data which is used for legacy threading semantics for the build
@@ -19,10 +15,10 @@ namespace Microsoft.Build.Execution
     {
         #region Fields
         /// <summary>
-        /// Store the pair of start/end events used by a particular submission to track their ownership 
-        /// of the legacy thread. 
-        /// Item1: Start event, tracks when the submission has permission to start building. 
-        /// Item2: End event, signalled when that submission is no longer using the legacy thread. 
+        /// Store the pair of start/end events used by a particular submission to track their ownership
+        /// of the legacy thread.
+        /// Item1: Start event, tracks when the submission has permission to start building.
+        /// Item2: End event, signalled when that submission is no longer using the legacy thread.
         /// </summary>
         private readonly IDictionary<int, Tuple<AutoResetEvent, ManualResetEvent>> _legacyThreadingEventsById = new Dictionary<int, Tuple<AutoResetEvent, ManualResetEvent>>();
 
@@ -37,8 +33,8 @@ namespace Microsoft.Build.Execution
         private RequestBuilder _instanceForMainThread;
 
         /// <summary>
-        /// Lock object for startNewRequestBuilderMainThreadEventsById, since it's possible for multiple submissions to be 
-        /// submitted at the same time. 
+        /// Lock object for startNewRequestBuilderMainThreadEventsById, since it's possible for multiple submissions to be
+        /// submitted at the same time.
         /// </summary>
         private readonly Object _legacyThreadingEventsLock = new Object();
         #endregion
@@ -79,7 +75,7 @@ namespace Microsoft.Build.Execution
         #endregion
 
         /// <summary>
-        /// Given a submission ID, assign it "start" and "finish" events to track its use of 
+        /// Given a submission ID, assign it "start" and "finish" events to track its use of
         /// the legacy thread.
         /// </summary>
         internal void RegisterSubmissionForLegacyThread(int submissionId)
@@ -95,8 +91,8 @@ namespace Microsoft.Build.Execution
         }
 
         /// <summary>
-        /// This submission is completely done with the legacy thread, so unregister it 
-        /// from the dictionary so that we don't leave random events lying around. 
+        /// This submission is completely done with the legacy thread, so unregister it
+        /// from the dictionary so that we don't leave random events lying around.
         /// </summary>
         internal void UnregisterSubmissionForLegacyThread(int submissionId)
         {
@@ -109,8 +105,8 @@ namespace Microsoft.Build.Execution
         }
 
         /// <summary>
-        /// Given a submission ID, return the event being used to track when that submission is ready 
-        /// to be executed on the legacy thread. 
+        /// Given a submission ID, return the event being used to track when that submission is ready
+        /// to be executed on the legacy thread.
         /// </summary>
         internal WaitHandle GetStartRequestBuilderMainThreadEventForSubmission(int submissionId)
         {
@@ -127,8 +123,8 @@ namespace Microsoft.Build.Execution
         }
 
         /// <summary>
-        /// Given a submission ID, return the event being used to track when that submission is ready 
-        /// to be executed on the legacy thread. 
+        /// Given a submission ID, return the event being used to track when that submission is ready
+        /// to be executed on the legacy thread.
         /// </summary>
         internal Task GetLegacyThreadInactiveTask(int submissionId)
         {

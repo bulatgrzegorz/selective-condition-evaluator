@@ -1,13 +1,9 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Collections.Generic;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator.BackEnd;
-
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// Implementation of INodePacketFactory as a helper class for classes which expose this interface publicly.

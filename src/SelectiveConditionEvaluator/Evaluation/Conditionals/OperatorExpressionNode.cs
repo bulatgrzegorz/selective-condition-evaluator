@@ -3,7 +3,6 @@
 
 #nullable disable
 
-using Microsoft.Build.BackEnd.Logging;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 
 namespace SelectiveConditionEvaluator.Evaluation.Conditionals
@@ -52,7 +51,7 @@ namespace SelectiveConditionEvaluator.Evaluation.Conditionals
         }
 
         /// <summary>
-        /// If any expression nodes cache any state for the duration of evaluation, 
+        /// If any expression nodes cache any state for the duration of evaluation,
         /// now's the time to clean it up
         /// </summary>
         internal override void ResetState()

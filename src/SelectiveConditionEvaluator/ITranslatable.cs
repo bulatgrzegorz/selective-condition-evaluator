@@ -3,7 +3,7 @@
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator
 {
     /// <summary>
     /// An interface representing an object which may be serialized by the node packet serializer.

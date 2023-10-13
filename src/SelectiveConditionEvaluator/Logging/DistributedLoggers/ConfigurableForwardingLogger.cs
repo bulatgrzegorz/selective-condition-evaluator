@@ -5,14 +5,9 @@
 // BACKWARD COMPATIBILITY FOR API USERS WHO HAVE NOT YET MOVED TO UPDATED APIS. PLEASE DO NOT SEND PULL
 // REQUESTS THAT CHANGE THIS FILE WITHOUT FIRST CHECKING WITH THE MAINTAINERS THAT THE FIX IS REQUIRED.
 
-using System;
-using System.Collections.Generic;
+using SelectiveConditionEvaluator.Shared;
 
-using Microsoft.Build.Framework;
-using Microsoft.Build.BuildEngine.Shared;
-using Microsoft.Build.Shared;
-
-namespace Microsoft.Build.BuildEngine
+namespace SelectiveConditionEvaluator.Logging.DistributedLoggers
 {
     /// <summary>
     /// Logger that forwards events to a central logger (e.g ConsoleLogger)

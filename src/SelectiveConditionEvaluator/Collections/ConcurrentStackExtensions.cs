@@ -4,7 +4,7 @@
 #nullable disable
 
 using System.Collections.Concurrent;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.Collections
 {

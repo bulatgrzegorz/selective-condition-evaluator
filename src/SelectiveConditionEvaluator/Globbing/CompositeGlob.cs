@@ -2,14 +2,13 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using Microsoft.Build.Shared;
-
 #nullable disable
 
-namespace Microsoft.Build.Globbing
+using System.Collections.Immutable;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Utilities;
+
+namespace SelectiveConditionEvaluator.Globbing
 {
     /// <summary>
     ///     A composite glob that returns a match for an input if any of its

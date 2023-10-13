@@ -1,13 +1,11 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Collections.Generic;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Shared;
-
 #nullable disable
 
-namespace Microsoft.Build.Evaluation
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator.Definition
 {
     /// <summary>
     /// Class representing a reference to a project import path with property fall-back

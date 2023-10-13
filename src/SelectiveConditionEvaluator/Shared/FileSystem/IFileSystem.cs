@@ -3,7 +3,7 @@
 
 #nullable disable
 
-namespace SelectiveConditionEvaluator
+namespace SelectiveConditionEvaluator.Shared.FileSystem
 {
 
     /*

@@ -2,12 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections;
-using Microsoft.Build.BuildEngine.Shared;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Framework.Profiler;
-using Microsoft.Build.Shared;
-using InvalidProjectFileException = Microsoft.Build.Exceptions.InvalidProjectFileException;
-using LoggerDescription = Microsoft.Build.Logging.LoggerDescription;
+using SelectiveConditionEvaluator.Profiler;
+using SelectiveConditionEvaluator.Shared;
+using InvalidProjectFileException = SelectiveConditionEvaluator.Errors.InvalidProjectFileException;
+using LoggerDescription = SelectiveConditionEvaluator.Logging.LoggerDescription;
 using TaskItem = SelectiveConditionEvaluator.Instance.ProjectItemInstance.TaskItem;
 
 #nullable disable

@@ -5,16 +5,13 @@
 // BACKWARD COMPATIBILITY FOR API USERS WHO HAVE NOT YET MOVED TO UPDATED APIS. PLEASE DO NOT SEND PULL
 // REQUESTS THAT CHANGE THIS FILE WITHOUT FIRST CHECKING WITH THE MAINTAINERS THAT THE FIX IS REQUIRED.
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 using System.Security;
 using System.Text;
 using System.Xml;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.Deprecated.Engine.Shared;
 
-namespace Microsoft.Build.BuildEngine.Shared
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <remarks>
     /// An enumeration defining the different types of projects we might find in an SLN.
@@ -247,7 +244,7 @@ namespace Microsoft.Build.BuildEngine.Shared
                 // but we need to find it amongst the other types of XmlNode at the root.
                 foreach (XmlNode childNode in projectDocument.ChildNodes)
                 {
-                    if (XmlUtilities.IsXmlRootElement(childNode))
+                    if (Deprecated.Engine.Shared.XmlUtilities.IsXmlRootElement(childNode))
                     {
                         mainProjectElement = (XmlElement)childNode;
                         break;

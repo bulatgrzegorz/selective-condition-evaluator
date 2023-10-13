@@ -3,7 +3,7 @@
 
 #nullable disable
 
-namespace Microsoft.Build.Framework
+namespace SelectiveConditionEvaluator
 {
     /// <summary>
     /// This interface extends <see cref="IBuildEngine9" /> to provide a reference to the <see cref="EngineServices" /> class.

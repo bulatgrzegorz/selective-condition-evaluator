@@ -5,8 +5,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.Instance
 {

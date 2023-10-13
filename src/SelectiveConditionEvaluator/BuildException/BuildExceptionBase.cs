@@ -1,16 +1,11 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Runtime.Serialization;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
+using SelectiveConditionEvaluator.Shared;
 
-namespace Microsoft.Build.Framework.BuildException;
+namespace SelectiveConditionEvaluator.BuildException;
 
 public abstract class BuildExceptionBase : Exception
 {

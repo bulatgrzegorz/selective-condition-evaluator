@@ -3,7 +3,7 @@
 
 using SelectiveConditionEvaluator.FileAccess;
 
-namespace Microsoft.Build.Framework
+namespace SelectiveConditionEvaluator
 {
     /// <summary>
     /// Exposes build engine functionality that was made available in newer versions of MSBuild.

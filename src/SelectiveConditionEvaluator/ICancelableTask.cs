@@ -3,7 +3,7 @@
 
 #nullable disable
 
-namespace Microsoft.Build.Framework
+namespace SelectiveConditionEvaluator
 {
     /// <summary>
     /// Interface for tasks which can be cancelled.

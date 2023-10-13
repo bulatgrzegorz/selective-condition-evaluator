@@ -2,8 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
-using Microsoft.Build.BackEnd;
 using SelectiveConditionEvaluator.BackEnd.Node;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.BackEnd.Components.Communications
 {

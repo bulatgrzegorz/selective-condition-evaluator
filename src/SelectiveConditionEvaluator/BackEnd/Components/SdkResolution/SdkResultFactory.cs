@@ -1,20 +1,18 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Collections.Generic;
-using Microsoft.Build.Framework;
-using SdkReference = Microsoft.Build.Framework.SdkReference;
-using SdkResultBase = Microsoft.Build.Framework.SdkResult;
-using SdkResultFactoryBase = Microsoft.Build.Framework.SdkResultFactory;
+using SelectiveConditionEvaluator.Sdk;
+using SdkReference = SelectiveConditionEvaluator.Sdk.SdkReference;
+using SdkResultBase = SelectiveConditionEvaluator.Sdk.SdkResult;
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd.SdkResolution
+namespace SelectiveConditionEvaluator.BackEnd.Components.SdkResolution
 {
     /// <summary>
-    /// An internal implementation of <see cref="Microsoft.Build.Framework.SdkResultFactory"/>.
+    /// An internal implementation of <see cref="Sdk.SdkResultFactory"/>.
     /// </summary>
-    internal class SdkResultFactory : SdkResultFactoryBase
+    internal class SdkResultFactory : Sdk.SdkResultFactory
     {
         private readonly SdkReference _sdkReference;
 

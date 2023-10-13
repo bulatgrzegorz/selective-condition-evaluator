@@ -1,20 +1,17 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Runtime.Serialization;
-#if FEATURE_SECURITY_PERMISSIONS
-using System.Security.Permissions;
-#endif
 
-using Microsoft.Build.Shared;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Framework.BuildException;
-using System.Collections.Generic;
 
 #nullable disable
 
-namespace Microsoft.Build.Exceptions
+using System.Runtime.Serialization;
+using SelectiveConditionEvaluator.BuildException;
+using SelectiveConditionEvaluator.Shared;
+#if FEATURE_SECURITY_PERMISSIONS
+using System.Security.Permissions;
+#endif
+namespace SelectiveConditionEvaluator.Errors
 {
     /// <summary>
     /// This exception is used to wrap an unhandled exception from a logger. This exception aborts the build, and it can only be

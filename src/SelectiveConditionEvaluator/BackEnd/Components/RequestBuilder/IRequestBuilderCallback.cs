@@ -1,15 +1,13 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Threading.Tasks;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Execution;
+#nullable disable
+
+using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Instance;
 
-#nullable disable
-
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder
 {
     /// <summary>
     /// This interface is passed to objects which might need to call back into the request builder, such as the Target and Task builders

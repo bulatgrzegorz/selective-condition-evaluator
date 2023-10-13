@@ -5,7 +5,7 @@
 
 using System.Diagnostics;
 using System.Globalization;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.Evaluation.Conditionals
 {

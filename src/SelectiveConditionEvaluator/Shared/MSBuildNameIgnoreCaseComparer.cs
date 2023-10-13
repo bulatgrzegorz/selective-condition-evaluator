@@ -1,14 +1,9 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
-
 #nullable disable
 
-namespace Microsoft.Build.Collections
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// This is a custom string comparer that has three advantages over the regular
@@ -23,7 +18,7 @@ namespace Microsoft.Build.Collections
         /// <summary>
         /// The processor architecture on which we are running, but default it will be x86
         /// </summary>
-        private static readonly NativeMethods.ProcessorArchitectures s_runningProcessorArchitecture = NativeMethods.ProcessorArchitecture;
+        private static readonly SelectiveConditionEvaluator.NativeMethods.ProcessorArchitectures s_runningProcessorArchitecture = SelectiveConditionEvaluator.NativeMethods.ProcessorArchitecture;
 
         /// <summary>
         /// The default immutable comparer instance.
@@ -70,8 +65,8 @@ namespace Microsoft.Build.Collections
                 return false;
             }
 
-            if ((s_runningProcessorArchitecture != NativeMethods.ProcessorArchitectures.IA64)
-                && (s_runningProcessorArchitecture != NativeMethods.ProcessorArchitectures.ARM))
+            if ((s_runningProcessorArchitecture != SelectiveConditionEvaluator.NativeMethods.ProcessorArchitectures.IA64)
+                && (s_runningProcessorArchitecture != SelectiveConditionEvaluator.NativeMethods.ProcessorArchitectures.ARM))
             {
                 // The use of unsafe here is quite a bit faster than the regular
                 // mechanism in the BCL. This is because we can make assumptions
@@ -117,8 +112,8 @@ namespace Microsoft.Build.Collections
                 return 0; // per BCL convention
             }
 
-            if ((s_runningProcessorArchitecture != NativeMethods.ProcessorArchitectures.IA64)
-                && (s_runningProcessorArchitecture != NativeMethods.ProcessorArchitectures.ARM))
+            if ((s_runningProcessorArchitecture != SelectiveConditionEvaluator.NativeMethods.ProcessorArchitectures.IA64)
+                && (s_runningProcessorArchitecture != SelectiveConditionEvaluator.NativeMethods.ProcessorArchitectures.ARM))
             {
                 unsafe
                 {

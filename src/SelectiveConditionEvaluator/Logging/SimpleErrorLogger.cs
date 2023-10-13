@@ -1,12 +1,10 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Logging.TerminalLogger;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.Framework.Logging;
+using SelectiveConditionEvaluator.Shared;
 
-namespace Microsoft.Build.Logging.SimpleErrorLogger
+namespace SelectiveConditionEvaluator.Logging
 {
     /// <summary>
     /// This logger ignores all message-level output, writing errors and warnings to
@@ -24,7 +22,7 @@ namespace Microsoft.Build.Logging.SimpleErrorLogger
         private readonly uint? originalConsoleMode;
         public SimpleErrorLogger()
         {
-            (acceptAnsiColorCodes, _, originalConsoleMode) = NativeMethods.QueryIsScreenAndTryEnableAnsiColorCodes(NativeMethods.StreamHandleType.StdErr);
+            (acceptAnsiColorCodes, _, originalConsoleMode) = Framework.NativeMethods.QueryIsScreenAndTryEnableAnsiColorCodes(Framework.NativeMethods.StreamHandleType.StdErr);
         }
 
         public bool HasLoggedErrors { get; private set; } = false;
@@ -85,7 +83,7 @@ namespace Microsoft.Build.Logging.SimpleErrorLogger
 
         public void Shutdown()
         {
-            NativeMethods.RestoreConsoleMode(originalConsoleMode, NativeMethods.StreamHandleType.StdErr);
+            Framework.NativeMethods.RestoreConsoleMode(originalConsoleMode, Framework.NativeMethods.StreamHandleType.StdErr);
         }
     }
 }

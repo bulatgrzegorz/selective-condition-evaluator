@@ -5,10 +5,9 @@
 // BACKWARD COMPATIBILITY FOR API USERS WHO HAVE NOT YET MOVED TO UPDATED APIS. PLEASE DO NOT SEND PULL
 // REQUESTS THAT CHANGE THIS FILE WITHOUT FIRST CHECKING WITH THE MAINTAINERS THAT THE FIX IS REQUIRED.
 
-using System;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.Shared;
 
-namespace Microsoft.Build.BuildEngine.Shared
+namespace SelectiveConditionEvaluator.Deprecated.Engine.Shared
 {
     /// <summary>
     /// This class packages information about how to load a given assembly -- an assembly can be loaded by either its assembly

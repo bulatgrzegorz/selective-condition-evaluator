@@ -1,15 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Diagnostics;
-using System.IO;
-using Microsoft.Build.BackEnd;
-using SelectiveConditionEvaluator.BackEnd;
-
 #nullable disable
 
-namespace Microsoft.Build.Shared
+using System.Diagnostics;
+
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// This class packages information about how to load a given assembly -- an assembly can be loaded by either its assembly

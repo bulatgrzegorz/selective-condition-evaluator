@@ -1,14 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Microsoft.Build.Shared;
-
 #nullable disable
 
-namespace Microsoft.Build.Evaluation
+using System.Diagnostics;
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator.Definition
 {
     /// <summary>
     /// This class encapsulates the behavior and collection of built-in metadata.  These metadatum

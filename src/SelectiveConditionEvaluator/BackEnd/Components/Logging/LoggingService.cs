@@ -4,15 +4,16 @@
 using System.Collections.Concurrent;
 using System.Globalization;
 using System.Reflection;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.BackEnd.Components.RequestBuilder;
-using Microsoft.Build.BuildEngine;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd.Components.Caching;
-using InternalLoggerException = Microsoft.Build.Exceptions.InternalLoggerException;
-using LoggerDescription = Microsoft.Build.Logging.LoggerDescription;
+using SelectiveConditionEvaluator.BackEnd.Components.Communications;
+using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
+using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder.IntrinsicTasks;
+using SelectiveConditionEvaluator.BackEnd.Shared;
+using SelectiveConditionEvaluator.Definition;
+using SelectiveConditionEvaluator.Logging;
+using SelectiveConditionEvaluator.Shared;
+using InternalLoggerException = SelectiveConditionEvaluator.Errors.InternalLoggerException;
+using LoggerDescription = SelectiveConditionEvaluator.Logging.LoggerDescription;
 
 #nullable disable
 
@@ -781,8 +782,8 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// Called by the build component host when a component is first initialized.
         /// </summary>
         /// <param name="buildComponentHost">The component host for this object</param>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">When buildComponentHost is null</exception>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">Service has already shutdown</exception>
+        /// <exception cref="InternalErrorException">When buildComponentHost is null</exception>
+        /// <exception cref="InternalErrorException">Service has already shutdown</exception>
         public void InitializeComponent(IBuildComponentHost buildComponentHost)
         {
             lock (_lockObject)
@@ -812,7 +813,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// 3. Null out sinks and the filter event source so that no more events can get to the central loggers
         /// 4. Shutdown the central loggers
         /// </summary>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">Service has already shutdown</exception>
+        /// <exception cref="InternalErrorException">Service has already shutdown</exception>
         /// <exception cref="LoggerException"> A logger may throw a logger exception when shutting down</exception>
         /// <exception cref="InternalLoggerException">A logger will wrap other exceptions (except ExceptionHandling.IsCriticalException exceptions) in a InternalLoggerException if it crashes during shutdown</exception>
         public void ShutdownComponent()
@@ -884,8 +885,8 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// </summary>
         /// <param name="node">The node from which the packet was received.</param>
         /// <param name="packet">A LogMessagePacket</param>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">Packet is null</exception>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">Packet is not a NodePacketType.LogMessage</exception>
+        /// <exception cref="InternalErrorException">Packet is null</exception>
+        /// <exception cref="InternalErrorException">Packet is not a NodePacketType.LogMessage</exception>
         public void PacketReceived(int node, INodePacket packet)
         {
             // The packet cannot be null
@@ -961,7 +962,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// </summary>
         /// <param name="logger">ILogger</param>
         /// <returns>True if the logger has been registered successfully. False if the logger was not registered due to it already being registered before</returns>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">If logger is null</exception>
+        /// <exception cref="InternalErrorException">If logger is null</exception>
         public bool RegisterLogger(ILogger logger)
         {
             lock (_lockObject)
@@ -1048,7 +1049,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// <param name="centralLogger">Central logger to receive messages from the forwarding logger, This logger cannot have been registered before</param>
         /// <param name="forwardingLogger">Logger description which describes how to create the forwarding logger, the logger description cannot have been used before</param>
         /// <returns value="bool">True if the distributed and central logger were registered, false if they either were already registered</returns>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">If forwardingLogger is null</exception>
+        /// <exception cref="InternalErrorException">If forwardingLogger is null</exception>
         /// <exception cref="LoggerException">If a logger exception is thrown while creating or initializing the distributed or central logger</exception>
         /// <exception cref="InternalLoggerException">If any exception (other than a loggerException)is thrown while creating or initializing the distributed or central logger, we will wrap these exceptions in an InternalLoggerException</exception>
         public bool RegisterDistributedLogger(ILogger centralLogger, LoggerDescription forwardingLogger)
@@ -1114,8 +1115,8 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// <param name="descriptions">Collection of logger descriptions which we would like to use to create a set of forwarding loggers on a node</param>
         /// <param name="forwardingLoggerSink">The buildEventSink which the fowarding loggers will forward their events to</param>
         /// <param name="nodeId">The id of the node the logging services is on</param>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">When forwardingLoggerSink is null</exception>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">When loggerDescriptions is null</exception>
+        /// <exception cref="InternalErrorException">When forwardingLoggerSink is null</exception>
+        /// <exception cref="InternalErrorException">When loggerDescriptions is null</exception>
         public void InitializeNodeLoggers(ICollection<LoggerDescription> descriptions, IBuildEventSink forwardingLoggerSink, int nodeId)
         {
             lock (_lockObject)
@@ -1172,7 +1173,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// BuildWarningEventArgs
         /// </summary>
         /// <param name="buildEvent">BuildEvent to log</param>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">buildEvent is null</exception>
+        /// <exception cref="InternalErrorException">buildEvent is null</exception>
         public void LogBuildEvent(BuildEventArgs buildEvent)
         {
             ErrorUtilities.VerifyThrow(buildEvent != null, "buildEvent is null");
@@ -1223,7 +1224,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// In Synchronous mode the event should be routed to the correct sink or logger right away
         /// </summary>
         /// <param name="buildEvent">BuildEventArgs to process</param>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">buildEvent is null</exception>
+        /// <exception cref="InternalErrorException">buildEvent is null</exception>
         internal virtual void ProcessLoggingEvent(object buildEvent)
         {
             ErrorUtilities.VerifyThrow(buildEvent != null, "buildEvent is null");
@@ -1423,7 +1424,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// When this happens the thread will start to process the queue items by raising the build event
         /// on either a filter event source or a sink depending on where the message is supposed to go.
         /// </summary>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">WaitHandle returns something other than 0 or 1</exception>
+        /// <exception cref="InternalErrorException">WaitHandle returns something other than 0 or 1</exception>
         private void LoggingEventProcessor(object loggingEvent)
         {
             // Save the culture so at the end of the threadproc if something else reuses this thread then it will not have a culture which it was not expecting.
@@ -1747,7 +1748,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
 
             MessageImportance? minimumImportance = innerLogger switch
             {
-                Microsoft.Build.Logging.ConsoleLogger consoleLogger => consoleLogger.GetMinimumMessageImportance(),
+                ConsoleLogger consoleLogger => consoleLogger.GetMinimumMessageImportance(),
                 Microsoft.Build.Logging.ConfigurableForwardingLogger forwardingLogger => forwardingLogger.GetMinimumMessageImportance(),
 
                 // Central forwarding loggers are used in worker nodes if logging verbosity could not be optimized, i.e. in cases
@@ -1755,7 +1756,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
                 CentralForwardingLogger => (_nodeId > 1 ? MessageImportance.Low : null),
 
                 // The null logger has no effect on minimum verbosity.
-                Microsoft.Build.Execution.BuildManager.NullLogger => null,
+                BuildManager.BuildManager.NullLogger => null,
 
                 // The terminal logger consumes only high priority messages.
                 _ => innerLogger.GetType().FullName == "Microsoft.Build.Logging.TerminalLogger.TerminalLogger"

@@ -1,17 +1,13 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Reflection;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Framework;
-using SelectiveConditionEvaluator.Instance;
-
 #nullable disable
 
-namespace Microsoft.Build.Shared
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
+using SelectiveConditionEvaluator.Instance;
+
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// This class packages information about a type loaded from an assembly: for example,

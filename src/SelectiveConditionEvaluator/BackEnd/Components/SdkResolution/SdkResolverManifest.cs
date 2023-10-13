@@ -1,15 +1,13 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Xml;
-using Microsoft.Build.Shared;
-
 #nullable disable
 
-namespace Microsoft.Build.BackEnd.SdkResolution
+using System.Text.RegularExpressions;
+using System.Xml;
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator.BackEnd.Components.SdkResolution
 {
     /// <summary>
     /// Serialization contract for an SDK Resolver manifest
@@ -41,7 +39,7 @@ namespace Microsoft.Build.BackEnd.SdkResolution
         public string Path { get; set; }
 
         /// <summary>
-        /// Regex which matches all the sdk names that could be resolved by the resolvers associated with given manifest.  
+        /// Regex which matches all the sdk names that could be resolved by the resolvers associated with given manifest.
         /// </summary>
         public Regex ResolvableSdkRegex { get; set; }
 
@@ -69,7 +67,7 @@ namespace Microsoft.Build.BackEnd.SdkResolution
                 XmlResolver = null
             };
 
-            using (FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (FileStream stream = new FileStream(filePath, FileMode.Open, System.IO.FileAccess.Read, FileShare.Read))
             using (XmlReader reader = XmlReader.Create(stream, readerSettings))
             {
                 while (reader.Read())

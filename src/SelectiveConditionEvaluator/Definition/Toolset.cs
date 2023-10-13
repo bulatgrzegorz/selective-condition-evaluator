@@ -1,18 +1,13 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
+#if FEATURE_WIN32_REGISTRY
+using Microsoft.Win32;
+#endif
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
 using System.Xml;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
+using SelectiveConditionEvaluator.BackEnd.Components.Communications;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Construction;
@@ -20,14 +15,13 @@ using SelectiveConditionEvaluator.ElementLocation;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Instance;
 using SelectiveConditionEvaluator.Resources;
-#if FEATURE_WIN32_REGISTRY
-using Microsoft.Win32;
-#endif
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Shared.FileSystem;
 using ObjectModel = System.Collections.ObjectModel;
 
 #nullable disable
 
-namespace Microsoft.Build.Evaluation
+namespace SelectiveConditionEvaluator.Definition
 {
     /// <summary>
     /// Delegate for loading an Xml file, for unit testing.

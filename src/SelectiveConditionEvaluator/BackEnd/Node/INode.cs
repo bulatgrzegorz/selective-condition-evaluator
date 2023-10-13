@@ -3,9 +3,11 @@
 
 #nullable disable
 
+using SelectiveConditionEvaluator.Shared;
+
 namespace SelectiveConditionEvaluator.BackEnd.Node
 {
-    using NodeEngineShutdownReason = Microsoft.Build.Execution.NodeEngineShutdownReason;
+    using NodeEngineShutdownReason = NodeEngineShutdownReason;
 
     #region Delegates
     /// <summary>

@@ -7,10 +7,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
 using Microsoft.Win32;
 using Microsoft.Win32.SafeHandles;
+using SelectiveConditionEvaluator.Shared;
 using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
 
 #nullable disable

@@ -1,31 +1,22 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 #if CLR2COMPATIBILITY
 using Microsoft.Build.Shared.Concurrent;
 #else
-using System.Collections.Concurrent;
 #endif
-using System.IO;
-using System.IO.Pipes;
-using System.Threading;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator.BackEnd;
 #if FEATURE_SECURITY_PERMISSIONS || FEATURE_PIPE_SECURITY
 using System.Security.AccessControl;
 #endif
 #if FEATURE_PIPE_SECURITY && FEATURE_NAMED_PIPE_SECURITY_CONSTRUCTOR
 using System.Security.Principal;
 #endif
-#if !FEATURE_APM
-using System.Threading.Tasks;
-#endif
+using System.Collections.Concurrent;
+using System.IO.Pipes;
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// This is an implementation of INodeEndpoint for the out-of-proc nodes.  It acts only as a client.

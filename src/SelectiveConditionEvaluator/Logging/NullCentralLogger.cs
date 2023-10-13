@@ -5,11 +5,9 @@
 // BACKWARD COMPATIBILITY FOR API USERS WHO HAVE NOT YET MOVED TO UPDATED APIS. PLEASE DO NOT SEND PULL
 // REQUESTS THAT CHANGE THIS FILE WITHOUT FIRST CHECKING WITH THE MAINTAINERS THAT THE FIX IS REQUIRED.
 
-using Microsoft.Build.Framework;
-using Microsoft.Build.BuildEngine.Shared;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.Shared;
 
-namespace Microsoft.Build.BuildEngine
+namespace SelectiveConditionEvaluator.Logging
 {
     /// <summary>
     /// This class will throw an exception when it recieves any event except for the build started or build finished event

@@ -1,18 +1,14 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Build.Shared;
-using Microsoft.Build.Shared.AssemblyFoldersFromConfig;
-using Microsoft.Build.Utilities;
+using SelectiveConditionEvaluator.AssemblyFolders;
+using SelectiveConditionEvaluator.Shared.AssemblyFolders.Serialization;
 using ProcessorArchitecture = System.Reflection.ProcessorArchitecture;
 
 #nullable disable
 
-namespace Microsoft.Build.Tasks.AssemblyFoldersFromConfig
+namespace SelectiveConditionEvaluator.Shared.AssemblyFolders
 {
     internal class AssemblyFoldersFromConfig : IEnumerable<AssemblyFoldersFromConfigInfo>
     {

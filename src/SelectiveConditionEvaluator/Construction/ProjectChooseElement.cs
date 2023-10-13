@@ -5,10 +5,10 @@
 
 using System.Diagnostics;
 using System.Xml;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.ElementLocation;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.ObjectModelRemoting.ConstructionObjectLinks;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.Construction
 {

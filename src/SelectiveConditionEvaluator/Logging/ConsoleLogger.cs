@@ -1,19 +1,14 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using Microsoft.Build.BackEnd.Logging;
 using Microsoft.Build.BuildEngine;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Framework.Telemetry;
-using Microsoft.Build.Shared;
-using BaseConsoleLogger = Microsoft.Build.BackEnd.Logging.BaseConsoleLogger;
-using ParallelConsoleLogger = Microsoft.Build.BuildEngine.ParallelConsoleLogger;
-using SerialConsoleLogger = Microsoft.Build.BuildEngine.SerialConsoleLogger;
+using SelectiveConditionEvaluator.Framework.Telemetry;
+using SelectiveConditionEvaluator.Shared;
+using ParallelConsoleLogger = SelectiveConditionEvaluator.Logging.ParallelLogger.ParallelConsoleLogger;
 
 #nullable disable
 
-namespace Microsoft.Build.Logging
+namespace SelectiveConditionEvaluator.Logging
 {
     #region Delegates
 

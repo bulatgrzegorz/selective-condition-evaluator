@@ -1,25 +1,20 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
+#nullable disable
+
 using System.Configuration.Assemblies;
 using System.Globalization;
-using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
-using Microsoft.Build.BackEnd;
-using SelectiveConditionEvaluator.BackEnd;
 
-#nullable disable
-
-namespace Microsoft.Build.Shared
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// Specifies the parts of the assembly name to partially match
     /// </summary>
-    [FlagsAttribute]
+    [Flags]
     internal enum PartialComparisonFlags : int
     {
         /// <summary>
@@ -194,7 +189,7 @@ namespace Microsoft.Build.Shared
             {
                 // Its pretty hard to get here, you need an assembly that contains a valid reference
                 // to a dependent assembly that, in turn, throws a FileLoadException during GetAssemblyName.
-                // Still it happened once, with an older version of the CLR. 
+                // Still it happened once, with an older version of the CLR.
             }
             catch (FileNotFoundException)
             {
@@ -484,7 +479,7 @@ namespace Microsoft.Build.Shared
         /// <returns></returns>
         internal new int GetHashCode()
         {
-            // Ok, so this isn't a great hashing algorithm. However, basenames with different 
+            // Ok, so this isn't a great hashing algorithm. However, basenames with different
             // versions or PKTs are relatively uncommon and so collisions should be low.
             // Hashing on FullName is wrong because the order of tuple fields is undefined.
             int hash = StringComparer.OrdinalIgnoreCase.GetHashCode(this.Name);

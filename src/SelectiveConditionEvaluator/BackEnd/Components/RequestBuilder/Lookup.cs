@@ -1,25 +1,18 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Shared;
+#nullable disable
+
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Instance;
 using SelectiveConditionEvaluator.Resources;
+using SelectiveConditionEvaluator.Shared;
 
-#nullable disable
-
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder
 {
-    using ItemsMetadataUpdateDictionary = System.Collections.Generic.Dictionary<ProjectItemInstance, Microsoft.Build.BackEnd.Lookup.MetadataModifications>;
-    using ItemTypeToItemsMetadataUpdateDictionary = System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<ProjectItemInstance, Microsoft.Build.BackEnd.Lookup.MetadataModifications>>;
+    using ItemsMetadataUpdateDictionary = System.Collections.Generic.Dictionary<ProjectItemInstance, Lookup.MetadataModifications>;
+    using ItemTypeToItemsMetadataUpdateDictionary = System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<ProjectItemInstance, Lookup.MetadataModifications>>;
 
     /// <summary>
     /// Contains a list of item and property collections, optimized to allow

@@ -1,16 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.IO;
-using System.Linq;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator.BackEnd.Components.Caching;
-
 #nullable disable
 
-namespace Microsoft.Build.Execution
+using SelectiveConditionEvaluator.BackEnd.Components.Caching;
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator.BackEnd.BuildManager
 {
     internal static class CacheSerialization
     {
@@ -34,7 +30,7 @@ namespace Microsoft.Build.Execution
                 Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
 
                 // Use FileStream constructor (File.OpenWrite should not be used as it doesn't reset the length of the file!)
-                using (var fileStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                using (var fileStream = new FileStream(fullPath, FileMode.Create, System.IO.FileAccess.Write, FileShare.None))
                 {
                     var translator = BinaryTranslator.GetWriteTranslator(fileStream);
 

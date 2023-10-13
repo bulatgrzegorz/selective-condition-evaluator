@@ -1,15 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Diagnostics;
-using System.Linq;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
-
 #nullable disable
 
-namespace Microsoft.Build.Framework
+using System.Diagnostics;
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator.Sdk
 {
     /// <summary>
     ///     Represents a software development kit (SDK) that is referenced in a &lt;Project /&gt; or &lt;Import /&gt; element.

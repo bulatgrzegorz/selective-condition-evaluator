@@ -1,15 +1,13 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using Microsoft.Build.Framework.BuildException;
-using SelectiveConditionEvaluator.BackEnd.Shared;
-
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+using System.Diagnostics.CodeAnalysis;
+using SelectiveConditionEvaluator.BackEnd.Shared;
+using SelectiveConditionEvaluator.BuildException;
+
+namespace SelectiveConditionEvaluator.BackEnd.Components.Scheduler
 {
     /// <summary>
     /// Exception thrown when a circular dependency is detected in the Scheduler.

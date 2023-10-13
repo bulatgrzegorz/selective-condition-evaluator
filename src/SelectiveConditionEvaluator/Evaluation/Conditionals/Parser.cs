@@ -1,9 +1,9 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
+using SelectiveConditionEvaluator.Shared;
 using ElementLocation = SelectiveConditionEvaluator.ElementLocation.ElementLocation;
 
 #nullable disable

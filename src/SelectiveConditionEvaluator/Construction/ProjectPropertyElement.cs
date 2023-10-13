@@ -4,10 +4,10 @@
 #nullable disable
 
 using System.Diagnostics;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.ElementLocation;
 using SelectiveConditionEvaluator.ObjectModelRemoting.ConstructionObjectLinks;
 using SelectiveConditionEvaluator.Resources;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.Construction
 {
@@ -65,7 +65,7 @@ namespace SelectiveConditionEvaluator.Construction
         /// </summary>
         public string Value
         {
-            get => Link != null ? PropertyLink.Value : Microsoft.Build.Internal.Utilities.GetXmlNodeInnerContents(XmlElement);
+            get => Link != null ? PropertyLink.Value : Utilities.Utilities.GetXmlNodeInnerContents(XmlElement);
 
             set
             {
@@ -79,7 +79,7 @@ namespace SelectiveConditionEvaluator.Construction
                 // Visual Studio has a tendency to set properties to their existing value.
                 if (Value != value)
                 {
-                    Microsoft.Build.Internal.Utilities.SetXmlNodeInnerContents(XmlElement, value);
+                    Utilities.Utilities.SetXmlNodeInnerContents(XmlElement, value);
                     MarkDirty("Set property Value {0}", value);
                 }
             }

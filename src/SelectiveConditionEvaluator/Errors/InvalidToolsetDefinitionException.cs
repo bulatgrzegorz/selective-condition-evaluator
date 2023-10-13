@@ -1,18 +1,16 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using Microsoft.Build.Framework.BuildException;
-using Microsoft.Build.Shared;
-using System;
 using System.Runtime.Serialization;
-using System.Collections.Generic;
+using SelectiveConditionEvaluator.BuildException;
+using SelectiveConditionEvaluator.Shared;
 #if FEATURE_SECURITY_PERMISSIONS
 using System.Security.Permissions;
 #endif
 
 #nullable disable
 
-namespace Microsoft.Build.Exceptions
+namespace SelectiveConditionEvaluator.Errors
 {
     /// <summary>
     /// Exception subclass that ToolsetReaders should throw.
@@ -139,7 +137,7 @@ namespace Microsoft.Build.Exceptions
 
         /// <summary>
         /// Throws an InvalidToolsetDefinitionException.
-        /// 
+        ///
         /// PERF WARNING: calling a method that takes a variable number of arguments
         /// is expensive, because memory is allocated for the array of arguments -- do
         /// not call this method repeatedly in performance-critical scenarios
@@ -156,7 +154,7 @@ namespace Microsoft.Build.Exceptions
         /// <summary>
         /// Throws an InvalidToolsetDefinitionException including a specified inner exception,
         /// which may be interesting to hosts.
-        /// 
+        ///
         /// PERF WARNING: calling a method that takes a variable number of arguments
         /// is expensive, because memory is allocated for the array of arguments -- do
         /// not call this method repeatedly in performance-critical scenarios

@@ -2,12 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
-using Microsoft.Build.Shared;
-using ErrorUtilities = Microsoft.Build.Shared.ErrorUtilities;
+using SelectiveConditionEvaluator.Shared;
+using ErrorUtilities = SelectiveConditionEvaluator.Shared.ErrorUtilities;
 
 #nullable disable
 
-namespace Microsoft.Build.Evaluation
+namespace SelectiveConditionEvaluator.Definition
 {
     /// <summary>
     /// A class representing a property.  Used internally by the toolset readers.
@@ -79,7 +79,7 @@ namespace Microsoft.Build.Evaluation
 
         /// <summary>
         /// A description of the location where the property was defined,
-        /// such as a registry key path or a path to a config file and 
+        /// such as a registry key path or a path to a config file and
         /// line number.
         /// </summary>
         public IElementLocation Source

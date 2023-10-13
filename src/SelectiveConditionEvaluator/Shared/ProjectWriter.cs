@@ -1,15 +1,13 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.IO;
+#nullable disable
+
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-#nullable disable
-
-namespace Microsoft.Build.Shared
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// This class is used to save MSBuild project files. It contains special handling for MSBuild notations that are not saved

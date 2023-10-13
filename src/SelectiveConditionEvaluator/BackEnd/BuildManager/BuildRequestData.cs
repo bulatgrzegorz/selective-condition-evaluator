@@ -1,18 +1,16 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator.Collections;
-using SelectiveConditionEvaluator.Evaluation;
-using SelectiveConditionEvaluator.Instance;
-
 #nullable disable
 
-namespace Microsoft.Build.Execution
+using SelectiveConditionEvaluator.BackEnd.Shared;
+using SelectiveConditionEvaluator.Collections;
+using SelectiveConditionEvaluator.Definition;
+using SelectiveConditionEvaluator.Evaluation;
+using SelectiveConditionEvaluator.Instance;
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator.BackEnd.BuildManager
 {
     /// <summary>
     /// Flags providing additional control over the build request
@@ -164,7 +162,7 @@ namespace Microsoft.Build.Execution
         /// <param name="hostServices">The host services to use, if any.  May be null.</param>
         /// <param name="flags">Flags controlling this build request.</param>
         /// <param name="propertiesToTransfer">The list of properties whose values should be transferred from the project to any out-of-proc node.</param>
-        /// <param name="requestedProjectState">A <see cref="Execution.RequestedProjectState"/> describing properties, items, and metadata that should be returned. Requires setting <see cref="BuildRequestDataFlags.ProvideSubsetOfStateAfterBuild"/>.</param>
+        /// <param name="requestedProjectState">A <see cref="BackEnd.BuildManager.RequestedProjectState"/> describing properties, items, and metadata that should be returned. Requires setting <see cref="BuildRequestDataFlags.ProvideSubsetOfStateAfterBuild"/>.</param>
         public BuildRequestData(ProjectInstance projectInstance, string[] targetsToBuild, HostServices hostServices, BuildRequestDataFlags flags, IEnumerable<string> propertiesToTransfer, RequestedProjectState requestedProjectState)
             : this(projectInstance, targetsToBuild, hostServices, flags, propertiesToTransfer)
         {
@@ -196,7 +194,7 @@ namespace Microsoft.Build.Execution
         /// <param name="targetsToBuild">The targets to build.</param>
         /// <param name="hostServices">The host services to use.  May be null.</param>
         /// <param name="flags">The <see cref="BuildRequestDataFlags"/> to use.</param>
-        /// <param name="requestedProjectState">A <see cref="Execution.RequestedProjectState"/> describing properties, items, and metadata that should be returned. Requires setting <see cref="BuildRequestDataFlags.ProvideSubsetOfStateAfterBuild"/>.</param>
+        /// <param name="requestedProjectState">A <see cref="BackEnd.BuildManager.RequestedProjectState"/> describing properties, items, and metadata that should be returned. Requires setting <see cref="BuildRequestDataFlags.ProvideSubsetOfStateAfterBuild"/>.</param>
         public BuildRequestData(string projectFullPath, IDictionary<string, string> globalProperties,
             string toolsVersion, string[] targetsToBuild, HostServices hostServices, BuildRequestDataFlags flags,
             RequestedProjectState requestedProjectState)

@@ -4,13 +4,11 @@
 #nullable disable
 
 using System.Diagnostics;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd;
 using SelectiveConditionEvaluator.Collections;
+using SelectiveConditionEvaluator.Definition;
 using SelectiveConditionEvaluator.Evaluation;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.Instance
 {

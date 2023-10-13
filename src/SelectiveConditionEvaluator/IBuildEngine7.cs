@@ -3,7 +3,7 @@
 
 #nullable disable
 
-namespace Microsoft.Build.Framework
+namespace SelectiveConditionEvaluator
 {
     /// <summary>
     /// This interface extends <see cref="IBuildEngine6" /> to allow tasks to set whether they want to

@@ -1,12 +1,9 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.IO;
-
 #nullable disable
 
-namespace Microsoft.Build.Shared.LanguageParser
+namespace SelectiveConditionEvaluator.Shared.LanguageParser
 {
     /*
     * Class:   VisualBasicTokenEnumerator
@@ -21,7 +18,7 @@ namespace Microsoft.Build.Shared.LanguageParser
 
         /*
         * Method:  TokenEnumerator
-        * 
+        *
         * Construct
         */
         internal VisualBasicTokenEnumerator(Stream binaryStream, bool forceANSI)
@@ -31,7 +28,7 @@ namespace Microsoft.Build.Shared.LanguageParser
 
         /*
         * Method:  FindNextToken
-        * 
+        *
         * Find the next token. Return 'true' if one was found. False, otherwise.
         */
         internal override bool FindNextToken()
@@ -185,7 +182,7 @@ namespace Microsoft.Build.Shared.LanguageParser
                     return true;
                 }
 
-                // Sink a suffix if there is one.                    
+                // Sink a suffix if there is one.
                 _reader.SinkIntegerSuffix();
 
                 current = new HexIntegerLiteralToken();
@@ -200,7 +197,7 @@ namespace Microsoft.Build.Shared.LanguageParser
                     return true;
                 }
 
-                // Sink a suffix if there is one.                    
+                // Sink a suffix if there is one.
                 _reader.SinkIntegerSuffix();
 
                 current = new VisualBasicTokenizer.OctalIntegerLiteralToken();
@@ -209,7 +206,7 @@ namespace Microsoft.Build.Shared.LanguageParser
             // Is it a decimal integer?
             else if (_reader.SinkMultipleDecimalDigits())
             {
-                // Sink a suffix if there is one.                    
+                // Sink a suffix if there is one.
                 _reader.SinkDecimalIntegerSuffix();
 
                 current = new DecimalIntegerLiteralToken();
@@ -259,7 +256,7 @@ namespace Microsoft.Build.Shared.LanguageParser
                 }
                 while (!_reader.EndOfLines && _reader.SinkCharacter() != '\"');
 
-                // Can't end a file inside a string 
+                // Can't end a file inside a string
                 if (_reader.EndOfLines)
                 {
                     current = new EndOfFileInsideStringToken();
@@ -271,7 +268,7 @@ namespace Microsoft.Build.Shared.LanguageParser
             }
 
 
-            // We didn't recognize the token, so this is a syntax error. 
+            // We didn't recognize the token, so this is a syntax error.
             _reader.SinkCharacter();
             current = new UnrecognizedToken();
             return true;
@@ -317,7 +314,7 @@ namespace Microsoft.Build.Shared.LanguageParser
 
         /*
         * Method:  Reader
-        * 
+        *
         * Return the token char reader.
         */
         internal override TokenCharReader Reader

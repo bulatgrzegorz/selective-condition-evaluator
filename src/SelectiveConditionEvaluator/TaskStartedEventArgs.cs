@@ -1,13 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.IO;
-using Microsoft.Build.Shared;
-
 #nullable disable
 
-namespace Microsoft.Build.Framework
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator
 {
     /// <summary>
     /// Arguments for task started events
@@ -116,12 +114,12 @@ namespace Microsoft.Build.Framework
         public string TaskName => taskName;
 
         /// <summary>
-        /// Project file associated with event.   
+        /// Project file associated with event.
         /// </summary>
         public string ProjectFile => projectFile;
 
         /// <summary>
-        /// MSBuild file where this task was defined.   
+        /// MSBuild file where this task was defined.
         /// </summary>
         public string TaskFile => taskFile;
 

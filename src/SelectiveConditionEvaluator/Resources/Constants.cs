@@ -7,8 +7,8 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using Microsoft.Build.Collections;
 using SelectiveConditionEvaluator.Evaluation;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.Resources
 {

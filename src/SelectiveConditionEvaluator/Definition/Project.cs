@@ -1,51 +1,40 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Text;
 using System.Xml;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.BackEnd.Logging;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Construction;
-using Microsoft.Build.Definition;
-using Microsoft.Build.Execution;
-using Microsoft.Build.FileSystem;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Globbing;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
+using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
 using SelectiveConditionEvaluator.Collections;
+using SelectiveConditionEvaluator.Collections.RetrievableEntryHashSet;
 using SelectiveConditionEvaluator.Construction;
-using SelectiveConditionEvaluator.ElementLocation;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Evaluation.Context;
+using SelectiveConditionEvaluator.FileSystem;
+using SelectiveConditionEvaluator.Globbing;
 using SelectiveConditionEvaluator.Instance;
 using SelectiveConditionEvaluator.ObjectModelRemoting;
 using SelectiveConditionEvaluator.ObjectModelRemoting.DefinitionObjectsLinks;
+using SelectiveConditionEvaluator.Shared;
 using Constants = SelectiveConditionEvaluator.Resources.Constants;
-using EvaluationItemExpressionFragment = SelectiveConditionEvaluator.Evaluation.ItemSpec<Microsoft.Build.Evaluation.ProjectProperty, Microsoft.Build.Evaluation.ProjectItem>.ItemExpressionFragment;
-using EvaluationItemSpec = SelectiveConditionEvaluator.Evaluation.ItemSpec<Microsoft.Build.Evaluation.ProjectProperty, Microsoft.Build.Evaluation.ProjectItem>;
+using EvaluationItemExpressionFragment = SelectiveConditionEvaluator.Evaluation.ItemSpec<SelectiveConditionEvaluator.Definition.ProjectProperty, SelectiveConditionEvaluator.Definition.ProjectItem>.ItemExpressionFragment;
+using EvaluationItemSpec = SelectiveConditionEvaluator.Evaluation.ItemSpec<SelectiveConditionEvaluator.Definition.ProjectProperty, SelectiveConditionEvaluator.Definition.ProjectItem>;
 using ForwardingLoggerRecord = SelectiveConditionEvaluator.BackEnd.Components.Logging.ForwardingLoggerRecord;
 using ILoggingService = SelectiveConditionEvaluator.BackEnd.Components.Logging.ILoggingService;
-using InvalidProjectFileException = Microsoft.Build.Exceptions.InvalidProjectFileException;
+using InvalidProjectFileException = SelectiveConditionEvaluator.Errors.InvalidProjectFileException;
 using ObjectModel = System.Collections.ObjectModel;
-using ProjectItemFactory = Microsoft.Build.Evaluation.ProjectItem.ProjectItemFactory;
-using SdkResult = Microsoft.Build.BackEnd.SdkResolution.SdkResult;
+using ProjectItemFactory = SelectiveConditionEvaluator.Definition.ProjectItem.ProjectItemFactory;
+using SdkResult = SelectiveConditionEvaluator.BackEnd.Components.SdkResolution.SdkResult;
 
 #nullable disable
 
-namespace Microsoft.Build.Evaluation
+namespace SelectiveConditionEvaluator.Definition
 {
-    using Utilities = Microsoft.Build.Internal.Utilities;
+    using Utilities = Utilities.Utilities;
 
     /// <summary>
     /// Represents an evaluated project with design time semantics.
@@ -819,7 +808,7 @@ namespace Microsoft.Build.Evaluation
         /// Location of the originating file itself, not any specific content within it.
         /// If the file has not been given a name, returns an empty location.
         /// </summary>
-        public ElementLocation ProjectFileLocation => Xml.ProjectFileLocation;
+        public ElementLocation.ElementLocation ProjectFileLocation => Xml.ProjectFileLocation;
 
         /// <summary>
         /// Obsolete. Use <see cref="LastEvaluationId"/> instead.
@@ -1752,7 +1741,7 @@ namespace Microsoft.Build.Evaluation
         /// <remarks>
         /// On project in order to keep Project's expander hidden.
         /// </remarks>
-        internal string ExpandPropertyValueBestEffortLeaveEscaped(string unevaluatedValue, ElementLocation propertyLocation)
+        internal string ExpandPropertyValueBestEffortLeaveEscaped(string unevaluatedValue, ElementLocation.ElementLocation propertyLocation)
         {
             return implementationInternal.ExpandPropertyValueBestEffortLeaveEscaped(unevaluatedValue, propertyLocation);
         }
@@ -1782,7 +1771,7 @@ namespace Microsoft.Build.Evaluation
         /// <remarks>
         /// On project in order to keep Project's expander hidden.
         /// </remarks>
-        internal string ExpandMetadataValueBestEffortLeaveEscaped(IMetadataTable metadataTable, string unevaluatedValue, ElementLocation metadataLocation)
+        internal string ExpandMetadataValueBestEffortLeaveEscaped(IMetadataTable metadataTable, string unevaluatedValue, ElementLocation.ElementLocation metadataLocation)
         {
             return implementationInternal.ExpandMetadataValueBestEffortLeaveEscaped(metadataTable, unevaluatedValue, metadataLocation);
         }
@@ -2181,7 +2170,7 @@ namespace Microsoft.Build.Evaluation
             /// Properties in this project.
             /// Since evaluation has occurred, this is an unordered collection.
             /// </summary>
-            public override ICollection<ProjectProperty> Properties => new ReadOnlyCollection<ProjectProperty>(_data.Properties);
+            public override ICollection<ProjectProperty> Properties => new Shared.ReadOnlyCollection<ProjectProperty>(_data.Properties);
 
             /// <summary>
             /// Collection of possible values implied for properties contained in the conditions found on properties,
@@ -2223,7 +2212,7 @@ namespace Microsoft.Build.Evaluation
             /// Items in this project, ordered within groups of item types.
             /// </summary>
             [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods", Justification = "This is a reasonable choice. API review approved")]
-            public override ICollection<ProjectItem> Items => new ReadOnlyCollection<ProjectItem>(_data.Items);
+            public override ICollection<ProjectItem> Items => new Shared.ReadOnlyCollection<ProjectItem>(_data.Items);
 
             /// <summary>
             /// Items in this project, ordered within groups of item types,
@@ -2243,7 +2232,7 @@ namespace Microsoft.Build.Evaluation
                         ErrorUtilities.ThrowInvalidOperation("OM_NotEvaluatedBecauseShouldEvaluateForDesignTimeIsFalse", nameof(ItemsIgnoringCondition));
                     }
 
-                    return new ReadOnlyCollection<ProjectItem>(_data.ItemsIgnoringCondition);
+                    return new Shared.ReadOnlyCollection<ProjectItem>(_data.ItemsIgnoringCondition);
                 }
             }
 
@@ -2335,7 +2324,7 @@ namespace Microsoft.Build.Evaluation
                         return ReadOnlyEmptyCollection<ProjectProperty>.Instance;
                     }
 
-                    return new ReadOnlyCollection<ProjectProperty>(allEvaluatedProperties);
+                    return new Shared.ReadOnlyCollection<ProjectProperty>(allEvaluatedProperties);
                 }
             }
 
@@ -2357,7 +2346,7 @@ namespace Microsoft.Build.Evaluation
                         return ReadOnlyEmptyCollection<ProjectMetadata>.Instance;
                     }
 
-                    return new ReadOnlyCollection<ProjectMetadata>(allEvaluatedItemDefinitionMetadata);
+                    return new Shared.ReadOnlyCollection<ProjectMetadata>(allEvaluatedItemDefinitionMetadata);
                 }
             }
 
@@ -2381,7 +2370,7 @@ namespace Microsoft.Build.Evaluation
                         return ReadOnlyEmptyCollection<ProjectItem>.Instance;
                     }
 
-                    return new ReadOnlyCollection<ProjectItem>(allEvaluatedItems);
+                    return new Shared.ReadOnlyCollection<ProjectItem>(allEvaluatedItems);
                 }
             }
 
@@ -2473,7 +2462,7 @@ namespace Microsoft.Build.Evaluation
             /// Location of the originating file itself, not any specific content within it.
             /// If the file has not been given a name, returns an empty location.
             /// </summary>
-            public ElementLocation ProjectFileLocation => Xml.ProjectFileLocation;
+            public ElementLocation.ElementLocation ProjectFileLocation => Xml.ProjectFileLocation;
 
             /// <summary>
             /// Obsolete. Use <see cref="LastEvaluationId"/> instead.
@@ -3506,7 +3495,7 @@ namespace Microsoft.Build.Evaluation
             /// <remarks>
             /// On project in order to keep Project's expander hidden.
             /// </remarks>
-            public string ExpandPropertyValueBestEffortLeaveEscaped(string unevaluatedValue, ElementLocation propertyLocation)
+            public string ExpandPropertyValueBestEffortLeaveEscaped(string unevaluatedValue, ElementLocation.ElementLocation propertyLocation)
             {
                 string evaluatedValueEscaped = _data.Expander.ExpandIntoStringLeaveEscaped(unevaluatedValue, ExpanderOptions.ExpandProperties, propertyLocation);
 
@@ -3560,7 +3549,7 @@ namespace Microsoft.Build.Evaluation
             /// <remarks>
             /// On project in order to keep Project's expander hidden.
             /// </remarks>
-            public string ExpandMetadataValueBestEffortLeaveEscaped(IMetadataTable metadataTable, string unevaluatedValue, ElementLocation metadataLocation)
+            public string ExpandMetadataValueBestEffortLeaveEscaped(IMetadataTable metadataTable, string unevaluatedValue, ElementLocation.ElementLocation metadataLocation)
             {
                 ErrorUtilities.VerifyThrow(_data.Expander.Metadata == null, "Should be null");
 
@@ -3976,11 +3965,11 @@ namespace Microsoft.Build.Evaluation
 
             void ReAddExistingItemAfterItemTypeChange(ProjectItem item);
 
-            string ExpandPropertyValueBestEffortLeaveEscaped(string unevaluatedValue, ElementLocation propertyLocation);
+            string ExpandPropertyValueBestEffortLeaveEscaped(string unevaluatedValue, ElementLocation.ElementLocation propertyLocation);
 
             string ExpandItemIncludeBestEffortLeaveEscaped(ProjectItemElement renamedItemElement);
 
-            string ExpandMetadataValueBestEffortLeaveEscaped(IMetadataTable metadataTable, string unevaluatedValue, ElementLocation metadataLocation);
+            string ExpandMetadataValueBestEffortLeaveEscaped(IMetadataTable metadataTable, string unevaluatedValue, ElementLocation.ElementLocation metadataLocation);
         }
 
         private class ProjectLinkInternalNotImplemented : IProjectLinkInternal
@@ -4001,11 +3990,11 @@ namespace Microsoft.Build.Evaluation
 
             public void ReAddExistingItemAfterItemTypeChange(ProjectItem item) { throw new NotImplementedException(); }
 
-            public string ExpandPropertyValueBestEffortLeaveEscaped(string unevaluatedValue, ElementLocation propertyLocation) { throw new NotImplementedException(); }
+            public string ExpandPropertyValueBestEffortLeaveEscaped(string unevaluatedValue, ElementLocation.ElementLocation propertyLocation) { throw new NotImplementedException(); }
 
             public string ExpandItemIncludeBestEffortLeaveEscaped(ProjectItemElement renamedItemElement) { throw new NotImplementedException(); }
 
-            public string ExpandMetadataValueBestEffortLeaveEscaped(IMetadataTable metadataTable, string unevaluatedValue, ElementLocation metadataLocation) { throw new NotImplementedException(); }
+            public string ExpandMetadataValueBestEffortLeaveEscaped(IMetadataTable metadataTable, string unevaluatedValue, ElementLocation.ElementLocation metadataLocation) { throw new NotImplementedException(); }
         }
 
         /// <summary>
@@ -4295,7 +4284,7 @@ namespace Microsoft.Build.Evaluation
                 // used to figure out if any of them have changed.
                 RecordImport(null, Project.Xml, Project.Xml.Version, null);
 
-                ElementLocation toolsVersionLocation = Project.Xml.ProjectFileLocation;
+                ElementLocation.ElementLocation toolsVersionLocation = Project.Xml.ProjectFileLocation;
 
                 if (Project.Xml.ToolsVersion.Length > 0)
                 {
@@ -4614,7 +4603,7 @@ namespace Microsoft.Build.Evaluation
             internal ICollection<ProjectItem> GetItemsByEvaluatedInclude(string evaluatedInclude)
             {
                 // Even if there are no items in itemsByEvaluatedInclude[], it will return an IEnumerable, which is non-null
-                ICollection<ProjectItem> items = new ReadOnlyCollection<ProjectItem>(ItemsByEvaluatedIncludeCache[evaluatedInclude]);
+                ICollection<ProjectItem> items = new Shared.ReadOnlyCollection<ProjectItem>(ItemsByEvaluatedIncludeCache[evaluatedInclude]);
 
                 return items;
             }

@@ -1,19 +1,13 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.Evaluation;
 using SelectiveConditionEvaluator.Instance;
-using ElementLocation = SelectiveConditionEvaluator.ElementLocation.ElementLocation;
+using SelectiveConditionEvaluator.Shared;
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder
 {
     /// <summary>
     /// This class is used by objects in the build engine that have the ability to execute themselves in batches, to partition the
@@ -82,7 +76,7 @@ namespace Microsoft.Build.BackEnd
         internal static List<ItemBucket> PrepareBatchingBuckets(
             List<string> batchableObjectParameters,
             Lookup lookup,
-            ElementLocation elementLocation)
+            ElementLocation.ElementLocation elementLocation)
         {
             return PrepareBatchingBuckets(batchableObjectParameters, lookup, null, elementLocation);
         }
@@ -101,7 +95,7 @@ namespace Microsoft.Build.BackEnd
             List<string> batchableObjectParameters,
             Lookup lookup,
             string implicitBatchableItemType,
-            ElementLocation elementLocation)
+            ElementLocation.ElementLocation elementLocation)
         {
             if (batchableObjectParameters == null)
             {
@@ -201,7 +195,7 @@ namespace Microsoft.Build.BackEnd
                                                                                 // Value is [struct MetadataReference]
             HashSet<string> consumedItemReferenceNames,
             Lookup lookup,
-            ElementLocation elementLocation)
+            ElementLocation.ElementLocation elementLocation)
         {
             // The keys in this hashtable are the names of the items that we will batch on.
             // The values are always String.Empty (not used).
@@ -294,7 +288,7 @@ namespace Microsoft.Build.BackEnd
             Lookup lookup,
             Dictionary<string, ICollection<ProjectItemInstance>> itemListsToBeBatched,
             Dictionary<string, MetadataReference> consumedMetadataReferences,
-            ElementLocation elementLocation)
+            ElementLocation.ElementLocation elementLocation)
         {
             ErrorUtilities.VerifyThrow(itemListsToBeBatched.Count > 0, "Need item types consumed by the batchable object.");
             ErrorUtilities.VerifyThrow(consumedMetadataReferences.Count > 0, "Need item metadata consumed by the batchable object.");
@@ -375,7 +369,7 @@ namespace Microsoft.Build.BackEnd
         private static Dictionary<string, string> GetItemMetadataValues(
             ProjectItemInstance item,
             Dictionary<string, MetadataReference> consumedMetadataReferences,
-            ElementLocation elementLocation)
+            ElementLocation.ElementLocation elementLocation)
         {
             var itemMetadataValues = new Dictionary<string, string>(consumedMetadataReferences.Count, MSBuildNameIgnoreCaseComparer.Default);
 

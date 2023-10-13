@@ -6,26 +6,21 @@
 #if BUILDINGAPPXTASKS
 namespace Microsoft.Build.AppxPackage.Shared
 #else
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Security;
 using System.Text;
-using System.Threading;
 using System.Xml;
 using System.Xml.Schema;
-using System.Runtime.Serialization;
-using Microsoft.Build.BuildEngine.Shared;
-using SelectiveConditionEvaluator;
+using SelectiveConditionEvaluator.Shared.Debugging;
+using SelectiveConditionEvaluator.Shared.FileSystem;
 #if !CLR2COMPATIBILITY && !MICROSOFT_BUILD_ENGINE_OM_UNITTESTS
 #endif
 
-namespace Microsoft.Build.Shared
+namespace SelectiveConditionEvaluator.Shared
 #endif
 {
     /// <summary>

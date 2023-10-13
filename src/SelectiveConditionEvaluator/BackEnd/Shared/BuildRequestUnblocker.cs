@@ -2,9 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.Shared;
 
 #nullable disable
 

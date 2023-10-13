@@ -2,12 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Framework.Profiler;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.Profiler;
 using SelectiveConditionEvaluator.Resources;
-using InvalidProjectFileException = Microsoft.Build.Exceptions.InvalidProjectFileException;
+using SelectiveConditionEvaluator.Shared;
+using InvalidProjectFileException = SelectiveConditionEvaluator.Errors.InvalidProjectFileException;
 using TaskItem = SelectiveConditionEvaluator.Instance.ProjectItemInstance.TaskItem;
 
 #nullable disable
@@ -29,7 +27,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// The higher the importance the lower the verbosity needs to be for the message to be seen</param>
         /// <param name="messageResourceName">String which identifies the message in the string resx</param>
         /// <param name="messageArgs">Arguments for the format string indexed by messageResourceName</param>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">MessageResourceName is null</exception>
+        /// <exception cref="InternalErrorException">MessageResourceName is null</exception>
         public void LogComment(BuildEventContext buildEventContext, MessageImportance importance, string messageResourceName, params object[] messageArgs)
         {
             if (!OnlyLogCriticalEvents)
@@ -47,8 +45,8 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// <param name="importance">How important is the message, this will determine which verbosities the message will show up on.
         /// The higher the importance the lower the verbosity needs to be for the message to be seen</param>
         /// <param name="message">Message to log</param>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">BuildEventContext is null</exception>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">Message is null</exception>
+        /// <exception cref="InternalErrorException">BuildEventContext is null</exception>
+        /// <exception cref="InternalErrorException">Message is null</exception>
         public void LogCommentFromText(BuildEventContext buildEventContext, MessageImportance importance, string message)
         {
             this.LogCommentFromText(buildEventContext, importance, message, messageArgs: null);
@@ -62,8 +60,8 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// The higher the importance the lower the verbosity needs to be for the message to be seen</param>
         /// <param name="message">Message to log</param>
         /// <param name="messageArgs">Message formatting arguments</param>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">BuildEventContext is null</exception>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">Message is null</exception>
+        /// <exception cref="InternalErrorException">BuildEventContext is null</exception>
+        /// <exception cref="InternalErrorException">Message is null</exception>
         public void LogCommentFromText(BuildEventContext buildEventContext, MessageImportance importance, string message, params object[] messageArgs)
         {
             if (!OnlyLogCriticalEvents)
@@ -112,7 +110,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// <param name="file">File information about where the error happened</param>
         /// <param name="messageResourceName">String index into the string.resx file</param>
         /// <param name="messageArgs">Arguments for the format string in the resource file</param>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">MessageResourceName is null</exception>
+        /// <exception cref="InternalErrorException">MessageResourceName is null</exception>
         public void LogError(BuildEventContext buildEventContext, string subcategoryResourceName, BuildEventFileInfo file, string messageResourceName, params object[] messageArgs)
         {
             ErrorUtilities.VerifyThrow(!string.IsNullOrEmpty(messageResourceName), "Need resource string for error message.");
@@ -131,8 +129,8 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// <param name="helpKeyword">Can be null.</param>
         /// <param name="file">File information about where the error happened</param>
         /// <param name="message">Error message which will be displayed</param>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">File is null</exception>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">Message is null</exception>
+        /// <exception cref="InternalErrorException">File is null</exception>
+        /// <exception cref="InternalErrorException">Message is null</exception>
         public void LogErrorFromText(BuildEventContext buildEventContext, string subcategoryResourceName, string errorCode, string helpKeyword, BuildEventFileInfo file, string message)
         {
             ErrorUtilities.VerifyThrow(buildEventContext != null, "Must specify the buildEventContext");
@@ -177,8 +175,8 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// </summary>
         /// <param name="buildEventContext">Event context information which describes who is logging the event</param>
         /// <param name="invalidProjectFileException">Exception which is causing the error</param>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">InvalidProjectFileException is null</exception>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">BuildEventContext is null</exception>
+        /// <exception cref="InternalErrorException">InvalidProjectFileException is null</exception>
+        /// <exception cref="InternalErrorException">BuildEventContext is null</exception>
         public void LogInvalidProjectFileError(BuildEventContext buildEventContext, InvalidProjectFileException invalidProjectFileException)
         {
             ErrorUtilities.VerifyThrow(invalidProjectFileException != null, "Need exception context.");
@@ -232,7 +230,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// <param name="exception">Exceptionm which caused the error</param>
         /// <param name="file">File information which indicates which file the error is happening in</param>
         /// <param name="taskName">Task which the error is happening in</param>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">TaskName is null</exception>
+        /// <exception cref="InternalErrorException">TaskName is null</exception>
         public void LogFatalTaskError(BuildEventContext buildEventContext, Exception exception, BuildEventFileInfo file, string taskName)
         {
             ErrorUtilities.VerifyThrow(taskName != null, "Must specify the name of the task that failed.");
@@ -249,7 +247,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// <param name="file">File information which describes where the error happened</param>
         /// <param name="messageResourceName">String name for the resource string to be used</param>
         /// <param name="messageArgs">Arguments for messageResourceName</param>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">MessageResourceName is null</exception>
+        /// <exception cref="InternalErrorException">MessageResourceName is null</exception>
         public void LogFatalError(BuildEventContext buildEventContext, Exception exception, BuildEventFileInfo file, string messageResourceName, params object[] messageArgs)
         {
             ErrorUtilities.VerifyThrow(!string.IsNullOrEmpty(messageResourceName), "Need resource string for error message.");
@@ -430,7 +428,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
 
             // Because the project cache runs in the BuildManager, it makes some sense to associate logging with the in-proc node.
             // If a invalid node id is used the messages become deferred in the console logger and spit out at the end.
-            int nodeId = Scheduler.InProcNodeId;
+            int nodeId = Scheduler.Scheduler.InProcNodeId;
 
             return new BuildEventContext(submissionId, nodeId, evaluationId, projectInstanceId, projectContextId, BuildEventContext.InvalidTargetId, BuildEventContext.InvalidTaskId);
         }
@@ -458,7 +456,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// <param name="properties">Properties produced by the evaluation.</param>
         /// <param name="items">Items produced by the evaluation.</param>
         /// <param name="profilerResult">Profiler results if evaluation profiling was enabled.</param>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">BuildEventContext is null</exception>
+        /// <exception cref="InternalErrorException">BuildEventContext is null</exception>
         public void LogProjectEvaluationFinished(
             BuildEventContext projectEvaluationEventContext,
             string projectFile,
@@ -496,8 +494,8 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// <param name="evaluationId">EvaluationId of the project instance</param>
         /// <param name="projectContextId">The project context id</param>
         /// <returns>The build event context for the project.</returns>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">parentBuildEventContext is null</exception>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">projectBuildEventContext is null</exception>
+        /// <exception cref="InternalErrorException">parentBuildEventContext is null</exception>
+        /// <exception cref="InternalErrorException">projectBuildEventContext is null</exception>
         public BuildEventContext LogProjectStarted(
             BuildEventContext nodeBuildEventContext,
             int submissionId,
@@ -539,7 +537,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
                     // Currently, an existing projectContextId can only be provided in the project cache scenario, which runs on the in-proc node.
                     // If there was a cache miss and the build was scheduled on a worker node, it may not have seen this projectContextId yet.
                     // So we only need this sanity check for the in-proc node.
-                    if (nodeBuildEventContext.NodeId == Scheduler.InProcNodeId)
+                    if (nodeBuildEventContext.NodeId == Scheduler.Scheduler.InProcNodeId)
                     {
                         ErrorUtilities.ThrowInternalError("ContextID {0} should have been in the ID-to-project file mapping but wasn't!", projectContextId);
                     }
@@ -583,7 +581,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// <param name="projectBuildEventContext">Event context for the project.</param>
         /// <param name="projectFile">Project file being built</param>
         /// <param name="success">Did the project pass or fail</param>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">BuildEventContext is null</exception>
+        /// <exception cref="InternalErrorException">BuildEventContext is null</exception>
         public void LogProjectFinished(BuildEventContext projectBuildEventContext, string projectFile, bool success)
         {
             ErrorUtilities.VerifyThrow(projectBuildEventContext != null, "projectBuildEventContext");
@@ -613,7 +611,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// <param name="parentTargetName">The name of the parent target.</param>
         /// <param name="buildReason">The reason the parent target built the target.</param>
         /// <returns>The build event context for the target.</returns>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">BuildEventContext is null</exception>
+        /// <exception cref="InternalErrorException">BuildEventContext is null</exception>
         public BuildEventContext LogTargetStarted(BuildEventContext projectBuildEventContext, string targetName, string projectFile, string projectFileOfTargetElement, string parentTargetName, TargetBuiltReason buildReason)
         {
             ErrorUtilities.VerifyThrow(projectBuildEventContext != null, "projectBuildEventContext is null");
@@ -652,7 +650,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// <param name="projectFileOfTargetElement">Project file which contains the target</param>
         /// <param name="success">Did the target pass or fail</param>
         /// <param name="targetOutputs">Target outputs for the target.</param>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">BuildEventContext is null</exception>
+        /// <exception cref="InternalErrorException">BuildEventContext is null</exception>
         public void LogTargetFinished(BuildEventContext targetBuildEventContext, string targetName, string projectFile, string projectFileOfTargetElement, bool success, IEnumerable<TaskItem> targetOutputs)
         {
             if (!OnlyLogCriticalEvents)
@@ -680,7 +678,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// <param name="taskName">Task Name</param>
         /// <param name="projectFile">Project file being built</param>
         /// <param name="projectFileOfTaskNode">Project file which contains the task</param>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">BuildEventContext is null</exception>
+        /// <exception cref="InternalErrorException">BuildEventContext is null</exception>
         public void LogTaskStarted(BuildEventContext taskBuildEventContext, string taskName, string projectFile, string projectFileOfTaskNode)
         {
             ErrorUtilities.VerifyThrow(taskBuildEventContext != null, "targetBuildEventContext is null");
@@ -707,7 +705,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// <param name="line">The line number in the file where the task invocation is located.</param>
         /// <param name="column">The column number in the file where the task invocation is located.</param>
         /// <returns>The build event context for the task.</returns>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">BuildEventContext is null</exception>
+        /// <exception cref="InternalErrorException">BuildEventContext is null</exception>
         public BuildEventContext LogTaskStarted2(BuildEventContext targetBuildEventContext, string taskName, string projectFile, string projectFileOfTaskNode, int line, int column)
         {
             ErrorUtilities.VerifyThrow(targetBuildEventContext != null, "targetBuildEventContext is null");
@@ -744,7 +742,7 @@ namespace SelectiveConditionEvaluator.BackEnd.Components.Logging
         /// <param name="projectFile">Project which is being processed</param>
         /// <param name="projectFileOfTaskNode">Project file which contains the task</param>
         /// <param name="success">Did the task pass or fail</param>
-        /// <exception cref="Microsoft.Build.BuildEngine.Shared.InternalErrorException">BuildEventContext is null</exception>
+        /// <exception cref="InternalErrorException">BuildEventContext is null</exception>
         public void LogTaskFinished(BuildEventContext taskBuildEventContext, string taskName, string projectFile, string projectFileOfTaskNode, bool success)
         {
             if (!OnlyLogCriticalEvents)

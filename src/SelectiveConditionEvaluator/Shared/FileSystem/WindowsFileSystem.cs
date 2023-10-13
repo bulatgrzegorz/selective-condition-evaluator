@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
-namespace SelectiveConditionEvaluator
+namespace SelectiveConditionEvaluator.Shared.FileSystem
 {
     /// <summary>
     /// The type of file artifact to search for
@@ -52,22 +52,22 @@ namespace SelectiveConditionEvaluator
 
         public override bool DirectoryExists(string path)
         {
-            return NativeMethods.DirectoryExistsWindows(path);
+            return SelectiveConditionEvaluator.NativeMethods.DirectoryExistsWindows(path);
         }
 
         public override bool FileExists(string path)
         {
-            return NativeMethods.FileExistsWindows(path);
+            return SelectiveConditionEvaluator.NativeMethods.FileExistsWindows(path);
         }
 
         public override bool FileOrDirectoryExists(string path)
         {
-            return NativeMethods.FileOrDirectoryExistsWindows(path);
+            return SelectiveConditionEvaluator.NativeMethods.FileOrDirectoryExistsWindows(path);
         }
 
         public override DateTime GetLastWriteTimeUtc(string path)
         {
-            var fileLastWriteTime = NativeMethods.GetLastWriteFileUtcTime(path);
+            var fileLastWriteTime = SelectiveConditionEvaluator.NativeMethods.GetLastWriteFileUtcTime(path);
 
             if (fileLastWriteTime != DateTime.MinValue)
             {
@@ -75,7 +75,7 @@ namespace SelectiveConditionEvaluator
             }
             else
             {
-                NativeMethods.GetLastWriteDirectoryUtcTime(path, out var directoryLastWriteTime);
+                SelectiveConditionEvaluator.NativeMethods.GetLastWriteDirectoryUtcTime(path, out var directoryLastWriteTime);
                 return directoryLastWriteTime;
             }
         }

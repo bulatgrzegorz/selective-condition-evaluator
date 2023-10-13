@@ -1,24 +1,17 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using Microsoft.Build.Framework;
-#if FEATURE_APPDOMAIN
-using System.Security;
-#endif
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
-using SelectiveConditionEvaluator.BackEnd;
+
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+using System.Collections;
+using System.Globalization;
+using System.Reflection;
+#if FEATURE_APPDOMAIN
+using System.Security;
+#endif
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// Type of parameter, used to figure out how to serialize it.

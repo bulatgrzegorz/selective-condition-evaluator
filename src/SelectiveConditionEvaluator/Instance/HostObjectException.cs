@@ -3,7 +3,7 @@
 
 #nullable disable
 
-using Microsoft.Build.Framework.BuildException;
+using SelectiveConditionEvaluator.BuildException;
 
 namespace SelectiveConditionEvaluator.Instance
 {

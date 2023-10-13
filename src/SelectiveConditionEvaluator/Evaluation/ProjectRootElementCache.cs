@@ -5,13 +5,12 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
+using SelectiveConditionEvaluator.BackEnd.Node;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Construction;
-using ErrorUtilities = Microsoft.Build.Shared.ErrorUtilities;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Xml;
+using ErrorUtilities = SelectiveConditionEvaluator.Shared.ErrorUtilities;
 
 #nullable disable
 

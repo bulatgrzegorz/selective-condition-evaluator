@@ -1,38 +1,28 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
 #if FEATURE_APPDOMAIN
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Lifetime;
 #endif
+using System.Collections;
 using System.Diagnostics;
+using System.Globalization;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Build.BackEnd.Components.Caching;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Eventing;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
-using SelectiveConditionEvaluator.BackEnd.Components;
-using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
+using SelectiveConditionEvaluator.BackEnd.Components.BuildRequestEngine;
+using SelectiveConditionEvaluator.BackEnd.Components.Caching;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.FileAccess;
 using SelectiveConditionEvaluator.Instance;
+using SelectiveConditionEvaluator.Shared;
 using ElementLocation = SelectiveConditionEvaluator.ElementLocation.ElementLocation;
 using TaskItem = SelectiveConditionEvaluator.Instance.ProjectItemInstance.TaskItem;
 using TaskLoggingContext = SelectiveConditionEvaluator.BackEnd.Components.Logging.TaskLoggingContext;
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder
 {
     /// <summary>
     /// The task host object which allows tasks to interface with the rest of the build system.
@@ -62,7 +52,7 @@ namespace Microsoft.Build.BackEnd
         /// <summary>
         /// Location of the task node in the original file
         /// </summary>
-        private ElementLocation _taskLocation;
+        private ElementLocation.ElementLocation _taskLocation;
 
         /// <summary>
         /// The task logging context
@@ -117,7 +107,7 @@ namespace Microsoft.Build.BackEnd
         /// <param name="requestEntry">The build request entry</param>
         /// <param name="taskLocation">The <see cref="ElementLocation"/> of the task.</param>
         /// <param name="targetBuilderCallback">An <see cref="ITargetBuilderCallback"/> to use to invoke targets and build projects.</param>
-        public TaskHost(IBuildComponentHost host, BuildRequestEntry requestEntry, ElementLocation taskLocation, ITargetBuilderCallback targetBuilderCallback)
+        public TaskHost(IBuildComponentHost host, BuildRequestEntry requestEntry, ElementLocation.ElementLocation taskLocation, ITargetBuilderCallback targetBuilderCallback)
         {
             ErrorUtilities.VerifyThrowArgumentNull(host, nameof(host));
             ErrorUtilities.VerifyThrowArgumentNull(requestEntry, nameof(requestEntry));
@@ -409,7 +399,7 @@ namespace Microsoft.Build.BackEnd
         /// Thread safe.
         /// </summary>
         /// <param name="e">The event args</param>
-        public void LogErrorEvent(Microsoft.Build.Framework.BuildErrorEventArgs e)
+        public void LogErrorEvent(BuildErrorEventArgs e)
         {
             lock (_callbackMonitor)
             {
@@ -479,7 +469,7 @@ namespace Microsoft.Build.BackEnd
         /// Thread safe.
         /// </summary>
         /// <param name="e">The event args</param>
-        public void LogWarningEvent(Microsoft.Build.Framework.BuildWarningEventArgs e)
+        public void LogWarningEvent(BuildWarningEventArgs e)
         {
             lock (_callbackMonitor)
             {
@@ -520,7 +510,7 @@ namespace Microsoft.Build.BackEnd
         /// Thread safe.
         /// </summary>
         /// <param name="e">The event args</param>
-        public void LogMessageEvent(Microsoft.Build.Framework.BuildMessageEventArgs e)
+        public void LogMessageEvent(BuildMessageEventArgs e)
         {
             lock (_callbackMonitor)
             {
@@ -561,7 +551,7 @@ namespace Microsoft.Build.BackEnd
         /// Thread safe.
         /// </summary>
         /// <param name="e">The event args</param>
-        public void LogCustomEvent(Microsoft.Build.Framework.CustomBuildEventArgs e)
+        public void LogCustomEvent(CustomBuildEventArgs e)
         {
             lock (_callbackMonitor)
             {

@@ -3,7 +3,7 @@
 
 #nullable disable
 
-namespace Microsoft.Build.Execution
+namespace SelectiveConditionEvaluator.Shared
 {
     #region Enums
     /// <summary>

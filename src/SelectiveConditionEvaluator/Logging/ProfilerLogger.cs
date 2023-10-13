@@ -1,22 +1,16 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Security;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Framework.Profiler;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator.Evaluation.Profiler;
-
 #nullable disable
 
-namespace Microsoft.Build.Logging
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Security;
+using SelectiveConditionEvaluator.Evaluation.Profiler;
+using SelectiveConditionEvaluator.Profiler;
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator.Logging
 {
     /// <summary>
     /// Listens to build evaluation finished events and collects profiling information when available

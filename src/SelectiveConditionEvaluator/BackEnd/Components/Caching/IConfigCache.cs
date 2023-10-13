@@ -3,7 +3,6 @@
 
 #nullable disable
 
-using Microsoft.Build.BackEnd;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 
 namespace SelectiveConditionEvaluator.BackEnd.Components.Caching

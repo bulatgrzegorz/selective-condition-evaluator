@@ -3,9 +3,7 @@
 
 #nullable disable
 
-using SelectiveConditionEvaluator.BackEnd;
-
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// A delegate representing factory methods used to re-create packets deserialized from a stream.

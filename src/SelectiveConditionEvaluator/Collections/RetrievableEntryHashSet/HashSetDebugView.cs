@@ -4,7 +4,7 @@
 #nullable disable
 
 using System.Diagnostics;
-using Microsoft.Build.Collections;
+using SelectiveConditionEvaluator.Shared;
 
 namespace SelectiveConditionEvaluator.Collections.RetrievableEntryHashSet
 {

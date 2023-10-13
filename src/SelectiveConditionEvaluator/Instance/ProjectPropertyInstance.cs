@@ -2,14 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.Collections;
-using Microsoft.Build.Shared;
 using SelectiveConditionEvaluator.BackEnd;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Construction;
 using SelectiveConditionEvaluator.Evaluation;
+using SelectiveConditionEvaluator.Shared;
 
 #nullable disable
 

@@ -1,14 +1,11 @@
-﻿using System;
+﻿#nullable disable
+
+using System.Collections;
 using System.Data;
 using System.Net.Mime;
 using System.Text;
-using System.Xml;
-using System.Text.RegularExpressions;
-using Microsoft.Build.Construction;
 
-#nullable disable
-
-namespace Microsoft.Build.Shared
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// This class contains utility methods for Xaml types.
@@ -73,7 +70,7 @@ namespace Microsoft.Build.Shared
 
             if (property == null)
             {
-                ErrorUtilities.VerifyThrowArgumentNull(null, propertyId, Strings.PropertyValueMustBeSet);
+                ErrorUtilities.VerifyThrowArgumentNull(null, propertyId, "PropertyValueMustBeSet");
             }
         }
 
@@ -105,7 +102,7 @@ namespace Microsoft.Build.Shared
 
             if (property.Length == 0)
             {
-                ErrorUtilities.ThrowArgument(Strings.PropertyCannotBeSetToTheEmptyString, propertyId);
+                ErrorUtilities.ThrowArgument("PropertyCannotBeSetToTheEmptyString", propertyId);
             }
         }
 
@@ -133,7 +130,7 @@ namespace Microsoft.Build.Shared
 
             if (listProperty.Count == 0)
             {
-                ErrorUtilities.ThrowArgument(Strings.ListPropertyShouldHaveAtLeastOneElement, propertyId);
+                ErrorUtilities.ThrowArgument("ListPropertyShouldHaveAtLeastOneElement", propertyId);
             }
         }
 

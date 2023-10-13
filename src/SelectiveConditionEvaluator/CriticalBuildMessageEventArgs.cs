@@ -1,11 +1,9 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-
 #nullable disable
 
-namespace Microsoft.Build.Framework
+namespace SelectiveConditionEvaluator
 {
     /// <summary>
     /// Arguments for critical message events. These always have High importance.
@@ -107,7 +105,7 @@ namespace Microsoft.Build.Framework
             string senderName,
             DateTime eventTimestamp,
             params object[] messageArgs)
-            //// Force importance to High. 
+            //// Force importance to High.
             : base(subcategory, code, file, lineNumber, columnNumber, endLineNumber, endColumnNumber, message, helpKeyword, senderName, MessageImportance.High, eventTimestamp, messageArgs)
         {
             // do nothing

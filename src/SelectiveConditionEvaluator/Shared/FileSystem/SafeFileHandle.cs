@@ -5,7 +5,7 @@
 
 using Microsoft.Win32.SafeHandles;
 
-namespace SelectiveConditionEvaluator
+namespace SelectiveConditionEvaluator.Shared.FileSystem
 {
     /// <summary>
     /// Handle for a volume iteration as returned by WindowsNative.FindFirstVolumeW />

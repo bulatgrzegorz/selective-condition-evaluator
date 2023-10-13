@@ -1,11 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Globalization;
-
 #nullable disable
 
-namespace Microsoft.Build.Shared.LanguageParser
+using System.Globalization;
+
+namespace SelectiveConditionEvaluator.Shared.LanguageParser
 {
     /// <summary>
     /// Utility functions for classifying characters that might be found in a sources file.
@@ -23,7 +23,7 @@ namespace Microsoft.Build.Shared.LanguageParser
             return c == 0x000d        // Carriage return
                     || c == 0x000a        // Linefeed
                     || c == 0x2028        // Line separator
-                    || c == 0x2029        // Paragraph separator                       
+                    || c == 0x2029        // Paragraph separator
                         ;
         }
 
@@ -103,7 +103,7 @@ namespace Microsoft.Build.Shared.LanguageParser
             // combining-character:
             if (
                     cat == UnicodeCategory.NonSpacingMark // Mn
-                    || cat == UnicodeCategory.SpacingCombiningMark)  // Mc 
+                    || cat == UnicodeCategory.SpacingCombiningMark)  // Mc
             {
                 return true;
             }

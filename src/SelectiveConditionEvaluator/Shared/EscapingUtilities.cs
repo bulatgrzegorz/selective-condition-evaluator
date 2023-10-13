@@ -1,15 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Build.Framework;
-using SelectiveConditionEvaluator.StringTools;
-
 #nullable disable
 
-namespace Microsoft.Build.Shared
+using System.Text;
+using SelectiveConditionEvaluator.StringTools;
+
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// This class implements static methods to assist with unescaping of %XX codes

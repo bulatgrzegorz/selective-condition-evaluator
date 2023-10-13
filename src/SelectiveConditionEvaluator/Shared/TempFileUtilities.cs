@@ -1,14 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.IO;
-using System.Runtime.CompilerServices;
-using SelectiveConditionEvaluator;
-
 #nullable disable
 
-namespace Microsoft.Build.Shared
+using System.Runtime.CompilerServices;
+using SelectiveConditionEvaluator.Shared.FileSystem;
+
+namespace SelectiveConditionEvaluator.Shared
 {
     /// <summary>
     /// This class contains utility methods for file IO.
@@ -39,15 +37,15 @@ namespace Microsoft.Build.Shared
         private static string CreateFolderUnderTemp()
         {
             // On windows Username with Unicode chars can give issues, so we dont append username to the temp folder name.
-            string msbuildTempFolder = NativeMethods.IsWindows ?
+            string msbuildTempFolder = SelectiveConditionEvaluator.NativeMethods.IsWindows ?
                 msbuildTempFolderPrefix :
                 msbuildTempFolderPrefix + Environment.UserName;
 
             string basePath = Path.Combine(Path.GetTempPath(), msbuildTempFolder);
 
-            if (NativeMethods.IsLinux && NativeMethods.mkdir(basePath, userRWX) != 0)
+            if (SelectiveConditionEvaluator.NativeMethods.IsLinux && SelectiveConditionEvaluator.NativeMethods.mkdir(basePath, userRWX) != 0)
             {
-                if (NativeMethods.chmod(basePath, userRWX) == 0)
+                if (SelectiveConditionEvaluator.NativeMethods.chmod(basePath, userRWX) == 0)
                 {
                     // Current user owns this file; we can read and write to it. It is reasonable here to assume it was created properly by MSBuild and can be used
                     // for temporary files.
@@ -57,7 +55,7 @@ namespace Microsoft.Build.Shared
                     // Another user created a folder pretending to be us! Find a folder we can actually use.
                     int extraBits = 0;
                     string pathToCheck = basePath + extraBits;
-                    while (NativeMethods.mkdir(pathToCheck, userRWX) != 0 && NativeMethods.chmod(pathToCheck, userRWX) != 0)
+                    while (SelectiveConditionEvaluator.NativeMethods.mkdir(pathToCheck, userRWX) != 0 && SelectiveConditionEvaluator.NativeMethods.chmod(pathToCheck, userRWX) != 0)
                     {
                         extraBits++;
                         pathToCheck = basePath + extraBits;

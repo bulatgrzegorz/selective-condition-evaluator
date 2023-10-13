@@ -4,13 +4,12 @@
 #nullable disable
 
 using System.Collections.Immutable;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.BackEnd.Logging;
-using Microsoft.Build.BackEnd.SdkResolution;
-using Microsoft.Build.Evaluation;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
+using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
+using SelectiveConditionEvaluator.BackEnd.Components.SdkResolution;
 using SelectiveConditionEvaluator.Collections;
 using SelectiveConditionEvaluator.Construction;
+using SelectiveConditionEvaluator.Definition;
 using SelectiveConditionEvaluator.Evaluation.Context;
 using SelectiveConditionEvaluator.Instance;
 

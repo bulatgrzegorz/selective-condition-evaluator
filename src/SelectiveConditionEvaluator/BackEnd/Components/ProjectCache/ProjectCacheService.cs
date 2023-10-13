@@ -1,38 +1,22 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Xml;
-using Microsoft.Build.BackEnd;
-using Microsoft.Build.BackEnd.Logging;
-using Microsoft.Build.Construction;
-using Microsoft.Build.Eventing;
-using Microsoft.Build.Execution;
-using Microsoft.Build.FileSystem;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Graph;
-using Microsoft.Build.Internal;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
-using SelectiveConditionEvaluator.BackEnd.Components;
+using SelectiveConditionEvaluator.BackEnd.BuildManager;
 using SelectiveConditionEvaluator.BackEnd.Components.Caching;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
-using SelectiveConditionEvaluator.BackEnd.Components.ProjectCache;
-using SelectiveConditionEvaluator.BackEnd.Components.Scheduler;
 using SelectiveConditionEvaluator.BackEnd.Shared;
 using SelectiveConditionEvaluator.Construction.Solution;
+using SelectiveConditionEvaluator.FileSystem;
+using SelectiveConditionEvaluator.Graph;
 using SelectiveConditionEvaluator.Instance;
 using SelectiveConditionEvaluator.Resources;
+using SelectiveConditionEvaluator.Shared;
 
-namespace Microsoft.Build.Experimental.ProjectCache
+namespace SelectiveConditionEvaluator.BackEnd.Components.ProjectCache
 {
     internal record CacheRequest(BuildSubmission Submission, BuildRequestConfiguration Configuration);
 
@@ -42,7 +26,7 @@ namespace Microsoft.Build.Experimental.ProjectCache
 
         private static HashSet<string> s_projectSpecificPropertyNames = new(StringComparer.OrdinalIgnoreCase) { "TargetFramework", "Configuration", "Platform", "TargetPlatform", "OutputType" };
 
-        private readonly BuildManager _buildManager;
+        private readonly BuildManager.BuildManager _buildManager;
         private readonly IBuildComponentHost _componentHost;
         private readonly ILoggingService _loggingService;
 #if FEATURE_REPORTFILEACCESSES
@@ -83,7 +67,7 @@ namespace Microsoft.Build.Experimental.ProjectCache
         }
 
         public ProjectCacheService(
-            BuildManager buildManager,
+            BuildManager.BuildManager buildManager,
             ILoggingService loggingService,
 #if FEATURE_REPORTFILEACCESSES
             IFileAccessManager fileAccessManager,
@@ -484,7 +468,7 @@ namespace Microsoft.Build.Experimental.ProjectCache
                             _buildManager,
                             submission.BuildRequestData.Flags,
                             submission.SubmissionId,
-                            Scheduler.InProcNodeId);
+                            Scheduler.Scheduler.InProcNodeId);
 
                         // If we're taking the time to evaluate, avoid having other nodes to repeat the same evaluation.
                         // Based on the assumption that ProjectInstance serialization is faster than evaluating from scratch.

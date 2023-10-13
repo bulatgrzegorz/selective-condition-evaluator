@@ -1,33 +1,22 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.IO;
-using System.Threading;
 using System.Threading.Tasks.Dataflow;
-using Microsoft.Build.BackEnd.Logging;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
-using SelectiveConditionEvaluator.BackEnd.Components;
-using SelectiveConditionEvaluator.BackEnd.Components.BuildRequestEngine;
+using SelectiveConditionEvaluator.BackEnd.BuildManager;
 using SelectiveConditionEvaluator.BackEnd.Components.Caching;
 using SelectiveConditionEvaluator.BackEnd.Components.Logging;
 using SelectiveConditionEvaluator.BackEnd.Components.RequestBuilder;
-using SelectiveConditionEvaluator.BackEnd.Components.Scheduler;
 using SelectiveConditionEvaluator.BackEnd.Shared;
-using SelectiveConditionEvaluator.ElementLocation;
-using BuildAbortedException = Microsoft.Build.Exceptions.BuildAbortedException;
-using NativeMethods = SelectiveConditionEvaluator.NativeMethods;
+using SelectiveConditionEvaluator.Shared;
+using SelectiveConditionEvaluator.Shared.Debugging;
+using BuildAbortedException = SelectiveConditionEvaluator.BackEnd.Shared.BuildAbortedException;
 
 #nullable disable
 
-namespace Microsoft.Build.BackEnd
+namespace SelectiveConditionEvaluator.BackEnd.Components.BuildRequestEngine
 {
     /// <summary>
     /// The BuildRequestEngine is responsible for managing the building of projects on a given node.  It
@@ -363,9 +352,9 @@ namespace Microsoft.Build.BackEnd
                         // On the other hand, if this is not the inproc node, we want to make sure that our copy of this configuration
                         // knows that its results are no longer on this node.  Since we don't know enough here to know where the
                         // results are going, we satisfy ourselves with marking that they are simply "not here".
-                        if (_componentHost.BuildParameters.NodeId != Scheduler.InProcNodeId)
+                        if (_componentHost.BuildParameters.NodeId != Scheduler.Scheduler.InProcNodeId)
                         {
-                            config.ResultsNodeId = Scheduler.ResultsTransferredId;
+                            config.ResultsNodeId = Scheduler.Scheduler.ResultsTransferredId;
                         }
 
                         RaiseRequestComplete(request, resultToReport);
@@ -902,7 +891,7 @@ namespace Microsoft.Build.BackEnd
                 {
                     _nodeLoggingContext.LogFatalBuildError(
                         e,
-                        new BuildEventFileInfo(ElementLocation.EmptyLocation));
+                        new BuildEventFileInfo(ElementLocation.ElementLocation.EmptyLocation));
                     throw new BuildAbortedException(e.Message, e);
                 }
             }

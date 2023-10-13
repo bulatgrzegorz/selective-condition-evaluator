@@ -3,12 +3,9 @@
 
 #nullable enable
 
-using System;
-using System.IO;
-using Microsoft.Build.Shared;
-using SelectiveConditionEvaluator;
+using SelectiveConditionEvaluator.Shared;
 
-namespace Microsoft.Build.Framework
+namespace SelectiveConditionEvaluator
 {
     public sealed class AssemblyLoadBuildEventArgs : BuildMessageEventArgs
     {

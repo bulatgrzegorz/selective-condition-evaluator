@@ -1,11 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Diagnostics.Tracing;
-
 #nullable disable
 
-namespace Microsoft.Build.Eventing
+using System.Diagnostics.Tracing;
+
+namespace SelectiveConditionEvaluator
 {
     /// <summary>
     /// This captures information of how various key methods of building with MSBuild ran.

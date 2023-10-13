@@ -3,11 +3,11 @@
 
 #nullable disable
 
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Framework;
 using SelectiveConditionEvaluator.Construction;
+using SelectiveConditionEvaluator.Definition;
 using SelectiveConditionEvaluator.ObjectModelRemoting.ConstructionObjectLinks;
 using SelectiveConditionEvaluator.ObjectModelRemoting.DefinitionObjectsLinks;
+using SelectiveConditionEvaluator.Sdk;
 
 namespace SelectiveConditionEvaluator.ObjectModelRemoting
 {

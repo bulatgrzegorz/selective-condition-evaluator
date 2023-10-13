@@ -1,14 +1,13 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Runtime.Versioning;
-using Microsoft.Build.Shared;
-using Microsoft.Win32;
-
 #nullable disable
 
-namespace Microsoft.Build.Utilities
+using System.Runtime.Versioning;
+using Microsoft.Win32;
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator.AssemblyFolders
 {
     /// <summary>
     /// Contains information about entries in the AssemblyFoldersEx registry keys.

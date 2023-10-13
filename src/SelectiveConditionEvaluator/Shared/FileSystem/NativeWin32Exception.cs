@@ -7,7 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
-namespace SelectiveConditionEvaluator
+namespace SelectiveConditionEvaluator.Shared.FileSystem
 {
     /// <summary>
     /// A possibly-recoverable exception wrapping a failed native call. The <see cref="Win32Exception.NativeErrorCode" /> captures the

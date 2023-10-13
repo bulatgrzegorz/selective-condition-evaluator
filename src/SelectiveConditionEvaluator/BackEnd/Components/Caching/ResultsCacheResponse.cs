@@ -4,7 +4,7 @@
 
 #nullable disable
 
-using Microsoft.Build.Execution;
+using SelectiveConditionEvaluator.BackEnd.Shared;
 
 namespace SelectiveConditionEvaluator.BackEnd.Components.Caching
 {

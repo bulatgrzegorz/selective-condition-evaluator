@@ -1,13 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using Microsoft.Build.Framework;
-using SelectiveConditionEvaluator;
-using SelectiveConditionEvaluator.ElementLocation;
-
 #nullable disable
 
-namespace Microsoft.Build.BackEnd.SdkResolution
+using SelectiveConditionEvaluator.Sdk;
+using SelectiveConditionEvaluator.Shared;
+
+namespace SelectiveConditionEvaluator.BackEnd.Components.SdkResolution
 {
     /// <summary>
     /// Represents an SDK resolver request which is serialized and sent between nodes.  This is mostly a wrapper around <see cref="SdkReference"/>
@@ -16,7 +15,7 @@ namespace Microsoft.Build.BackEnd.SdkResolution
     internal sealed class SdkResolverRequest : INodePacket
     {
         private BuildEventContext _buildEventContext;
-        private ElementLocation _elementLocation;
+        private ElementLocation.ElementLocation _elementLocation;
         private string _minimumVersion;
         private string _name;
         private string _projectPath;
@@ -31,7 +30,7 @@ namespace Microsoft.Build.BackEnd.SdkResolution
             Translate(translator);
         }
 
-        private SdkResolverRequest(int submissionId, string name, string version, string minimumVersion, BuildEventContext buildEventContext, ElementLocation elementLocation, string solutionPath, string projectPath, bool interactive, bool isRunningInVisualStudio)
+        private SdkResolverRequest(int submissionId, string name, string version, string minimumVersion, BuildEventContext buildEventContext, ElementLocation.ElementLocation elementLocation, string solutionPath, string projectPath, bool interactive, bool isRunningInVisualStudio)
         {
             _buildEventContext = buildEventContext;
             _submissionId = submissionId;
@@ -47,7 +46,7 @@ namespace Microsoft.Build.BackEnd.SdkResolution
 
         public BuildEventContext BuildEventContext => _buildEventContext;
 
-        public ElementLocation ElementLocation => _elementLocation;
+        public ElementLocation.ElementLocation ElementLocation => _elementLocation;
 
         public bool Interactive => _interactive;
 
@@ -69,7 +68,7 @@ namespace Microsoft.Build.BackEnd.SdkResolution
 
         public string Version => _version;
 
-        public static SdkResolverRequest Create(int submissionId, SdkReference sdkReference, BuildEventContext buildEventContext, ElementLocation elementLocation, string solutionPath, string projectPath, bool interactive, bool isRunningInVisualStudio)
+        public static SdkResolverRequest Create(int submissionId, SdkReference sdkReference, BuildEventContext buildEventContext, ElementLocation.ElementLocation elementLocation, string solutionPath, string projectPath, bool interactive, bool isRunningInVisualStudio)
         {
             return new SdkResolverRequest(submissionId, sdkReference.Name, sdkReference.Version, sdkReference.MinimumVersion, buildEventContext, elementLocation, solutionPath, projectPath, interactive, isRunningInVisualStudio);
         }
@@ -82,7 +81,7 @@ namespace Microsoft.Build.BackEnd.SdkResolution
         public void Translate(ITranslator translator)
         {
             translator.Translate(ref _buildEventContext);
-            translator.Translate(ref _elementLocation, ElementLocation.FactoryForDeserialization);
+            translator.Translate(ref _elementLocation, SelectiveConditionEvaluator.ElementLocation.ElementLocation.FactoryForDeserialization);
             translator.Translate(ref _minimumVersion);
             translator.Translate(ref _name);
             translator.Translate(ref _projectPath);
