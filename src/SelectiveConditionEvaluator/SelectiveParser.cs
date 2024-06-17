@@ -13,14 +13,10 @@ namespace SelectiveConditionEvaluator;
 public class SelectiveParser
 {
     private static readonly GenericExpressionNode TrueNode = new StringExpressionNode("true", false);
+    private static readonly GenericExpressionNode FalseNode = new StringExpressionNode("false", false);
     private readonly string[] _propertyPrefixQuery;
     private readonly PropertyDictionary<ProjectPropertyInstance> _projectPropertyInstances = new();
-
-    public SelectiveParser()
-    {
-        _propertyPrefixQuery = Array.Empty<string>();
-    }
-
+    
     public SelectiveParser(string propertyName, string propertyValue)
     {
         _propertyPrefixQuery = new[] { $"$({propertyName}" };
@@ -107,8 +103,8 @@ public class SelectiveParser
         {
             simplifiedNode = new OrExpressionNode()
             {
-                LeftChild = SimplifyNode(state, orNode.LeftChild, out var left) ? left : TrueNode,
-                RightChild = SimplifyNode(state, orNode.RightChild, out var right) ? right : TrueNode,
+                LeftChild = SimplifyNode(state, orNode.LeftChild, out var left) ? left : FalseNode,
+                RightChild = SimplifyNode(state, orNode.RightChild, out var right) ? right : FalseNode,
                 PossibleAndCollision = orNode.PossibleAndCollision,
                 PossibleOrCollision = orNode.PossibleOrCollision
             };
@@ -160,6 +156,6 @@ public class SelectiveParser
 
     private bool AnySelective(ConditionEvaluator.ConditionEvaluationState<ProjectPropertyInstance, ProjectItemInstance> state, OperatorExpressionNode node)
     {
-        return SimplifyNode(state, node.LeftChild, out _) || SimplifyNode(state, node.LeftChild, out _);
+        return SimplifyNode(state, node.LeftChild, out _) || SimplifyNode(state, node.RightChild, out _);
     }
 }
